@@ -1,24 +1,38 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('StudentProfiles', {
+    return queryInterface.createTable('EducationDetails', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
+      studentProfileId: {
         allowNull: false,
-        type: Sequelize.STRING
-      },
-      lastName: {
-        allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       collegeName: {
-        allowNull: false,
         type: Sequelize.STRING
+      },
+      collegeLocation: {
+        type: Sequelize.STRING
+      },
+      degree: {
+        type: Sequelize.STRING
+      },
+      major: {
+        type: Sequelize.STRING
+      },
+      yearOfPassing: {
+        type: Sequelize.INTEGER
+      },
+      currentCgpa: {
+        type: Sequelize.FLOAT
+      },
+      highestDegree: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +45,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('StudentProfiles');
+    return queryInterface.dropTable('EducationDetails');
   }
 };

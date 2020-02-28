@@ -1,22 +1,42 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('StudentProfiles', {
+    return queryInterface.createTable('JobPostings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
+      companyProfileId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      jobTitle: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      lastName: {
+      postingDate: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      applicationDeadline: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      location: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      collegeName: {
+      salary: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      jobDescription: {
+        allowNull: false,
+        type: Sequelize.TEXT
+      },
+      jobCategory: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -31,6 +51,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('StudentProfiles');
+    return queryInterface.dropTable('JobPostings');
   }
 };
