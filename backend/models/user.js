@@ -39,19 +39,12 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Has to be a Student or Company'
         }
       }
-    },
-    profile: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const profile = eval(this.role+'Profile');
-        return profile.findOne({where: {userId: this.id}});
-      },
-
     }
   }, {});
   User.associate = (models) => {
   };
 
+  // class methods
   User.generateSalt = () => {
     return crypto.randomBytes(16).toString('base64')
   };
@@ -62,14 +55,35 @@ module.exports = (sequelize, DataTypes) => {
       .update(salt)
       .digest('hex')
   }
+  User.findBy = async (queryObject) => {
+    let where_query = {where: queryObject.column};
+    delete queryObject.column;
+    let final_query = Object.assign({},where_query, queryObject);
+    let res = await User.findAll(final_query);
+    return res[0];
+  }
+
+  User.StudentRole = 'Student';
+  User.CompanyRole = 'Company';
+
+  // instance methods
+
+  User.prototype.is_password_valid = function(password){
+      return this.password === User.encryptPassword(password, this.salt);
+  }
+
+  User.prototype.profile = function(){
+    const profile = eval(this.role+'Profile');
+    return profile.findOne({where: {userId: this.id}});
+  }
+
+  // u = await User.findOne();u.is_password_valid('abcd')
   const setSaltAndPassword = user => {
     if (user.changed('password')) {
       user.salt = User.generateSalt()
       user.password = User.encryptPassword(user.password, user.salt)
     }
   }
-  // instance methods
-
   User.beforeCreate(setSaltAndPassword)
   User.beforeUpdate(setSaltAndPassword)
   return User;
