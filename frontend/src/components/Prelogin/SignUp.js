@@ -1,7 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import StudentSignUp from './StudentSignUp'
-import CompanySignUp from './CompanySignUp'
 
 function SignUp(){
   return(

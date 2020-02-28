@@ -1,5 +1,5 @@
 import React from 'react';
-import HandShakeLogo from '../HandShakeLogo';
+import HandShakeLogo from './HandShakeLogo';
 import './../../css/registration.css';
 import {Link} from 'react-router-dom';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 import SignIn from './SignIn';
 
 function Home(){

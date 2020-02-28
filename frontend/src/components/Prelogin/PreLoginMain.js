@@ -11,12 +11,11 @@ function PreLoginMain(){
   return(
       <div className='prelogin-main'>
         <PreLoginHeader />
-          {console.log("Hello!!!")}
-          <Route exact path='/' component={Home} />
-          <Route exact path='/signin' component={SignIn} />
-          <Route exact path='/signup' component={SignUp} />
-          <Route exact path='/student_signup' component={StudentSignUp} />
-          <Route exact path='/company_signup' component={CompanySignUp} />
+        <Route exact path='/' component={Home} />
+        <Route exact path='/signin' component={SignIn} />
+        <Route exact path='/signup' component={SignUp} />
+        <Route exact path='/student_signup' component={StudentSignUp} />
+        <Route exact path='/company_signup' component={CompanySignUp} />
       </div>
   )
 }
