@@ -1,27 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import PreLoginHeader from './components/Prelogin/PreLoginHeader'
 import Home from './components/Prelogin/Home'
 import SignIn from './components/Prelogin/SignIn'
 import SignUp from './components/Prelogin/SignUp'
 import StudentSignUp from './components/Prelogin/StudentSignUp'
 import CompanySignUp from './components/Prelogin/CompanySignUp'
-import StudentHeader from './components/PostLogin/Student/StudentHeader'
+import Header from './components/Header'
 import StudentProfile from './components/PostLogin/Student/StudentProfile'
 import CompanyProfile from './components/PostLogin/Student/CompanyProfile'
 import CompanyProfileEdit from './components/PostLogin/Student/CompanyProfileEdit'
 import StudentProfileEdit from './components/PostLogin/Student/StudentProfileEdit'
-import StudentJobPostingShow from './components/PostLogin/Student/StudentJobPostingShow'
-import RedirectToHome from './components/RedirectToHome';
+import JobPostingShow from './components/PostLogin/Student/JobPostingShow'
+import JobPostingCreate from './components/PostLogin/Student/JobPostingCreate';
+import JobPostingsAll from './components/PostLogin/Student/JobPostingsAll';
 
 
 function App() {
-  let header = sessionStorage.getItem('userInfo') ? <StudentHeader /> : <PreLoginHeader />
     return (
       <Router>
         <div className="App">
-          {header}
-          <RedirectToHome />
+          <Header />
           {/* SignUp and Registrations */}
           <Route exact path='/' component={Home} />
           <Route exact path='/signin' component={SignIn} />
@@ -37,7 +35,9 @@ function App() {
           <Route exact path='/company/company_profile/:id/edit' component={CompanyProfileEdit} />
 
           {/* Job postings */}
-          <Route exect path='/student/student_profile/job_postings/:id' component={StudentJobPostingShow} />
+          <Route exect path='/student/job_postings/:id' component={JobPostingShow} />
+          <Route exect path='/student/job_postings' component={JobPostingsAll} />
+          <Route exect path='/company/:companyProfileId/job_postings/:id/' component={JobPostingCreate} />
         </div>
       </Router>
     );

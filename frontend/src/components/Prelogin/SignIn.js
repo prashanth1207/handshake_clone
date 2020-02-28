@@ -1,5 +1,8 @@
 import React,{ useState} from 'react';
+import {connect} from 'react-redux';
+import {LoginIn} from '../../redux/actions/index'
 import axios from 'axios';
+import RedirectToProfile from '../RedirectToProfile';
 
 function SignIn(props){
   let [emailId,setEmailId] = useState('');
@@ -26,7 +29,7 @@ function SignIn(props){
             if(response.status === 200){
                 if (response.data.success === true){
                     sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo));
-                    setLoginSuccess(true);
+                    props.loggedIn();
                 } else{
                   setErrorMsg(response.data.errorMessage);
                 }
@@ -39,6 +42,8 @@ let errMsg = null;
   }
   return(
     <div class='user-signin div-center-align'>
+      <RedirectToProfile />
+      <br />
       <form>
         {errMsg}
         <input type='text' name='emailId' value={emailId} placeholder="Email Id" onChange={(e) => {setEmailId(e.target.value)}}/>
@@ -51,4 +56,8 @@ let errMsg = null;
   )
 }
 
-export default SignIn; 
+const mapDispatchToProps = {
+  loggedIn: LoginIn
+}
+let ConnectedSignIn = connect(null,mapDispatchToProps)(SignIn)
+export default ConnectedSignIn; 

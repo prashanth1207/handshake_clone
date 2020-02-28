@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get: function(){
         if (this.startDate){
-          return this.startDate.toLocaleString('en-US', { 
+          return new Date(this.startDate).toLocaleString('en-US', { 
             month: 'long',
             year: 'numeric' 
           })
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get: function(){
         if (this.endDate){
-          return this.endDate.toLocaleString('en-US', { 
+          return new Date(this.endDate).toLocaleString('en-US', { 
             month: 'long',
             year: 'numeric' 
           })

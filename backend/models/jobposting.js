@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     applicationDeadline: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         notNull: {
@@ -34,6 +34,19 @@ module.exports = (sequelize, DataTypes) => {
         },
         notEmpty: {
           msg: 'Application deadline cannot be empty'
+        }
+      }
+    },
+    readableDeadline: {
+      type: DataTypes.VIRTUAL,
+      get: function(){
+        if (this.applicationDeadline){
+          return  new Date(this.applicationDeadline).toLocaleString('en-US', { 
+            dateStyle: 'full',
+          })
+        }
+        else{
+          return null
         }
       }
     },

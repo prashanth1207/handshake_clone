@@ -1,11 +1,18 @@
 import React from 'react';
+import {connect} from 'react-redux'
 import { Redirect } from 'react-router-dom';
 
-function RedirectToHome() {
-  let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-  if(userInfo){
-    return <Redirect to={`/${userInfo.type}/${userInfo.type}_profile/${userInfo.profile.id}`}/>
+let RedirectToHome = (props) => {
+  if(!props.loggedIn){
+      return <Redirect to={'/'}/>
   }
+  return null;
 }
 
-export default RedirectToHome;
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.loggedIn
+  }
+}
+let ConnectedRedirectToHome = connect(mapStateToProps)(RedirectToHome)
+export default ConnectedRedirectToHome;

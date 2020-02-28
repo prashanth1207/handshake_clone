@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
 import axios from 'axios';
+import RedirectToProfile from '../RedirectToProfile';
 
 function StudentSignUp(){
 
@@ -38,6 +39,8 @@ function StudentSignUp(){
   }
   return(
     <div class='user-company-signup div-center-align'>
+      <RedirectToProfile />
+      <br />
       <form>
         <input type='text' name='firstName' value={firstName} onChange={(e) => handleFirstName(e.target.value)} placeholder="First Name"/>
         <br/>

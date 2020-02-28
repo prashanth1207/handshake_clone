@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
 import axios from 'axios';
+import RedirectToProfile from '../RedirectToProfile';
 
 function CompanySignUp(){
   const [name, setName] = useState('');
@@ -36,6 +37,8 @@ function CompanySignUp(){
 
   return(
     <div class='user-company-signup div-center-align'>
+      <RedirectToProfile />
+      <br />
       <form>
       <input type='text' name='name' value={name} onChange={(e)=>setName(e.target.value)} placeholder="Company Name" />
         <br/>
