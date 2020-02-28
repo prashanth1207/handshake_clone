@@ -1,31 +1,37 @@
 var createError = require('http-errors');
 var express = require('express');
+var bodyParser = require('body-parser');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
+const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var studentProfileRouter = require('./routes/student_profile');
+var companyProfileRouter = require('./routes/company_profile');
+var jobPostingRouter = require('./routes/job_posting');
+
 
 var app = express();
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-//const Dotenv = require('dotenv-webpack');
-const webpackConfig = {
-  node: { global: true, fs: 'empty' }, // Fix: "Uncaught ReferenceError: global is not defined", and "Can't resolve 'fs'".
-  output: {
-    libraryTarget: 'umd' // Fix: "Uncaught ReferenceError: exports is not defined".
-  },
-//  plugins: [new Dotenv()]
-};
+
+
+// //const Dotenv = require('dotenv-webpack');
+// const webpackConfig = {
+//   node: { global: true, fs: 'empty' }, // Fix: "Uncaught ReferenceError: global is not defined", and "Can't resolve 'fs'".
+//   output: {
+//     libraryTarget: 'umd' // Fix: "Uncaught ReferenceError: exports is not defined".
+//   },
+// //  plugins: [new Dotenv()]
+// };
 
 // global var __basedir to get base directory
 global.__basedir = __dirname;
 
-module.exports = webpackConfig;
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//module.exports = webpackConfig;
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -33,13 +39,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'cmpe_273_secure_string',
+  resave: false,
+  saveUninitialized: true,
+}));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/student_profile', studentProfileRouter);
+app.use('/company_profile', companyProfileRouter);
+app.use('/job_postings', jobPostingRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -54,8 +70,22 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-//use cors to allow cross origin resource sharing
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+//Allow Access Control
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
+// parse application/x-www-form-urlencoded
+// for easier testing with Postman or plain HTML forms
+app.use(bodyParser.urlencoded({extended: true}));
+
+// parse application/json
+app.use(bodyParser.json());
 
 // Execute App
 app.listen(3001, () => {
