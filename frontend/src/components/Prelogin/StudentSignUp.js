@@ -1,27 +1,26 @@
 import React,{useState} from 'react';
 import axios from 'axios';
 import RedirectToProfile from '../RedirectToProfile';
+import {Container,Row,Col,Form,Button,Alert} from 'react-bootstrap'
 
 function StudentSignUp(){
 
-  const [firstName,handleFirstName] = useState('');
-  const [lastName,handleLastName] = useState('');
-  const [emailId,handleEmailId] = useState('');
-  const [password,handlePassword] = useState('');
-  const [currentCollegeName,handlecurrentCollegeName] = useState('');
+  let [signupSuccess,setsignupSuccess] = useState(false);
+  let [errorMsg,setErrorMsg] = useState(null);
 
-  function onSubmit(e){
+  function handleSubmit(e){
     e.preventDefault();
+    let form = e.currentTarget;
     let form_data = {
       userData: {
-        emailId: emailId,
-        password: password,
+        emailId: form.emailId.value,
+        password: form.password.value,
         role: 'Student'
       },
       profileData:{
-        firstName: firstName,
-        lastName: lastName,
-        currentCollegeName: currentCollegeName
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        currentCollegeName: form.currentCollegeName.value
       }
     }
     axios.defaults.withCredentials = true;
@@ -29,32 +28,60 @@ function StudentSignUp(){
       .then(response =>{
         if(response.status === 200){
           if (response.data.success === true){
-            sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo))
+            sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo));
           } else{
-            console.log('!!!!!!!!!DAMN!!!!!!!');
+            setErrorMsg(response.data.error);
           }
       }
       })
 
   }
+  let errorTag = null;
+  if(errorMsg){
+    errorTag = <Alert variant='danger'>{errorMsg}</Alert>;
+  }
   return(
-    <div class='user-company-signup div-center-align'>
+    <Container>
       <RedirectToProfile />
       <br />
-      <form>
-        <input type='text' name='firstName' value={firstName} onChange={(e) => handleFirstName(e.target.value)} placeholder="First Name"/>
-        <br/>
-        <input type='text' name='lastName' value={lastName} onChange={(e) => handleLastName(e.target.value)} placeholder="Last Name" />
-        <br/>
-        <input type='text' name='emailId' value={emailId} onChange={(e) => handleEmailId(e.target.value)} placeholder="Email Id" />
-        <br />
-        <input type='password' name='password' value={password} onChange={(e) => handlePassword(e.target.value)} placeholder="Password" />
-        <br />
-        <input type='text' name='currentCollegeName' value={currentCollegeName} onChange={(e) => handlecurrentCollegeName(e.target.value)} placeholder="College" />
-        <br/>
-        <input type='submit' value='Register' onClick={onSubmit} />
-      </form>
-    </div>
+
+      <Row>
+        <Col></Col>
+        <Col>
+          <h2>Sign Up</h2>
+          <Form onSubmit={handleSubmit}>
+            {errorTag}
+            <Form.Group>
+              <Form.Label>First Name</Form.Label>
+              <Form.Control name="firstName" required/>
+            </Form.Group>
+            <br/>
+            <Form.Group>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control name="lastName" required/>
+            </Form.Group>
+            <br/>
+            <Form.Group>
+              <Form.Label>Email Id</Form.Label>
+              <Form.Control name="emailId" required type='email'/>
+            </Form.Group>
+            <br />
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control name="password" required type='password'/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>College</Form.Label>
+              <Form.Control name="currentCollegeName" required/>
+            </Form.Group>
+            <br/>
+            <Button variant='primary' type='submit'>Register</Button>
+          </Form>
+        </Col>
+        <Col></Col>
+      </Row>
+      <br />
+    </Container>
   )
 }
 

@@ -19,15 +19,15 @@ module.exports.post_login = async (req,res) =>{
   if (isDataEmpty([emailId,password])){
       return res.json({
         success: false,
-        errorMessage: 'All fields are mandatory' 
+        error: 'All fields are mandatory' 
       })
   }
   let user = await User.findBy({column: {emailId: emailId}});
-  let errorMessage = 'Invalid email id or password';
+  let error = 'Invalid email id or password';
   if (!user || !user.is_password_valid(password)){
     return res.json({
       success: false,
-      errorMessage: errorMessage 
+      error: error 
     })
   }
   let profile = await eval(user.role + 'Profile').findBy({column:{userId: user.id}})
@@ -46,7 +46,7 @@ module.exports.post_register = async (req,res) =>{
   if (isDataEmpty([...Object.values(req.body.userData),...Object.values(req.body.profileData)])){
       return res.json({
         success: false,
-        errorMessage: 'All fields are mandatory' 
+        error: 'All fields are mandatory' 
       })
   }
   req.body.userData
@@ -56,7 +56,7 @@ module.exports.post_register = async (req,res) =>{
   if(user){
     return res.json({
       success: false,
-      errorMessage: 'EmailId already exists' 
+      error: 'EmailId already exists' 
     })
   }
   sequelize.transaction(async() => {
@@ -76,7 +76,7 @@ module.exports.post_register = async (req,res) =>{
     }).catch(e =>{
       return res.json({
         success: false,
-        errorMessage: e.errors[0].message
+        error: e.errors[0].message
       })
     });
   });

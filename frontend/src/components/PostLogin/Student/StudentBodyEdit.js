@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './companyprofile.css'
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import {Form, Button} from 'react-bootstrap';
 
 function StudentBodyEdit(props) {
   //basic profile
@@ -95,6 +96,100 @@ function StudentBodyEdit(props) {
   }
   return (
     <main class="clearfix new-topbar-nux" id="skip-to-content">
+      <Form>
+        <Form.Group>
+          <Form.Label>firstName</Form.Label>
+          <Form.Control type='text' name='firstName' value={studentProfile.firstName}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>lastName</Form.Label>
+          <Form.Control type='text' name='lastName' value={studentProfile.lastName}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>currentCollegeName</Form.Label>
+          <Form.Control type='text' name='currentCollegeName' value={studentProfile.currentCollegeName}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>city</Form.Label>
+          <Form.Control type='text' name='city' value={studentProfile.city}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>state</Form.Label>
+          <Form.Control type='text' name='state' value={studentProfile.state}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>country</Form.Label>
+          <Form.Control type='text' name='country' value={studentProfile.country}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>careerObjective</Form.Label>
+          <Form.Control type='text' name='careerObjective' value={studentProfile.careerObjective}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>phoneNumber</Form.Label>
+          <Form.Control type='text' name='phoneNumber' value={studentProfile.phoneNumber}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>skillSet</Form.Label>
+          <Form.Control type='text' name='skillSet' value={studentProfile.skillSet}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>dob</Form.Label>
+          <Form.Control type='text' name='dob' value={studentProfile.dob}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>collegeName</Form.Label>
+          <Form.Control type='text' name='collegeName' value={studentProfile.collegeName}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>collegeLocation</Form.Label>
+          <Form.Control type='text' name='collegeLocation' value={studentProfile.collegeLocation}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>degree</Form.Label>
+          <Form.Control type='text' name='degree' value={studentProfile.degree}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>major</Form.Label>
+          <Form.Control type='text' name='major' value={studentProfile.major}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>yearOfPassing</Form.Label>
+          <Form.Control type='text' name='yearOfPassing' value={studentProfile.yearOfPassing}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>currentCgpa</Form.Label>
+          <Form.Control type='text' name='currentCgpa' value={studentProfile.currentCgpa}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>highestDegree</Form.Label>
+          <Form.Control type='text' name='highestDegree' value={studentProfile.highestDegree}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>companyName</Form.Label>
+          <Form.Control type='text' name='companyName' value={studentProfile.companyName}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>title</Form.Label>
+          <Form.Control type='text' name='title' value={studentProfile.title}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>companyLocation</Form.Label>
+          <Form.Control type='text' name='companyLocation' value={studentProfile.companyLocation}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>startDate</Form.Label>
+          <Form.Control type='text' name='startDate' value={studentProfile.startDate}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>endDate</Form.Label>
+          <Form.Control type='date' name='endDate' value={studentProfile.endDate}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>workDescription</Form.Label>
+          <Form.Control as="textarea" name='workDescription' value={studentProfile.workDescription}/>
+        </Form.Group>
+      </Form>
       <div class="student-profile-container">
         <div class="student-profile">
           <div data-hook="container" class="style__container___15r1p style__medium___2PHCb">

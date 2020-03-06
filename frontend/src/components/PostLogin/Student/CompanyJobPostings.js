@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import JobPostingSummary from './JobPostingSummary'
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
-function JobPostingsAll(props) {
+function CompanyJobPostings(props) {
   let companyProfileId = props.companyProfileId;
   let [jobPostingResp,setData] = useState({status: 'loading', jobPostings: null});
   if(jobPostingResp.status === 'loading'){
@@ -27,7 +27,13 @@ function JobPostingsAll(props) {
   console.dir(jobPostings)
   let jobPostingsDivs = jobPostings.map(jobPosting =>{
     return(
+      <div>
       <JobPostingSummary jobPosting={jobPosting} linkJobTitle={true}/>
+      sdcvsdvsdvsvsdvs
+      <Button variant="link" href={`/${companyProfileId}/job_postings/${jobPosting.id}/job_applications`}>
+        Job applications
+      </Button>
+      </div>
     )
   });
   return (
@@ -37,4 +43,4 @@ function JobPostingsAll(props) {
   );
 }
 
-export default JobPostingsAll;
+export default CompanyJobPostings;

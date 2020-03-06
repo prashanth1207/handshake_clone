@@ -3,7 +3,7 @@ let JobPosting = models.JobPosting
 let CompanyProfile = models.CompanyProfile
 
 module.exports.show_all_job_postings = async (req,resp) => {
-  filter_params = req.params || {};
+  let filter_params = {where: req.query || {}};
   let jobPostings = await JobPosting.findAll(Object.assign({},filter_params,{include: [{model: CompanyProfile, as: 'companyProfile'}]}));
   resp.json(JSON.parse(JSON.stringify(jobPostings)));
 }

@@ -3,9 +3,10 @@ import axios from 'axios';
 import './companyprofile.css'
 import { useParams, Redirect } from 'react-router-dom';
 import { Multiselect } from 'multiselect-react-dropdown';
+import {storedUserInfo} from './../../../utility'
 
 function JobPostingCreate(props) {
-  let {companyProfileId} = useParams();
+  let companyProfileId = storedUserInfo().profile.id;
   let [errorMsg,setErrorMsg] = useState(null);
   let [jobTitle, setjobTitle] = useState('');
   let [postingDate, setpostingDate] = useState(

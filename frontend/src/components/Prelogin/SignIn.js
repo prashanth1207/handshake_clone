@@ -3,25 +3,21 @@ import {connect} from 'react-redux';
 import {LoginIn} from '../../redux/actions/index'
 import axios from 'axios';
 import RedirectToProfile from '../RedirectToProfile';
+import {Container, Row, Col, Form, Button, Alert} from 'react-bootstrap'
 
 function SignIn(props){
-  let [emailId,setEmailId] = useState('');
-  let [password,setPassword] = useState('');
   let [loginSuccess,setLoginSuccess] = useState(false);
   let [errorMsg,setErrorMsg] = useState(null);
   
-  function handlePassword(password){
-    emailId = setPassword(password);
-  }
-  
   function handleSubmit(e){
     e.preventDefault();
+    let form  = e.currentTarget;
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     let formData = {
-      emailId: emailId,
-      password: password
+      emailId: form.emailId.value,
+      password: form.password.value
     }
     axios.post('http://localhost:3001/users/login',formData)
         .then(response => {
@@ -31,27 +27,42 @@ function SignIn(props){
                     sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo));
                     props.loggedIn();
                 } else{
-                  setErrorMsg(response.data.errorMessage);
+                  setErrorMsg(response.data.error);
                 }
             }
         });
   }
-let errMsg = null;
+let errTag = null;
   if(errorMsg){
-    errMsg = <p class='error-msg'>errorMsg</p>;
+    errTag = <Alert variant='danger'>{errorMsg}</Alert>;
   }
   return(
     <div class='user-signin div-center-align'>
       <RedirectToProfile />
       <br />
-      <form>
-        {errMsg}
-        <input type='text' name='emailId' value={emailId} placeholder="Email Id" onChange={(e) => {setEmailId(e.target.value)}}/>
-        <br/>
-        <input type='password' name='password' value={password} placeholder="Password" onChange={(e) => {setPassword(e.target.value)}} />
-        <br/>
-        <input type='submit' value='Login' onClick={handleSubmit}/>
-      </form>
+      <Container>
+        <Row>
+          <Col></Col>
+          <Col>
+            <h2>Sign In</h2>
+            <Form onSubmit={handleSubmit}>
+              {errTag}
+              <Form.Group>
+                <Form.Label>Email Id</Form.Label>
+                <Form.Control name='emailId' type='email' required/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Password</Form.Label>
+                <Form.Control name='password' type='password' required/>
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                Login
+              </Button>
+            </Form>
+          </Col>
+          <Col></Col>
+        </Row>
+      </Container>
     </div>
   )
 }

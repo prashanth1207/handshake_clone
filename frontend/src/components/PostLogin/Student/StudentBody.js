@@ -3,6 +3,7 @@ import './studentbody.css';
 import LeftDetails from './LeftDetails'
 import RightDetails from './RightDetails'
 import axios from 'axios'
+import {Container,Row,Col, Card} from 'react-bootstrap'
 
 export default function StudentBody(props){
   let [studentProfileResp,setData] = useState({status: 'loading', studentProfile: null});
@@ -28,23 +29,13 @@ export default function StudentBody(props){
   }
 
   return(
-    <main class="clearfix" id="skip-to-content">
-      <div class="student-profile-container">
-        <div class="student-profile">
-          <div data-hook="container" class="style__container___15r1p style__medium___2PHCb">
-            <div class="style__profile___26D5X">
-              <div class="row style__profile-row___KAiYi">
-                <div class="col-md-4">
-                  <LeftDetails studentProfile={studentProfileResp.studentProfile} />
-                </div>
-                <div class="col-md-8" id="main-content">
-                  <RightDetails studentProfile={studentProfileResp.studentProfile} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+      <Row>
+        <Col xs={4}>
+          <LeftDetails studentProfile={studentProfileResp.studentProfile} />
+        </Col>
+        <Col xs={8}>
+        <RightDetails studentProfile={studentProfileResp.studentProfile} />
+        </Col>
+      </Row>
   );
 }

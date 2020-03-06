@@ -4,6 +4,25 @@ let EducationDetail = models.EducationDetail
 let ExperienceDetail = models.ExperienceDetail
 let sequelize = models.sequelize
 
+module.exports.get_all_students_profile = (req,res) =>{
+  let query_params = req.query;
+  StudentProfile.findAll({
+    where: query_params,
+    include: [{
+      model: EducationDetail,
+      as : 'educationDetails'
+    },
+    {
+      model: ExperienceDetail,
+      as: 'experienceDetails'
+    }]
+  }).then(studentProfiles =>{
+    return res.json({data: studentProfiles});
+  }).catch(e => {
+    return res.json({error: e})
+  })
+}
+
 module.exports.get_student_profile = async (req,res) => {
 
   let id = req.params.id;

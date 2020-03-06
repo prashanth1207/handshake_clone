@@ -4,6 +4,7 @@ let StudentProfileController = require('./../controllers/studentProfileControlle
 
 
 /* GET home page. */
+router.get('/',StudentProfileController.get_all_students_profile)
 router.get('/:id', StudentProfileController.get_student_profile);
 router.post('/:id', StudentProfileController.update_student_profile);
 module.exports = router;

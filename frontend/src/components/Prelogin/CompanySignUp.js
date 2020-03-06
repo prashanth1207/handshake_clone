@@ -1,24 +1,24 @@
 import React,{useState} from 'react';
 import axios from 'axios';
 import RedirectToProfile from '../RedirectToProfile';
+import {Container,Row,Col,Form,Button,Alert} from 'react-bootstrap'
+
 
 function CompanySignUp(){
-  const [name, setName] = useState('');
-  const [emailId, setEmailId] = useState('');
-  const [password, setPassword] = useState('');
-  const [location, setLocation] = useState('');
+  let [errorMsg,setErrorMsg] = useState(null);
 
-  function onSubmit(e){
+  function handleSubmit(e){
     e.preventDefault();
+    let form = e.currentTarget;
     let form_data = {
       userData: {
-        emailId: emailId,
-        password: password,
+        emailId: form.emailId.value,
+        password: form.password.value,
         role: 'Company'
       },
       profileData:{
-        name: name,
-        location: location
+        name: form.name.value,
+        location: form.location.value
       }
     }
     axios.defaults.withCredentials = true;
@@ -28,29 +28,50 @@ function CompanySignUp(){
           if (response.data.success === true){
               sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo))
           } else{
-            console.log('!!!!!!!!!DAMN!!!!!!!');
+            setErrorMsg(response.data.error);
           }
       }
       })
 
   }
+  let errorTag = null;
+  if(errorMsg){
+    errorTag = <Alert variant='danger'>{errorMsg}</Alert>;
+  }
 
   return(
-    <div class='user-company-signup div-center-align'>
+    <Container>
       <RedirectToProfile />
+      <Row>
+        <Col></Col>
+        <Col>
+          <br />
+          <h2>Sign Up</h2>
+          <Form onSubmit={handleSubmit}>
+            {errorTag}
+            <Form.Group>
+              <Form.Label>Company Name</Form.Label>
+              <Form.Control name='name' required />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Email Id</Form.Label>
+              <Form.Control name='emailId' required type='email'/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control name='password' required type='password'/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Location</Form.Label>
+              <Form.Control name='location' required />
+            </Form.Group>
+            <Button type='submit' variant='primary'>Register</Button>
+          </Form>
+        </Col>
+        <Col></Col>
+      </Row>
       <br />
-      <form>
-      <input type='text' name='name' value={name} onChange={(e)=>setName(e.target.value)} placeholder="Company Name" />
-        <br/>
-        <input type='text' name='emailId' value={emailId} onChange={(e)=>setEmailId(e.target.value)} placeholder="Email Id" />
-        <br />
-        <input type='password' name='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" />
-        <br />
-        <input type='text' name='location' value={location} onChange={(e)=>setLocation(e.target.value)} placeholder="Location" />
-        <br/>
-        <input type='submit' value='Register' onClick={onSubmit}/>
-      </form>
-    </div>
+    </Container>
   )
 }
 

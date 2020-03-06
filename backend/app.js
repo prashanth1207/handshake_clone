@@ -12,7 +12,9 @@ var usersRouter = require('./routes/users');
 var studentProfileRouter = require('./routes/student_profile');
 var companyProfileRouter = require('./routes/company_profile');
 var jobPostingRouter = require('./routes/job_posting');
-
+var jobApplicationRouter = require('./routes/job_application');
+var eventRouter = require('./routes/event');
+var eventRegistrationRouter = require('./routes/event_registration');
 
 var app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -50,6 +52,10 @@ app.use('/users', usersRouter);
 app.use('/student_profile', studentProfileRouter);
 app.use('/company_profile', companyProfileRouter);
 app.use('/job_postings', jobPostingRouter);
+app.use('/job_application', jobApplicationRouter);
+app.use('/events', eventRouter);
+app.use('/event_registrations', eventRegistrationRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
