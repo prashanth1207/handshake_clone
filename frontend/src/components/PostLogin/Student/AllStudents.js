@@ -1,7 +1,6 @@
 import React,{useState} from 'react';
-import {Container, Row, Col, Image,Card} from 'react-bootstrap';
+import {Container, Row, Col, Image,Card, Form,FormControl, Button} from 'react-bootstrap';
 import axios from 'axios';
-import IdentityCard from './IdentityCard';
 
 function AllStudents(props) {
   let [studentsResp,setstudentsResp] = useState({status: 'loading', students: null});
@@ -16,6 +15,24 @@ function AllStudents(props) {
     })
   }
 
+  let handleOnChange = (e) =>{
+    let form = e.currentTarget.form;
+    let queryData = {
+      firstName: form.firstName.value,
+      lastName: form.lastName.value,
+      currentCollegeName: form.currentCollegeName.value,
+      skillSet: form.skillSet.value,
+    }
+    console.dir(queryData)
+    axios.get('http://localhost:3001/student_profile',{params: queryData},{validateStatus: false}).then(resp => {
+      if(resp.status == 200 && resp.data.data){
+        setstudentsResp({status: 'loaded',students: resp.data.data});
+      }else{
+        setstudentsResp({status: 'error',students: null});
+      }
+    })
+
+  }
   if(studentsResp.status === 'loading'){
     return <div> Loading Profiles..</div>
   }
@@ -35,10 +52,12 @@ function AllStudents(props) {
               <Col>
                 <Row>
                   <Col>
-                    <h3><a href={profile_path}>{student.firstName} {student.lastName}</a></h3>
+                    <Card.Title><a href={profile_path}>{student.firstName} {student.lastName}</a></Card.Title>
                     <div>{student.currentCollegeName}</div>
-                    <div>{educationDetails.degree}, {educationDetails.major}</div>
-                    <div>Year of Passing {educationDetails.yearOfPassing}</div>
+                    <Row>
+                      <Col>{educationDetails.degree}, {educationDetails.major}</Col>
+                      <Col>Year of Passing {educationDetails.yearOfPassing}</Col>
+                    </Row>
                   </Col>
                 </Row>
               </Col>
@@ -50,7 +69,45 @@ function AllStudents(props) {
   })
   return (
     <Container>
-      {students_tag}
+      <Row>
+        <Col xs={3}>
+          <Row className='my-3'>
+            <Col>
+              <Card>
+                <Form inline>
+                <Card.Body>
+                  <Card.Title>Filters<Button style={{float: 'right'}} variant='secondary'>Reset</Button></Card.Title>
+                </Card.Body>
+                  <Card.Body class='list-group-item'>
+                    <Card.Text>Name</Card.Text>
+                    <Card.Text>
+                      <Form.Control type="text" name='firstName' onChange={handleOnChange}placeholder="First Name" className="mr-sm-2" />
+                    </Card.Text>
+                    <Card.Text>
+                      <Form.Control type="text" name='lastName' onChange={handleOnChange}placeholder="Last Name" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body class='list-group-item'>
+                    <Card.Text>College Name</Card.Text>
+                    <Card.Text>
+                      <Form.Control type="text" name='currentCollegeName' onChange={handleOnChange}placeholder="College Name" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body class='list-group-item'>
+                    <Card.Text>Skill Set</Card.Text>
+                    <Card.Text>
+                      <Form.Control type="text" name='skillSet' onChange={handleOnChange}placeholder="Skill Set" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                </Form>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+        <Col>
+          {students_tag}
+        </Col>
+      </Row>
     </Container>
   );
 }

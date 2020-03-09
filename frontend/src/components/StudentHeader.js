@@ -17,7 +17,7 @@ let StudentHeader = (props) => {
   let eventsLink = `/${role}/show_all_events`;
   let profileLink = `/${role}_profile/${profileId}`;
   return(
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="white" variant="white">
         <Navbar.Brand href="#home"> <PostLoginHandshakeLogo /></Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">

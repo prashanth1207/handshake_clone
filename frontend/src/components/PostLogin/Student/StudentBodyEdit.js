@@ -2,40 +2,16 @@ import React, { useState } from 'react';
 import './companyprofile.css'
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import {Form, Button} from 'react-bootstrap';
+import {Form, Button,Alert} from 'react-bootstrap';
+import {DEGREES,MAJORS} from '../../../utility'
 
 function StudentBodyEdit(props) {
   //basic profile
   let {studentProfile} = props.studentProfileResp;
-  let [firstName,setfirstName] = useState(studentProfile.firstName);
-  let [lastName,setlastName] = useState(studentProfile.lastName);
-  let [currentCollegeName,setcurrentCollegeName] = useState(studentProfile.currentCollegeName);
-  let [city,setcity] = useState(studentProfile.city);
-  let [state,setstate] = useState(studentProfile.state);
-  let [country,setcountry] = useState(studentProfile.country);
-  let [careerObjective,setcareerObjective] = useState(studentProfile.careerObjective);
-  let [phoneNumber,setphoneNumber] = useState(studentProfile.phoneNumber);
-  let [skillSet,setskillSet] = useState(studentProfile.skillSet);
-  let [dob,setdob] = useState(studentProfile.dob);
-
   //education details
   let educationDetails = studentProfile.educationDetails[0] || {};
-  let [collegeName,setcollegeName] = useState(educationDetails.collegeName);
-  let [collegeLocation,setcollegeLocation] = useState(educationDetails.collegeLocation);
-  let [degree,setdegree] = useState(educationDetails.degree);
-  let [major,setmajor] = useState(educationDetails.major);
-  let [yearOfPassing,setyearOfPassing] = useState(educationDetails.yearOfPassing);
-  let [currentCgpa,setcurrentCgpa] = useState(educationDetails.currentCgpa);
-  let [highestDegree] = useState(true);
-
   //experience details
   let experienceDetails = studentProfile.experienceDetails[0] || {};
-  let [companyName, setcompanyName]  = useState(experienceDetails.companyName)
-  let [title, settitle]  = useState(experienceDetails.title)
-  let [companyLocation, setcompanyLocation]  = useState(experienceDetails.companyLocation)
-  let [startDate, setstartDate]  = useState(experienceDetails.startDate)
-  let [endDate, setendDate]  = useState(experienceDetails.endDate)
-  let [workDescription, setworkDescription]  = useState(experienceDetails.workDescription)
 
 
   let [errorMsg,seterrorMsg] = useState(null);
@@ -43,37 +19,38 @@ function StudentBodyEdit(props) {
 
   let handleSubmit = (e) => {
     e.preventDefault();
+    let form = e.currentTarget;
     let formData = {
       studentProfile: {
-        firstName: firstName,
-        lastName: lastName,
-        currentCollegeName: currentCollegeName,
-        city: city,
-        state: state,
-        country: country,
-        careerObjective: careerObjective,
-        phoneNumber: phoneNumber,
-        skillSet: skillSet,
-        dob: dob,
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        currentCollegeName: form.currentCollegeName.value,
+        city: form.city.value,
+        state: form.state.value,
+        country: form.country.value,
+        careerObjective: form.careerObjective.value,
+        phoneNumber: form.phoneNumber.value,
+        skillSet: form.skillSet.value,
+        dob: form.dob.value,
       },
       educationDetails: {
         id: educationDetails.id,
-        collegeName: collegeName,
-        collegeLocation: collegeLocation,
-        degree: degree,
-        major: major,
-        yearOfPassing: yearOfPassing,
-        currentCgpa: currentCgpa,
-        highestDegree: highestDegree
+        collegeName: form.collegeName.value,
+        collegeLocation: form.collegeLocation.value,
+        degree: form.degree.value,
+        major: form.major.value,
+        yearOfPassing: form.yearOfPassing.value,
+        currentCgpa: form.currentCgpa.value,
+        highestDegree: true
       },
       experienceDetails: {
         id: experienceDetails.id,
-        companyName: companyName,
-        title: title,
-        companyLocation: companyLocation,
-        startDate: startDate,
-        endDate: endDate,
-        workDescription: workDescription
+        companyName: form.companyName.value,
+        title: form.title.value,
+        companyLocation: form.companyLocation.value,
+        startDate: form.startDate.value,
+        endDate: form.endDate.value,
+        workDescription: form.workDescription.value
       }
     }
     axios.defaults.withCredentials = false;
@@ -87,244 +64,123 @@ function StudentBodyEdit(props) {
       });
   }
 
+  let degreeSelectionTag = DEGREES.map(degree => {
+  return <option key={degree} defaultValue={degree}>{degree}</option>
+  })
+
+  let majorSelectionTag = MAJORS.map(major => {
+    return <option key={major} defaultValue={major}>{major}</option>
+    })
+
   let errTag = null;
   if(errorMsg){
-    errTag = <p class='error-msg'>{errorMsg}</p>
+    errTag = <Alert variant='danger'>{errorMsg}</Alert>
   }
   if(updateSuccess){
-    return <Redirect to={`/student/student_profile/${studentProfile.id}`} />
+    return <Redirect to={`/student_profile/${studentProfile.id}`} />
   }
   return (
     <main class="clearfix new-topbar-nux" id="skip-to-content">
-      <Form>
+      <Form onSubmit={handleSubmit}>
+        {errTag}
         <Form.Group>
           <Form.Label>firstName</Form.Label>
-          <Form.Control type='text' name='firstName' value={studentProfile.firstName}/>
+          <Form.Control type='text' name='firstName' defaultValue={studentProfile.firstName}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>lastName</Form.Label>
-          <Form.Control type='text' name='lastName' value={studentProfile.lastName}/>
+          <Form.Control type='text' name='lastName' defaultValue={studentProfile.lastName}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>currentCollegeName</Form.Label>
-          <Form.Control type='text' name='currentCollegeName' value={studentProfile.currentCollegeName}/>
+          <Form.Control type='text' name='currentCollegeName' defaultValue={studentProfile.currentCollegeName}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>city</Form.Label>
-          <Form.Control type='text' name='city' value={studentProfile.city}/>
+          <Form.Control type='text' name='city' defaultValue={studentProfile.city}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>state</Form.Label>
-          <Form.Control type='text' name='state' value={studentProfile.state}/>
+          <Form.Control type='text' name='state' defaultValue={studentProfile.state}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>country</Form.Label>
-          <Form.Control type='text' name='country' value={studentProfile.country}/>
+          <Form.Control type='text' name='country' defaultValue={studentProfile.country}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>careerObjective</Form.Label>
-          <Form.Control type='text' name='careerObjective' value={studentProfile.careerObjective}/>
+          <Form.Control as='textarea' name='careerObjective' defaultValue={studentProfile.careerObjective}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>phoneNumber</Form.Label>
-          <Form.Control type='text' name='phoneNumber' value={studentProfile.phoneNumber}/>
+          <Form.Control type='tel' name='phoneNumber' placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" defaultValue={studentProfile.phoneNumber}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>skillSet</Form.Label>
-          <Form.Control type='text' name='skillSet' value={studentProfile.skillSet}/>
+          <Form.Control type='text' name='skillSet' placeholder="AJAX,CSS,Front end" defaultValue={studentProfile.skillSet}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>dob</Form.Label>
-          <Form.Control type='text' name='dob' value={studentProfile.dob}/>
+          <Form.Control type='date' name='dob' defaultValue={studentProfile.dob}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>collegeName</Form.Label>
-          <Form.Control type='text' name='collegeName' value={studentProfile.collegeName}/>
+          <Form.Control type='text' name='collegeName' defaultValue={educationDetails.collegeName}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>collegeLocation</Form.Label>
-          <Form.Control type='text' name='collegeLocation' value={studentProfile.collegeLocation}/>
+          <Form.Control type='text' name='collegeLocation' defaultValue={educationDetails.collegeLocation}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>degree</Form.Label>
-          <Form.Control type='text' name='degree' value={studentProfile.degree}/>
+          <Form.Control as='select' name='degree' defaultValue={educationDetails.degree}>
+          {degreeSelectionTag}
+          </Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>major</Form.Label>
-          <Form.Control type='text' name='major' value={studentProfile.major}/>
+          <Form.Control as='select' name='major' defaultValue={educationDetails.major}>
+            {majorSelectionTag}
+          </Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>yearOfPassing</Form.Label>
-          <Form.Control type='text' name='yearOfPassing' value={studentProfile.yearOfPassing}/>
+          <Form.Control type='number' pattern="[0-9]{4}" name='yearOfPassing' defaultValue={educationDetails.yearOfPassing}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>currentCgpa</Form.Label>
-          <Form.Control type='text' name='currentCgpa' value={studentProfile.currentCgpa}/>
+          <Form.Control type='number' step="any" name='currentCgpa' defaultValue={educationDetails.currentCgpa}/>
         </Form.Group>
-        <Form.Group>
+        {/* <Form.Group>
           <Form.Label>highestDegree</Form.Label>
-          <Form.Control type='text' name='highestDegree' value={studentProfile.highestDegree}/>
-        </Form.Group>
+          <Form.Control disable type='text' name='highestDegree' defaultValue={educationDetails.highestDegree}/>
+        </Form.Group> */}
         <Form.Group>
           <Form.Label>companyName</Form.Label>
-          <Form.Control type='text' name='companyName' value={studentProfile.companyName}/>
+          <Form.Control type='text' name='companyName' defaultValue={experienceDetails.companyName}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>title</Form.Label>
-          <Form.Control type='text' name='title' value={studentProfile.title}/>
+          <Form.Control type='text' name='title' defaultValue={experienceDetails.title}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>companyLocation</Form.Label>
-          <Form.Control type='text' name='companyLocation' value={studentProfile.companyLocation}/>
+          <Form.Control type='text' name='companyLocation' defaultValue={experienceDetails.companyLocation}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>startDate</Form.Label>
-          <Form.Control type='text' name='startDate' value={studentProfile.startDate}/>
+          <Form.Control type='date' name='startDate' defaultValue={experienceDetails.startDate}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>endDate</Form.Label>
-          <Form.Control type='date' name='endDate' value={studentProfile.endDate}/>
+          <Form.Control type='date' name='endDate' defaultValue={experienceDetails.endDate}/>
         </Form.Group>
         <Form.Group>
           <Form.Label>workDescription</Form.Label>
-          <Form.Control as="textarea" name='workDescription' value={studentProfile.workDescription}/>
+          <Form.Control as="textarea" name='workDescription' defaultValue={experienceDetails.workDescription}/>
         </Form.Group>
+        <Button type='submit'>Update</Button>
       </Form>
-      <div class="student-profile-container">
-        <div class="student-profile">
-          <div data-hook="container" class="style__container___15r1p style__medium___2PHCb">
-            <div class="style__profile___26D5X">
-              <div class="row style__profile-row___KAiYi">
-                <div class="col-md-12">
-                <div class="style__card___1rhof" data-hook="card">
-                  <div class="style__card-item___B1f7m style__large___Kv76x">
-                  <h2 class="style__heading___29i1Z style__extra-large___PY8Kd">
-                    Edit Profile
-                  </h2>
-                  <form class='form-group comp-prof-edit'>
-                    {errTag}
-                    <div class='comp-prof-edit'>
-                      <h3 class="style__heading___29i1Z style__extra-large___PY8Kd">
-                        Edit Basic Details
-                      </h3>
-                      <div class='comp-prof-edit'>
-                        <div><label class="control_label">first Name:</label>&nbsp;
-                          <input type='text' name='firstName' value={firstName} onChange={e => setfirstName(e.target.value)}/>
-                        </div>
-                        <br />
-                    <div><label class="control_label">last Name:</label>&nbsp;
-                      <input type='text' name='lastName' value={lastName} onChange={e => setlastName(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">current College Name:</label>&nbsp;
-                      <input type='text' name='currentCollegeName' value={currentCollegeName} onChange={e => setcurrentCollegeName(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">city:</label>&nbsp;
-                      <input type='text' name='city' value={city} onChange={e => setcity(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">state:</label>&nbsp;
-                      <input type='text' name='state' value={state} onChange={e => setstate(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">country:</label>&nbsp;
-                      <input type='text' name='country' value={country} onChange={e => setcountry(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">career Objective:</label>&nbsp;
-                      <textarea name='careerObjective' value={careerObjective} onChange={e => setcareerObjective(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">phone Number:</label>&nbsp;
-                      <input type='text' name='phoneNumber' value={phoneNumber} onChange={e => setphoneNumber(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">skillSet(comma seperated):</label>&nbsp;
-                      <input type='text' name='skillSet' value={skillSet} onChange={e => setskillSet(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">dob:</label>&nbsp;
-                      <input type='date' name='dob' value={dob} onChange={e => setdob(e.target.value)}/>
-                    </div>
-                    <br />
-                      </div>
-                    </div>
-                    <div class='comp-prof-edit'>
-                      <h3 class="style__heading___29i1Z style__extra-large___PY8Kd">
-                        Edit Education Details
-                      </h3>
-                      <div class='comp-prof-edit'>
-                      <div><label class="control_label">company Name:</label>&nbsp;
-                      <input type='text' name='companyName' value={companyName} onChange={e => setcompanyName(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">title:</label>&nbsp;
-                      <input type='text' name='title' value={title} onChange={e => settitle(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">company Location:</label>&nbsp;
-                      <input type='text' name='companyLocation' value={companyLocation} onChange={e => setcompanyLocation(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">start Date:</label>&nbsp;
-                      <input type='date' name='startDate' value={startDate} onChange={e => setstartDate(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">end Date:</label>&nbsp;
-                      <input type='date' name='endDate' value={endDate} onChange={e => setendDate(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">work Description:</label>&nbsp;
-                      <textarea name='workDescription' value={workDescription} onChange={e => setworkDescription(e.target.value)}/>
-                    </div>
-                    <br />
-                      </div>
-                    </div>
-                    <div class='comp-prof-edit'>
-                      <h3 class="style__heading___29i1Z style__extra-large___PY8Kd">
-                        Edit Experience Details
-                      </h3>
-                      <div class='comp-prof-edit'>
-                      <div><label class="control_label">college Name:</label>&nbsp;
-                      <input type='text' name='collegeName' value={collegeName} onChange={e => setcollegeName(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">college Location:</label>&nbsp;
-                      <input type='text' name='collegeLocation' value={collegeLocation} onChange={e => setcollegeLocation(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">degree:</label>&nbsp;
-                      <input type='text' name='degree' value={degree} onChange={e => setdegree(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">major:</label>&nbsp;
-                      <input type='text' name='major' value={major} onChange={e => setmajor(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">year Of Passing:</label>&nbsp;
-                      <input type='number' name='yearOfPassing' value={yearOfPassing} onChange={e => setyearOfPassing(e.target.value)}/>
-                    </div>
-                    <br />
-                    <div><label class="control_label">current Cgpa:</label>&nbsp;
-                      <input type="number" step="0.01" name='currentCgpa' value={currentCgpa} onChange={e => setcurrentCgpa(e.target.value)}/>
-                    </div>
-                    <br />
-                      </div>
-                    </div>
-                    <div>
-                      <input type='submit' value='Update' onClick={handleSubmit}/>
-                    </div>
-                    <br />
-                  </form>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>    
   );
 }

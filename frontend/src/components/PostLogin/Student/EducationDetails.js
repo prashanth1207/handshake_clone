@@ -8,7 +8,7 @@ export default function EducationDetails(props){
       <Card.Body>
         <Card.Title>Education</Card.Title>
         <Card.Text><h5>{educationDetails.collegeName}</h5></Card.Text>
-        <Card.Text>{educationDetails.degree}, {educationDetails.location}, CGPA : {educationDetails.currentCgpa}</Card.Text>
+        <Card.Text>{educationDetails.degree}, {educationDetails.collegeLocation}, CGPA : {educationDetails.currentCgpa}</Card.Text>
       </Card.Body>
     </Card>
   )

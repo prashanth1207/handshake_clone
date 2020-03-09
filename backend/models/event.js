@@ -7,11 +7,18 @@ module.exports = (sequelize, DataTypes) => {
       },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
       },
     time: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isnotPastTime(time){
+          if(time.getTime() < new Date().getTime()){
+            throw new Error("Event Date and Time has to be in future");
+          }
+        }
+      }
       },
     readableTime:{
       type: DataTypes.VIRTUAL,

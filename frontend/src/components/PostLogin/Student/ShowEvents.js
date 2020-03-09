@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {storedUserInfo} from '../../../utility';
-import {Container,Row,Col,Card} from 'react-bootstrap';
+import {Container,Row,Col,Card, Button} from 'react-bootstrap';
 import EventRegister from './EventRegister';
 
 function ShowEvents(props) {
@@ -42,19 +42,32 @@ function ShowEvents(props) {
     return <Row>
       <Col>
         <Card>
-          <Card.Title>{event.eventName}</Card.Title>
-          <Card.Text>{event.readableTime}</Card.Text>
-          <Card.Text><Card.Link href={`/events/show/${event.id}`} >More Info</Card.Link></Card.Text>
-          <Card.Text>
-            {externalTag}
-          </Card.Text>
+          <Card.Body>
+            <Card.Title>{event.eventName}</Card.Title>
+            <Card.Text>{event.readableTime}</Card.Text>
+            <Card.Text><Card.Link href={`/events/show/${event.id}`} >More Info</Card.Link></Card.Text>
+            <Card.Text>
+              {externalTag}
+            </Card.Text>
+          </Card.Body>
         </Card>
       </Col>
     </Row>
   });
+
+  let create_event_tag = null;
+  if(props.for === 'Company'){
+    create_event_tag = <div>
+    <Button style={{'float': 'right'}} variant='primary' href={`/company/${storedUserInfo().profile.id}/create_event`}>Create New Job</Button>
+    <br/>
+    <br/>
+    </div>
+  }
   return (
     <div>
       <Container>
+        <br />
+        {create_event_tag}
         {eventsSection}
       </Container>
     </div>

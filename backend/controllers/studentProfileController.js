@@ -1,11 +1,13 @@
 let models = require('./../models')
-let StudentProfile = models.StudentProfile
-let EducationDetail = models.EducationDetail
-let ExperienceDetail = models.ExperienceDetail
-let sequelize = models.sequelize
+let StudentProfile = models.StudentProfile;
+let EducationDetail = models.EducationDetail;
+let ExperienceDetail = models.ExperienceDetail;
+let sequelize = models.sequelize;
+let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.get_all_students_profile = (req,res) =>{
-  let query_params = req.query;
+  let query_params = searchableQuery(req.query);
+  console.log(query_params)
   StudentProfile.findAll({
     where: query_params,
     include: [{
@@ -68,7 +70,7 @@ module.exports.update_student_profile = async(req,res) => {
         .catch(e => {
           return res.json({
             success: false,
-            error: (e.errors || [{}])[0].message
+            error: e.message
           })
         })
     })

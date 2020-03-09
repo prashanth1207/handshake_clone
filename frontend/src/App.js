@@ -14,6 +14,7 @@ import JobPostingShow from './components/PostLogin/Student/JobPostingShow'
 import JobPostingCreate from './components/PostLogin/Student/JobPostingCreate';
 import JobPostingsAll from './components/PostLogin/Student/JobPostingsAll';
 import CompanyJobPostings from './components/PostLogin/Student/CompanyJobPostings';
+import ShowEventDetails from './components/PostLogin/Student/ShowEventDetails';
 
 import {Container} from 'react-bootstrap'
 import {PrivateRoute, PrivateCompanyRoute, PrivateOwnCompanyRoute, PrivateStudentRoute, PrivateOwnStudentRoute} from './PrivateRoutes'
@@ -51,19 +52,20 @@ function App() {
               <PrivateRoute exact path='/student_profiles' component={AllStudents} />
               <PrivateRoute exact path='/student_profile/:id' component={StudentProfile} />
               <PrivateRoute exact path='/company_profile/:id' component={CompanyProfile} />
-              <PrivateOwnStudentRoute exact path='/:studentProfileId/student_profile/edit' component={StudentProfileEdit} />
-              <PrivateOwnCompanyRoute exact path='/:companyProfileId/company_profile/edit' component={CompanyProfileEdit} />
+              <PrivateOwnStudentRoute exact path='/student_profile/:studentProfileId/edit' component={StudentProfileEdit} />
+              <PrivateOwnCompanyRoute exact path='company_profile/:companyProfileId/edit' component={CompanyProfileEdit} />
 
               {/* Job postings */}
               <PrivateRoute exect path='/job_postings/:id' component={JobPostingShow} />
               <PrivateRoute exect path='/company/job_postings' component={CompanyJobPostings} />
               <PrivateRoute exect path='/student/job_postings' component={JobPostingsAll} />
               <PrivateOwnStudentRoute exect path='/student/:studentProfileId/job_postings/:id/apply' component={ApplyForJobForm} />
-              <PrivateCompanyRoute exect path='/company/create/job_postings' component={JobPostingCreate} />
+              <PrivateOwnCompanyRoute exect path='/company/:companyProfileId/create/job_postings' component={JobPostingCreate} />
               <PrivateOwnCompanyRoute exact path='/:companyProfileId/job_postings/:id/job_applications' component={AllJobApplications}/>
-              <PrivateCompanyRoute exact path='/company/create_event' component={CreateEvent}/>
+              <PrivateOwnCompanyRoute exact path='/company/:companyProfileId/create_event' component={CreateEvent}/>
               <PrivateStudentRoute exact path='/student/show_all_events' component={() => <ShowEvents for='Student'/>}/>
               <PrivateCompanyRoute exact path='/company/show_all_events' component={() => <ShowEvents for='Company'/>}/>
+              <PrivateRoute exect path='/events/show/:id' component={ShowEventDetails} />
               <PrivateCompanyRoute exact path='/company/events/:id/students' component={EventRegisteredStudents} />
             </Switch>
           </Container>

@@ -16,3 +16,7 @@ code {
   width: 70%;
   max-width: none!important;
 }
+
+body{
+  background-color: #f7f7f7!important;
+}

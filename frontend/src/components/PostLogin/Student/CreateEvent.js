@@ -53,7 +53,7 @@ function CreateEvent(props) {
         </Form.Group>
         <Form.Group>
           <Form.Label>Event Date and Time</Form.Label>
-          <Form.Control type='datetime-local' name='time' required/>
+          <Form.Control type='datetime-local' name='time' min={new Date().toISOString().split('T')[0]} required/>
         </Form.Group>
         <Form.Group>
           <Form.Label>Location</Form.Label>

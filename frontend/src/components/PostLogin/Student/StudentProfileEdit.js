@@ -4,11 +4,11 @@ import StudentBodyEdit from './StudentBodyEdit'
 import { useParams } from 'react-router-dom';
 
 export default function StudentProfileEdit(props){
-  let {id} = useParams();
+  let {studentProfileId} = useParams();
   let [studentProfileResp,setData] = useState({status: 'loading', studentProfile: null});
   useEffect(() =>{
     if(studentProfileResp.status === 'loading'){
-      axios.get(`http://localhost:3001/student_profile/${id}`, { 
+      axios.get(`http://localhost:3001/student_profile/${studentProfileId}`, { 
         validateStatus: false 
       }).then((resp)=>{
         if(resp.status === 200){
