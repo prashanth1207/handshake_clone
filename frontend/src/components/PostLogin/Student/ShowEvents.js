@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {storedUserInfo} from '../../../utility';
-import {Container,Row,Col,Card, Button} from 'react-bootstrap';
+import {Container, Row, Col, Image,Card, Form, Button} from 'react-bootstrap';
 import EventRegister from './EventRegister';
 
 function ShowEvents(props) {
   let [eventResp,setEventResp] = useState({status: 'loading', events: null})
-  if(eventResp.status === 'loading' && props.for === 'Student'){
-    axios.get(`http://localhost:3001/events/student/${storedUserInfo().profile.id}`).then(resp =>resp.data).then(resp =>{
-        if(resp.error){
-          return setEventResp({status: 'error',events: null});
-        }else{
-          console.dir(resp.data);
-          setEventResp({status: 'loaded', events: resp.data});
+  if(eventResp.status === 'loading'){
+    axios.get(`http://localhost:3001/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`,{validationStatus: false}).then(resp =>resp.data).then(resp =>{
+      if(resp.error){
+        return setEventResp({status: 'error',events: []});
+      }else{
+          console.dir(resp);
+          setEventResp({status: 'loaded', events: resp.events, major: resp.studentMajor});
         }
-    });
-  }else if(eventResp.status === 'loading' && props.for === 'Company'){
-    axios.get(`http://localhost:3001/events/company/${storedUserInfo().profile.id}`).then(resp =>resp.data).then(resp =>{
-        if(resp.error){
-          return setEventResp({status: 'error',events: null});
-        }else{
-          console.dir(resp.data);
-          setEventResp({status: 'loaded', events: resp.data});
-        }
-    });
+      });
+  }
+  let handleOnChange = (e) =>{
+    let form = e.currentTarget.form;
+    let queryData = {
+      eventName: form.eventName.value,
+    }
+    console.dir(queryData);
+    axios.get(`http://localhost:3001/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`,{params: queryData},{validateStatus: false}).then(resp =>resp.data).then(resp => {
+      if(resp.error){
+        return setEventResp({status: 'error',events: []});
+      }else{
+        console.dir(resp.data);
+        setEventResp({status: 'loaded', events: resp.events, major: resp.studentMajor});
+      }
+    })
+  }
+
+  let resetForm = (e) =>{
+    e.currentTarget.form.reset();
+    handleOnChange(e);
   }
 
   if(eventResp.status === 'loading'){
@@ -35,11 +46,11 @@ function ShowEvents(props) {
   let eventsSection = eventResp.events.map(event =>{
     let externalTag = null;
     if(props.for === 'Student'){
-      externalTag = <EventRegister eventId={event.id} studentProfileId={storedUserInfo().profile.id} registered={event.registered}/>
+      externalTag = <EventRegister event={event} studentProfileId={storedUserInfo().profile.id} studentMajor={eventResp.major}/>
     }else{
       externalTag = <Card.Link href={`/company/events/${event.id}/students`}>Registrations</Card.Link>
     }
-    return <Row>
+    return <Row className='my-3'>
       <Col>
         <Card>
           <Card.Body>
@@ -68,7 +79,30 @@ function ShowEvents(props) {
       <Container>
         <br />
         {create_event_tag}
-        {eventsSection}
+        <Row>
+          <Col xs={3}>
+            <Row className='my-3'>
+              <Col>
+                <Card>
+                  <Form inline>
+                  <Card.Body>
+                    <Card.Title>Filters<Button style={{float: 'right'}} variant='secondary' onClick={resetForm}>Reset</Button></Card.Title>
+                  </Card.Body>
+                    <Card.Body class='list-group-item'>
+                      <Card.Text>Event Name</Card.Text>
+                      <Card.Text>
+                        <Form.Control type="text" name='eventName' onChange={handleOnChange}placeholder="Event Name" className="mr-sm-2" />
+                      </Card.Text>
+                    </Card.Body>
+                  </Form>
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            {eventsSection}
+          </Col>
+        </Row>
       </Container>
     </div>
   );

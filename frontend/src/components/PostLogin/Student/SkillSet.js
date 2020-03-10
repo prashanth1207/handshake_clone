@@ -1,5 +1,7 @@
 import React from 'react';
-import {Card} from 'react-bootstrap'
+import {Card, Button} from 'react-bootstrap'
+import EditProfileSvg from './../../EditProfileSvg'
+
 
 export default function SkillSet(props){
   let skill_span_tags = (props.studentProfile.skillSet || '').split(',').map(skill => {
@@ -10,6 +12,11 @@ export default function SkillSet(props){
   return(
     <Card my-3>
       <Card.Body>
+        <div>
+          <Button variant='link' style={{float: 'right', width:'10px'}}>
+            <EditProfileSvg/>
+          </Button>
+        </div>
         <Card.Title>Skills</Card.Title>
           <Card.Text>
           <div class="student-skills">

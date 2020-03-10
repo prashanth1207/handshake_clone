@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
-import {Container, Row, Col, Image,Card, Form,FormControl, Button} from 'react-bootstrap';
+import {Container, Row, Col, Image,Card, Form, Button} from 'react-bootstrap';
 import axios from 'axios';
+import {MAJORS,storedUserInfo} from './../../../utility'
 
 function AllStudents(props) {
   let [studentsResp,setstudentsResp] = useState({status: 'loading', students: null});
@@ -8,7 +9,10 @@ function AllStudents(props) {
   if(studentsResp.status === 'loading'){
     axios.get('http://localhost:3001/student_profile',{validateStatus: false}).then(resp => {
       if(resp.status == 200 && resp.data.data){
-        setstudentsResp({status: 'loaded',students: resp.data.data});
+        let students = resp.data.data.filter(student => {
+          return student.id != storedUserInfo().profile.id;
+        })
+        setstudentsResp({status: 'loaded',students: students});
       }else{
         setstudentsResp({status: 'error',students: null});
       }
@@ -22,17 +26,28 @@ function AllStudents(props) {
       lastName: form.lastName.value,
       currentCollegeName: form.currentCollegeName.value,
       skillSet: form.skillSet.value,
+      educationDetails: {
+        major: form.major.value
+      }
     }
     console.dir(queryData)
     axios.get('http://localhost:3001/student_profile',{params: queryData},{validateStatus: false}).then(resp => {
       if(resp.status == 200 && resp.data.data){
-        setstudentsResp({status: 'loaded',students: resp.data.data});
+        let students = resp.data.data.filter(student => {
+          return student.id != storedUserInfo().profile.id;
+        })
+        setstudentsResp({status: 'loaded',students: students});
       }else{
         setstudentsResp({status: 'error',students: null});
       }
     })
-
   }
+
+  let resetForm = (e) =>{
+    e.currentTarget.form.reset();
+    handleOnChange(e);
+  }
+
   if(studentsResp.status === 'loading'){
     return <div> Loading Profiles..</div>
   }
@@ -67,6 +82,9 @@ function AllStudents(props) {
       </Col>
     </Row>
   })
+  let majorOptions = MAJORS.map(major =>{
+  return <option key={major} value={major}>{major}</option>
+  });
   return (
     <Container>
       <Row>
@@ -76,7 +94,7 @@ function AllStudents(props) {
               <Card>
                 <Form inline>
                 <Card.Body>
-                  <Card.Title>Filters<Button style={{float: 'right'}} variant='secondary'>Reset</Button></Card.Title>
+                  <Card.Title>Filters<Button style={{float: 'right'}} onClick={resetForm} variant='secondary'>Reset</Button></Card.Title>
                 </Card.Body>
                   <Card.Body class='list-group-item'>
                     <Card.Text>Name</Card.Text>
@@ -97,6 +115,15 @@ function AllStudents(props) {
                     <Card.Text>Skill Set</Card.Text>
                     <Card.Text>
                       <Form.Control type="text" name='skillSet' onChange={handleOnChange}placeholder="Skill Set" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body class='list-group-item'>
+                    <Card.Text>Major</Card.Text>
+                    <Card.Text>
+                      <Form.Control as="select" name='major' placeholder='selectMajor' onChange={handleOnChange} className="mr-sm-2" style={{width: '100%'}}>
+                        <option key='' value=''>All</option>
+                        {majorOptions}
+                      </Form.Control>
                     </Card.Text>
                   </Card.Body>
                 </Form>

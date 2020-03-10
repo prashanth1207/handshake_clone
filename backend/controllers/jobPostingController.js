@@ -1,9 +1,11 @@
 let models = require('./../models')
 let JobPosting = models.JobPosting
 let CompanyProfile = models.CompanyProfile
+let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.show_all_job_postings = async (req,resp) => {
-  let filter_params = {where: req.query || {}};
+  let filter_params = {where: searchableQuery(req.query) || {}};
+  console.log(JSON.stringify(filter_params,null,2))
   let jobPostings = await JobPosting.findAll(Object.assign({},filter_params,{include: [{model: CompanyProfile, as: 'companyProfile'}]}));
   resp.json(JSON.parse(JSON.stringify(jobPostings)));
 }

@@ -1,6 +1,9 @@
 let models = require('./../models');
 let Event = models.Event;
+let StudentProfile = models.StudentProfile;
 let EventRegistration = models.EventRegistration;
+let EducationDetail = models.EducationDetail;
+let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.show_event = (req, res) =>{
   Event.findByPk(req.param('id')).then(event =>{
@@ -24,10 +27,14 @@ module.exports.create_event = (req,res) => {
 }
 
 module.exports.show_all_events_for_student = async (req,res) =>{
-  let query_params = req.params;
-  let studentProfileId = query_params.studentProfileId;
-  delete query_params.studentProfileId
-  Event.findAll({where: query_params}).then(async events =>{
+  let {studentProfileId} = req.params;
+  let query_params = searchableQuery(req.query);
+  Event.findAll({
+    where: query_params,
+    order: [
+      ['time', 'DESC']
+    ]
+  }).then(async events =>{
     let eventRegistrations = await EventRegistration.findAll({
       where: {studentProfileId: studentProfileId}
     });
@@ -37,8 +44,18 @@ module.exports.show_all_events_for_student = async (req,res) =>{
       })
       return event
     })
-    return res.json({data: eventsWithRegistrationInfo})
+    let studentProfile = await StudentProfile.findBy({
+      column: {
+        id: studentProfileId
+      },
+      include:[{
+        model: EducationDetail,
+        as: 'educationDetails'
+      }]});
+    let major = (studentProfile.educationDetails[0] || {}).major;
+    return res.json({events: eventsWithRegistrationInfo, studentMajor: major})
   }).catch(e => {
+    console.log(e);
     res.json({error: 'Something went wrong'})
   });
 }
@@ -49,7 +66,7 @@ module.exports.show_all_events_for_company = (req,res) =>{
   delete query_params.companyProfileId
   Event.findAll(Object.assign({},{where: {companyProfileId: companyProfileId}},query_params)).then(events =>{
     return res.json({
-      data: events
+      events: events
     })
   }).catch(e => {
     res.json({error: 'Something went wrong'})

@@ -1,11 +1,17 @@
 import React from 'react';
-import {Card} from 'react-bootstrap'
+import EditProfileSvg from './../../EditProfileSvg'
+import {Card, Button} from 'react-bootstrap'
 
 export default function WorkExperience(props){
   let experienceDetails = props.experienceDetails;
   return(
     <Card>
       <Card.Body>
+        <div>
+          <Button variant='link' style={{float: 'right', width:'10px'}}>
+            <EditProfileSvg/>
+          </Button>
+        </div>
         <Card.Title>Work Experience</Card.Title>
         <Card.Text>
           <h5>{experienceDetails.companyName}</h5>

@@ -3,11 +3,17 @@ import {Badge, Form, Button} from 'react-bootstrap'
 import axios from 'axios';
 
 function EventRegister(props) {
+  let event = props.event;
   let {studentProfileId,eventId} = props;
-  let [registered,setregistered] = useState(props.registered);
-
+  let [registered,setregistered] = useState(event.registered);
   if(registered){
     return <Badge variant="success">Registered</Badge>
+  }
+  if(event.eligibility != 'All' && props.studentMajor != event.eligibility){
+    return <Badge variant='secondary'>Not eligibile</Badge>
+  }
+  if(new Date(event.time).getTime() < new Date().getTime()){
+    return <Badge variant='info'>Expired</Badge>
   }
 
   let handleSubmit = (e) =>{

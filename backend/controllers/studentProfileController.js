@@ -6,18 +6,25 @@ let sequelize = models.sequelize;
 let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.get_all_students_profile = (req,res) =>{
-  let query_params = searchableQuery(req.query);
-  console.log(query_params)
+  let query_params = req.query;
+  let educationDetails_query = query_params.educationDetails || null;
+  delete query_params.educationDetails
+  let studentProfileQuery = searchableQuery(query_params);
+  let educationDetailsQuery = searchableQuery(JSON.parse(educationDetails_query));
+  let includeEducationDetails = {
+    model: EducationDetail,
+    as : 'educationDetails',
+  }
+  if(Object.keys(educationDetailsQuery).length > 0) {
+    includeEducationDetails['where'] = educationDetailsQuery
+  }
+  let includeExperienceDetail = {
+    model: ExperienceDetail,
+    as: 'experienceDetails'
+  }
   StudentProfile.findAll({
-    where: query_params,
-    include: [{
-      model: EducationDetail,
-      as : 'educationDetails'
-    },
-    {
-      model: ExperienceDetail,
-      as: 'experienceDetails'
-    }]
+    where: studentProfileQuery,
+    include: [includeEducationDetails, includeExperienceDetail]
   }).then(studentProfiles =>{
     return res.json({data: studentProfiles});
   }).catch(e => {

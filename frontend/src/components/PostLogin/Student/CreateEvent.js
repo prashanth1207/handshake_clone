@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {Form, Button, Alert} from 'react-bootstrap'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import {MAJORS} from './../../../utility'
 
 function CreateEvent(props) {
   let [submitted,setsubmitted] = useState(false);
@@ -38,6 +39,9 @@ function CreateEvent(props) {
       {errorMsg}
     </Alert>
   }
+  let eligibility_options = MAJORS.map(major =>{
+  return <option key={major} value={major}>{major}</option>
+  })
   return (
     <div>
       <h2>Create an Event</h2>
@@ -60,8 +64,11 @@ function CreateEvent(props) {
           <Form.Control type='text' name='location' required/>
         </Form.Group>
         <Form.Group>
-          <Form.Label>Eligibility – All, specific major</Form.Label>
-          <Form.Control type='text' name='eligibility' required/>
+          <Form.Label>Eligibility</Form.Label>
+          <Form.Control as='select' name='eligibility' required defaultValue='All'>
+            <option key="All" value='All'>All</option>
+            {eligibility_options}
+          </Form.Control>
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

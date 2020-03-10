@@ -2,6 +2,7 @@ import React from 'react';
 import CareerObjective from './CareerObjective'
 import EducationDetails from './EducationDetails' 
 import WorkExperience from './WorkExperience' 
+import EditProfileSvg from './../../EditProfileSvg'
 import {Container, Row, Col} from 'react-bootstrap'
 
 export default function RightDetails(props){
