@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Container, Row,Col,Card, Modal, Button} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
-function EventRegisteredStudents(props) {
+function StudentsRegisteredForEvent(props) {
   let {id: eventId} = useParams();
   let [eventRegistrationsResp,seteventRegistrationsResp] = useState({status: 'loading', eventRegistrations: null});
   if(eventRegistrationsResp.status === 'loading'){
@@ -42,4 +42,4 @@ function EventRegisteredStudents(props) {
   );
 }
 
-export default EventRegisteredStudents;
+export default StudentsRegisteredForEvent;

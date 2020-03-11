@@ -16,12 +16,14 @@ let StudentHeader = (props) => {
   let jobsLink = role === 'Student' ? '/student/job_postings' : `/company/job_postings`;
   let eventsLink = `/${role}/show_all_events`;
   let profileLink = `/${role}_profile/${profileId}`;
+  let applicationLink = role === 'Student' ? <Nav.Link href={`/student/${profileId}/applications`}>Applications</Nav.Link> : null
   return(
       <Navbar bg="white" variant="white">
         <Navbar.Brand href="#home"> <PostLoginHandshakeLogo /></Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
             <Nav.Link href={jobsLink}>Jobs</Nav.Link>
+            {applicationLink}
             <Nav.Link href={eventsLink}>Events</Nav.Link>
             <Nav.Link href="/student_profiles">Students</Nav.Link>
             <Nav.Link href={profileLink}>My Profile</Nav.Link>

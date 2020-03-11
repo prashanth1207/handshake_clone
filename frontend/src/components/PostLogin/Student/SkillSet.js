@@ -1,29 +1,15 @@
-import React from 'react';
-import {Card, Button} from 'react-bootstrap'
-import EditProfileSvg from './../../EditProfileSvg'
-
+import React,{useState} from 'react';
+import SkillSetShow from './SkillSetShow';
+import SkillSetEdit from './SkillSetEdit';
 
 export default function SkillSet(props){
-  let skill_span_tags = (props.studentProfile.skillSet || '').split(',').map(skill => {
-    return(
-      <span class="style__tag___JUqHD" title={skill}><span class=" style__content___2INbm style__children___1bmK9">{skill}</span></span>
-    )
-  });
-  return(
-    <Card my-3>
-      <Card.Body>
-        <div>
-          <Button variant='link' style={{float: 'right', width:'10px'}}>
-            <EditProfileSvg/>
-          </Button>
-        </div>
-        <Card.Title>Skills</Card.Title>
-          <Card.Text>
-          <div class="student-skills">
-          {skill_span_tags}
-          </div>
-          </Card.Text>
-        </Card.Body>
-    </Card>
-  )
+  let [stateObj,setstateObj] = useState({state: 'edit',studentProfile: props.studentProfile});
+  let studentProfile = stateObj.studentProfile
+
+  if (stateObj.state === 'show'){
+    return <SkillSetShow studentProfile={studentProfile} setstateObj={setstateObj}/>
+  }
+  else{
+    return <SkillSetEdit studentProfile={studentProfile} setstateObj={setstateObj}/>;
+  }
 }

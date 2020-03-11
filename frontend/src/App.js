@@ -15,6 +15,7 @@ import JobPostingCreate from './components/PostLogin/Student/JobPostingCreate';
 import JobPostingsAll from './components/PostLogin/Student/JobPostingsAll';
 import CompanyJobPostings from './components/PostLogin/Student/CompanyJobPostings';
 import ShowEventDetails from './components/PostLogin/Student/ShowEventDetails';
+import StudentJobApplications from './components/PostLogin/Student/StudentJobApplications';
 
 import {Container} from 'react-bootstrap'
 import {PrivateRoute, PrivateCompanyRoute, PrivateOwnCompanyRoute, PrivateStudentRoute, PrivateOwnStudentRoute} from './PrivateRoutes'
@@ -22,7 +23,7 @@ import ApplyForJobForm from './components/PostLogin/Student/ApplyForJobForm';
 import AllJobApplications from './components/PostLogin/Student/AllJobApplications';
 import CreateEvent from './components/PostLogin/Student/CreateEvent';
 import ShowEvents from './components/PostLogin/Student/ShowEvents'
-import EventRegisteredStudents from './components/PostLogin/Student/EventRegisteredStudents'
+import StudentsRegisteredForEvent from './components/PostLogin/Student/StudentsRegisteredForEvent'
 import {storedUserInfo} from './utility'
 import AllStudents from './components/PostLogin/Student/AllStudents'
 
@@ -66,7 +67,8 @@ function App() {
               <PrivateStudentRoute exact path='/student/show_all_events' component={() => <ShowEvents for='Student'/>}/>
               <PrivateCompanyRoute exact path='/company/show_all_events' component={() => <ShowEvents for='Company'/>}/>
               <PrivateRoute exect path='/events/show/:id' component={ShowEventDetails} />
-              <PrivateCompanyRoute exact path='/company/events/:id/students' component={EventRegisteredStudents} />
+              <PrivateCompanyRoute exact path='/company/events/:id/students' component={StudentsRegisteredForEvent} />
+              <PrivateOwnStudentRoute exact path='/student/:studentProfileId/applications' component={StudentJobApplications} />
             </Switch>
           </Container>
         </div>

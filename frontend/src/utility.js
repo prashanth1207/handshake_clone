@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 export const DEGREES = ['Junior', 'Senior', 'Masters', 'Alumni'];
 
@@ -45,4 +46,45 @@ export function jsonToFormData (inJSON, inTestJSON, inFormData, parentKey) {
       }
   }
   return form_data;
+}
+
+export function studentProfileSubmit(formData, studentProfileId) {
+  // let formData = {
+  //   studentProfile: {
+  //     firstName: form.firstName.value,
+  //     lastName: form.lastName.value,
+  //     currentCollegeName: form.currentCollegeName.value,
+  //     city: form.city.value,
+  //     state: form.state.value,
+  //     country: form.country.value,
+  //     careerObjective: form.careerObjective.value,
+  //     phoneNumber: form.phoneNumber.value,
+  //     skillSet: form.skillSet.value,
+  //     dob: form.dob.value,
+  //   },
+  //   educationDetails: {
+  //     id: educationDetails.id,
+  //     collegeName: form.collegeName.value,
+  //     collegeLocation: form.collegeLocation.value,
+  //     degree: form.degree.value,
+  //     major: form.major.value,
+  //     yearOfPassing: form.yearOfPassing.value,
+  //     currentCgpa: form.currentCgpa.value,
+  //     highestDegree: true
+  //   },
+  //   experienceDetails: {
+  //     id: experienceDetails.id,
+  //     companyName: form.companyName.value,
+  //     title: form.title.value,
+  //     companyLocation: form.companyLocation.value,
+  //     startDate: form.startDate.value,
+  //     endDate: form.endDate.value,
+  //     workDescription: form.workDescription.value
+  //   }
+  // }
+  axios.defaults.withCredentials = false;
+  return axios.post(`http://localhost:3001/student_profile/${studentProfileId}`,formData)
+    .then(resp => {
+      return resp
+    });
 }

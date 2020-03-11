@@ -1,6 +1,7 @@
 let models = require('./../models');
 let EventRegistration = models.EventRegistration
 let StudentProfile = models.StudentProfile;
+let Event = models.Event;
 
 module.exports.create_registration = async (req,res) => {
   let eventId = req.body.eventId;
@@ -41,7 +42,16 @@ module.exports.is_student_registered = (req,resp) => {
 }
 
 module.exports.get_registrations = (req,res) =>{
-  EventRegistration.findAll({where: req.query || {},include:[{model:StudentProfile}]}).then(registrations => {
+  EventRegistration.findAll({
+    where: req.query || {},
+    include:[
+      {
+        model: StudentProfile
+      },
+      {
+        model: Event
+      }
+    ]}).then(registrations => {
     res.json({
       data: registrations
     });

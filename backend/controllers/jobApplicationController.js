@@ -1,8 +1,10 @@
 let models = require('./../models')
 let JobApplication = models.JobApplication;
 let StudentProfile = models.StudentProfile;
+let JobPosting = models.JobPosting;
 const formidable = require('formidable')
 let fs = require('fs');
+let searchableQuery = require('./../utility/search').searchableQuery;
 
 
 module.exports.getApplicationStatus = async (req, res) => {
@@ -88,6 +90,24 @@ module.exports.create_job_application = async (req, res) =>{
 module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
   let jobPostingId = req.param('jobPostingId');
   JobApplication.findAll({where: {jobPostingId: jobPostingId},include: [{model: StudentProfile,as: 'studentProfile'}]})
+    .then(jobPostings => {
+      res.json({data: jobPostings})
+    })
+    .catch(e => {
+      res.json({error: e})
+    })
+}
+
+module.exports.get_job_applications_for_a_student = (req, res) =>{
+  let {studentProfileId} = req.params;
+  let queryParams = searchableQuery(req.query);
+  JobApplication.findAll({
+    where: Object.assign({},queryParams,{studentProfileId: studentProfileId}),
+    include: [{
+      model: JobPosting,
+      as:'jobPosting'
+    }]
+  })
     .then(jobPostings => {
       res.json({data: jobPostings})
     })

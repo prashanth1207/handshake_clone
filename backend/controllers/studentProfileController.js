@@ -4,6 +4,8 @@ let EducationDetail = models.EducationDetail;
 let ExperienceDetail = models.ExperienceDetail;
 let sequelize = models.sequelize;
 let searchableQuery =  require('./../utility/search').searchableQuery;
+const formidable = require('formidable')
+let fs = require('fs');
 
 module.exports.get_all_students_profile = (req,res) =>{
   let query_params = req.query;
@@ -60,14 +62,20 @@ module.exports.update_student_profile = async(req,res) => {
   let studentProfile = await StudentProfile.findBy({column: {id: id}});
   if(studentProfile){
     sequelize.transaction(async() => {
-      StudentProfile.update(req.body.studentProfile,{where: {id: id}})
+      studentProfile.update(req.body.studentProfile)
         .then(async result => {
           let educationDetails = req.body.educationDetails
+          if(!educationDetails){
+            return true
+          }
           await EducationDetail.update(req.body.educationDetails,{where: {id: educationDetails.id,studentProfileId: id}});
           return true
         })
         .then(async result =>{
           let experienceDetails = req.body.experienceDetails
+          if(!experienceDetails){
+            return true
+          }
           await ExperienceDetail.update(req.body.experienceDetails,{where: {id: experienceDetails.id,studentProfileId: id}});
           return true
         })
@@ -86,3 +94,33 @@ module.exports.update_student_profile = async(req,res) => {
       .json({error: 'Record not found'});
   }
 };
+
+module.exports.upload_profile_pic = (req, res) =>{
+  StudentProfile.findBy({column: {id: req.params.id}}).then(studentProfile =>{
+    if(!studentProfile){
+      return res.json({
+        success: false,
+        error: 'no record found'
+      })
+    }
+    new formidable.IncomingForm().parse(req,async (err,fields,files) =>{
+      if(err){
+        res.json({
+          success: false,
+          error: err
+        })
+      }
+      let profilePic = files.profilePic;
+      fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.userId}.png`)
+      return res.json({
+        success: true
+      })
+    }).catch(e =>{
+      res.json({
+        success: false,
+        error: error
+      })
+    });
+  })
+
+}

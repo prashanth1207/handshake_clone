@@ -1,19 +1,14 @@
-import React from 'react';
-import EditProfileSvg from './../../EditProfileSvg'
-import {Card, Button} from 'react-bootstrap'
+import React, { useState } from 'react';
+import CareerObjectiveShow from './CareerObjectiveShow'
+import CareerObjectiveEdit from './CareerObjectiveEdit'
 
 export default function CareerObjective(props){
-  return(
-    <Card>
-      <Card.Body>
-        <div>
-          <Button variant='link' style={{float: 'right', width:'10px'}}>
-            <EditProfileSvg/>
-          </Button>
-        </div>
-        <Card.Title>My Journey</Card.Title>
-        <Card.Text>{props.studentProfile.careerObjective}</Card.Text>
-      </Card.Body>
-    </Card>
-  )
+  let [stateObj,setstateObj] = useState({state: 'show',studentProfile: props.studentProfile});
+  let studentProfile = stateObj.studentProfile;
+  if (stateObj.state === 'show'){
+    return <CareerObjectiveShow studentProfile={studentProfile} setstateObj={setstateObj}/>
+  }
+  else{
+    return <CareerObjectiveEdit studentProfile={studentProfile} setstateObj={setstateObj}/>;
+  }
 }

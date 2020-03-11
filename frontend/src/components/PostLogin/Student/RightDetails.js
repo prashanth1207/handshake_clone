@@ -15,12 +15,12 @@ export default function RightDetails(props){
       </Row>
       <Row className='my-3'>
         <Col>
-          <EducationDetails educationDetails={props.studentProfile.educationDetails[0] || {}}/>
+          <EducationDetails studentProfile={props.studentProfile}/>
         </Col>
       </Row>
       <Row className='my-3'>
         <Col>
-          <WorkExperience experienceDetails={props.studentProfile.experienceDetails[0] || {}}/>
+          <WorkExperience studentProfile={props.studentProfile}/>
         </Col>
       </Row>
     </Container>
