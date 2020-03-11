@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import {useParams} from 'react-router-dom'
-import axios from 'axios'
-import CompanyBody from './CompanyBody'
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import CompanyBody from './CompanyBody';
 
-export default function CompanyProfile(){
-  let {id} = useParams();
-  let [companyProfileResp,setData] = useState({status: 'loading', companyProfile: {}});
-  useEffect(() =>{
-    if(companyProfileResp.status === 'loading'){
-      axios.get(`http://localhost:3001/company_profile/${id}`, { 
-        validateStatus: false 
-      }).then((resp)=>{
-        if(resp.status === 200){
-          setData({status: 'recordFound',companyProfile: resp.data});
-        }else{
-          setData({status: 'recordNotFound'});
+export default function CompanyProfile() {
+  const { id } = useParams();
+  const [companyProfileResp, setData] = useState({ status: 'loading', companyProfile: {} });
+  useEffect(() => {
+    if (companyProfileResp.status === 'loading') {
+      axios.get(`http://localhost:3001/company_profile/${id}`, {
+        validateStatus: false,
+      }).then((resp) => {
+        if (resp.status === 200) {
+          setData({ status: 'recordFound', companyProfile: resp.data });
+        } else {
+          setData({ status: 'recordNotFound' });
         }
-      })
+      });
     }
   });
-  if(companyProfileResp.status === 'loading'){
-    return <h3>Loading Profile...</h3>
-  }else if(companyProfileResp.status === 'recordNotFound'){
-    return <h3>Profile Not Found</h3>
+  if (companyProfileResp.status === 'loading') {
+    return <h3>Loading Profile...</h3>;
+  } if (companyProfileResp.status === 'recordNotFound') {
+    return <h3>Profile Not Found</h3>;
   }
-  return(
+  return (
     <div>
-      <CompanyBody companyProfileResp={companyProfileResp}/>
+      <CompanyBody companyProfileResp={companyProfileResp} />
     </div>
-  )
+  );
 }

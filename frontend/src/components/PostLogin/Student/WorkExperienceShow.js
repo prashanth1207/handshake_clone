@@ -1,15 +1,17 @@
 import React from 'react';
-import EditProfileSvg from './../../EditProfileSvg'
-import {Card, Button} from 'react-bootstrap'
+import { Card, Button } from 'react-bootstrap';
+import EditProfileSvg from '../../EditProfileSvg';
 import { storedUserInfo } from '../../../utility';
 
 function WorkExperienceShow(props) {
-  let experienceDetails = props.studentProfile.experienceDetails[0] || {};
+  const experienceDetails = props.studentProfile.experienceDetails[0] || {};
   let editButton = null;
-  if(props.studentProfile.id === storedUserInfo().profile.id){
-    editButton =<Button variant='link' onClick={e => props.setstateObj({state: 'edit', studentProfile: props.studentProfile})} style={{float: 'right', width:'10px'}}>
-    <EditProfileSvg/>
-</Button>
+  if (props.studentProfile.id === storedUserInfo().profile.id) {
+    editButton = (
+      <Button variant="link" onClick={(_e) => props.setstateObj({ state: 'edit', studentProfile: props.studentProfile })} style={{ float: 'right', width: '10px' }}>
+        <EditProfileSvg />
+      </Button>
+    );
   }
   return (
     <Card>
@@ -21,7 +23,13 @@ function WorkExperienceShow(props) {
         <Card.Text>
           <h5>{experienceDetails.companyName}</h5>
           <div>{experienceDetails.title}</div>
-          <div>{experienceDetails.readableStartDate} - {experienceDetails.readableEndDate}</div>
+          <div>
+            {experienceDetails.readableStartDate}
+            {' '}
+            -
+            {' '}
+            {experienceDetails.readableEndDate}
+          </div>
           <div>{experienceDetails.location}</div>
           <div>{experienceDetails.workDescription}</div>
         </Card.Text>

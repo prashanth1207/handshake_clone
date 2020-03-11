@@ -1,27 +1,28 @@
 import React from 'react';
-import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
-import RedirectToProfile from '../RedirectToProfile';
-import {Button, Container, Row, Col} from 'react-bootstrap';
+import {
+  Button, Container, Row, Col,
+} from 'react-bootstrap';
+import RedirectToJobsPage from '../RedirectToJobsPage';
 
-function Home(){
-  return(
+function Home() {
+  return (
     <Container>
       <br />
-      <RedirectToProfile />
+      <RedirectToJobsPage />
       <Row>
-        <Col></Col>
+        <Col />
         <Col>
           <Row>
             <Col>
-              <Button href='/signin'>Sign In</Button>
+              <Button href="/signin">Sign In</Button>
             </Col>
-            <Col></Col>
+            <Col />
             <Col>
               <Button href="/signup">Sign Up</Button>
             </Col>
           </Row>
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
     </Container>
   );

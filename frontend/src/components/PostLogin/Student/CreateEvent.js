@@ -1,47 +1,49 @@
 import React, { useState } from 'react';
-import {Form, Button, Alert} from 'react-bootstrap'
+import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import {MAJORS} from './../../../utility'
+import { MAJORS } from '../../../utility';
 
 function CreateEvent(props) {
-  let [submitted,setsubmitted] = useState(false);
-  let [errorMsg,setErrorMsg] = useState(null);
-  let {companyProfileId} = useParams();
-  let handleSubmit = (e) => {
+  const [submitted, setsubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const { companyProfileId } = useParams();
+  const handleSubmit = (e) => {
     e.preventDefault();
     let formData = null;
-    let form = e.currentTarget;
+    const form = e.currentTarget;
     formData = {
-      companyProfileId: companyProfileId,
+      companyProfileId,
       eventName: form.eventName.value,
       description: form.description.value,
       time: form.time.value,
       location: form.location.value,
-      eligibility: form.eligibility.value
-    }
-    axios.post(`http://localhost:3001/events`,formData,{validateStatus: false}).then(resp =>{
-      if(resp.status == 200 & resp.data.success){
+      eligibility: form.eligibility.value,
+    };
+    axios.post('http://localhost:3001/events', formData, { validateStatus: false }).then((resp) => {
+      if (resp.status == 200 & resp.data.success) {
         setsubmitted(true);
-      }else{
+      } else {
         setErrorMsg(resp.data.error);
       }
-    })
-  }
-  if(submitted){
-    return <Alert variant='success'>
+    });
+  };
+  if (submitted) {
+    return (
+      <Alert variant="success">
         Event created successfully!
       </Alert>
+    );
   }
   let errTag = null;
-  if(errorMsg){
-    errTag = <Alert variant='danger'>
-      {errorMsg}
-    </Alert>
+  if (errorMsg) {
+    errTag = (
+      <Alert variant="danger">
+        {errorMsg}
+      </Alert>
+    );
   }
-  let eligibility_options = MAJORS.map(major =>{
-  return <option key={major} value={major}>{major}</option>
-  })
+  const eligibility_options = MAJORS.map((major) => <option key={major} value={major}>{major}</option>);
   return (
     <div>
       <h2>Create an Event</h2>
@@ -49,24 +51,24 @@ function CreateEvent(props) {
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label>Event name</Form.Label>
-          <Form.Control type='text' name='eventName' required/>
+          <Form.Control type="text" name="eventName" required />
         </Form.Group>
         <Form.Group>
           <Form.Label>Description</Form.Label>
-          <Form.Control as="textarea" name='description' required/>
+          <Form.Control as="textarea" name="description" required />
         </Form.Group>
         <Form.Group>
           <Form.Label>Event Date and Time</Form.Label>
-          <Form.Control type='datetime-local' name='time' min={new Date().toISOString().split('T')[0]} required/>
+          <Form.Control type="datetime-local" name="time" min={new Date().toISOString().split('T')[0]} required />
         </Form.Group>
         <Form.Group>
           <Form.Label>Location</Form.Label>
-          <Form.Control type='text' name='location' required/>
+          <Form.Control type="text" name="location" required />
         </Form.Group>
         <Form.Group>
           <Form.Label>Eligibility</Form.Label>
-          <Form.Control as='select' name='eligibility' required defaultValue='All'>
-            <option key="All" value='All'>All</option>
+          <Form.Control as="select" name="eligibility" required defaultValue="All">
+            <option key="All" value="All">All</option>
             {eligibility_options}
           </Form.Control>
         </Form.Group>

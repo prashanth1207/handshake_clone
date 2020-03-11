@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import './companyprofile.css'
+import './companyprofile.css';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import {Form, Button,Alert} from 'react-bootstrap';
-import {DEGREES,MAJORS} from '../../../utility'
+import { Form, Button, Alert } from 'react-bootstrap';
+import { DEGREES, MAJORS } from '../../../utility';
 
 function StudentBodyEdit(props) {
-  //basic profile
-  let {studentProfile} = props.studentProfileResp;
-  //education details
-  let educationDetails = studentProfile.educationDetails[0] || {};
-  //experience details
-  let experienceDetails = studentProfile.experienceDetails[0] || {};
+  // basic profile
+  const { studentProfile } = props.studentProfileResp;
+  // education details
+  const educationDetails = studentProfile.educationDetails[0] || {};
+  // experience details
+  const experienceDetails = studentProfile.experienceDetails[0] || {};
 
 
-  let [errorMsg,seterrorMsg] = useState(null);
-  let [updateSuccess,setUpdateSuccess] = useState(false);
+  const [errorMsg, seterrorMsg] = useState(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
-  let handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let form = e.currentTarget;
-    let formData = {
+    const form = e.currentTarget;
+    const formData = {
       studentProfile: {
         firstName: form.firstName.value,
         lastName: form.lastName.value,
@@ -41,7 +41,7 @@ function StudentBodyEdit(props) {
         major: form.major.value,
         yearOfPassing: form.yearOfPassing.value,
         currentCgpa: form.currentCgpa.value,
-        highestDegree: true
+        highestDegree: true,
       },
       experienceDetails: {
         id: experienceDetails.id,
@@ -50,106 +50,102 @@ function StudentBodyEdit(props) {
         companyLocation: form.companyLocation.value,
         startDate: form.startDate.value,
         endDate: form.endDate.value,
-        workDescription: form.workDescription.value
-      }
-    }
+        workDescription: form.workDescription.value,
+      },
+    };
     axios.defaults.withCredentials = false;
-    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}`,formData)
-      .then(resp => {
-        if(resp.status === 200 && resp.data.success){
-            setUpdateSuccess(true)
-        }else{
+    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}`, formData)
+      .then((resp) => {
+        if (resp.status === 200 && resp.data.success) {
+          setUpdateSuccess(true);
+        } else {
           seterrorMsg(resp.data.error);
         }
       });
-  }
+  };
 
-  let degreeSelectionTag = DEGREES.map(degree => {
-  return <option key={degree} defaultValue={degree}>{degree}</option>
-  })
+  const degreeSelectionTag = DEGREES.map((degree) => <option key={degree} defaultValue={degree}>{degree}</option>);
 
-  let majorSelectionTag = MAJORS.map(major => {
-    return <option key={major} defaultValue={major}>{major}</option>
-    })
+  const majorSelectionTag = MAJORS.map((major) => <option key={major} defaultValue={major}>{major}</option>);
 
   let errTag = null;
-  if(errorMsg){
-    errTag = <Alert variant='danger'>{errorMsg}</Alert>
+  if (errorMsg) {
+    errTag = <Alert variant="danger">{errorMsg}</Alert>;
   }
-  if(updateSuccess){
-    return <Redirect to={`/student_profile/${studentProfile.id}`} />
+  if (updateSuccess) {
+    return <Redirect to={`/student_profile/${studentProfile.id}`} />;
   }
   return (
-    <main class="clearfix new-topbar-nux" id="skip-to-content">
+    <main className="clearfix new-topbar-nux" id="skip-to-content">
       <Form onSubmit={handleSubmit}>
         {errTag}
         <Form.Group>
           <Form.Label>firstName</Form.Label>
-          <Form.Control type='text' name='firstName' defaultValue={studentProfile.firstName}/>
+          <Form.Control type="text" name="firstName" defaultValue={studentProfile.firstName} />
         </Form.Group>
         <Form.Group>
           <Form.Label>lastName</Form.Label>
-          <Form.Control type='text' name='lastName' defaultValue={studentProfile.lastName}/>
+          <Form.Control type="text" name="lastName" defaultValue={studentProfile.lastName} />
         </Form.Group>
         <Form.Group>
           <Form.Label>currentCollegeName</Form.Label>
-          <Form.Control type='text' name='currentCollegeName' defaultValue={studentProfile.currentCollegeName}/>
+          <Form.Control type="text" name="currentCollegeName" defaultValue={studentProfile.currentCollegeName} />
         </Form.Group>
         <Form.Group>
           <Form.Label>city</Form.Label>
-          <Form.Control type='text' name='city' defaultValue={studentProfile.city}/>
+          <Form.Control type="text" name="city" defaultValue={studentProfile.city} />
         </Form.Group>
         <Form.Group>
           <Form.Label>state</Form.Label>
-          <Form.Control type='text' name='state' defaultValue={studentProfile.state}/>
+          <Form.Control type="text" name="state" defaultValue={studentProfile.state} />
         </Form.Group>
         <Form.Group>
           <Form.Label>country</Form.Label>
-          <Form.Control type='text' name='country' defaultValue={studentProfile.country}/>
+          <Form.Control type="text" name="country" defaultValue={studentProfile.country} />
         </Form.Group>
         <Form.Group>
           <Form.Label>careerObjective</Form.Label>
-          <Form.Control as='textarea' name='careerObjective' defaultValue={studentProfile.careerObjective}/>
+          <Form.Control as="textarea" name="careerObjective" defaultValue={studentProfile.careerObjective} />
         </Form.Group>
         <Form.Group>
           <Form.Label>phoneNumber</Form.Label>
-          <Form.Control type='tel' name='phoneNumber' placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" defaultValue={studentProfile.phoneNumber}/>
+          <Form.Control type="tel" name="phoneNumber" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" defaultValue={studentProfile.phoneNumber} />
         </Form.Group>
         <Form.Group>
           <Form.Label>skillSet</Form.Label>
-          <Form.Control type='text' name='skillSet' placeholder="AJAX,CSS,Front end" defaultValue={studentProfile.skillSet}/>
+          <Form.Control type="text" name="skillSet" placeholder="AJAX,CSS,Front end" defaultValue={studentProfile.skillSet} />
         </Form.Group>
         <Form.Group>
           <Form.Label>dob</Form.Label>
-          <Form.Control type='date' name='dob' defaultValue={studentProfile.dob}/>
+          <Form.Control type="date" name="dob" defaultValue={studentProfile.dob} />
         </Form.Group>
         <Form.Group>
           <Form.Label>collegeName</Form.Label>
-          <Form.Control type='text' name='collegeName' defaultValue={educationDetails.collegeName}/>
+          <Form.Control type="text" name="collegeName" defaultValue={educationDetails.collegeName} />
         </Form.Group>
         <Form.Group>
           <Form.Label>collegeLocation</Form.Label>
-          <Form.Control type='text' name='collegeLocation' defaultValue={educationDetails.collegeLocation}/>
+          <Form.Control type="text" name="collegeLocation" defaultValue={educationDetails.collegeLocation} />
         </Form.Group>
         <Form.Group>
           <Form.Label>degree</Form.Label>
-          <Form.Control as='select' name='degree' defaultValue={educationDetails.degree}>
-          {degreeSelectionTag}
+          <Form.Control as="select" name="degree" defaultValue={educationDetails.degree}>
+            {degreeSelectionTag}
           </Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>major</Form.Label>
-          <Form.Control as='select' name='major' defaultValue={educationDetails.major}>
+          <Form.Control as="select" name="major" defaultValue={educationDetails.major}>
             {majorSelectionTag}
           </Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>yearOfPassing</Form.Label>
-          <Form.Control type='number' pattern="[0-9]{4}" name='yearOfPassing' defaultValue={educationDetails.yearOfPassing}/>
+          <Form.Control type="number" pattern="[0-9]{4}" name="yearOfPassing" defaultValue={educationDetails.yearOfPassing} />
         </Form.Group>
         <Form.Group>
           <Form.Label>currentCgpa</Form.Label>
-          <Form.Control type='number' step="any" name='currentCgpa' defaultValue={educationDetails.currentCgpa}/>
+          <Form.Control type="number" step="any" name="currentCgpa" defaultValue={educationDetails.currentCgpa} />
         </Form.Group>
         {/* <Form.Group>
           <Form.Label>highestDegree</Form.Label>
@@ -157,31 +153,31 @@ function StudentBodyEdit(props) {
         </Form.Group> */}
         <Form.Group>
           <Form.Label>companyName</Form.Label>
-          <Form.Control type='text' name='companyName' defaultValue={experienceDetails.companyName}/>
+          <Form.Control type="text" name="companyName" defaultValue={experienceDetails.companyName} />
         </Form.Group>
         <Form.Group>
           <Form.Label>title</Form.Label>
-          <Form.Control type='text' name='title' defaultValue={experienceDetails.title}/>
+          <Form.Control type="text" name="title" defaultValue={experienceDetails.title} />
         </Form.Group>
         <Form.Group>
           <Form.Label>companyLocation</Form.Label>
-          <Form.Control type='text' name='companyLocation' defaultValue={experienceDetails.companyLocation}/>
+          <Form.Control type="text" name="companyLocation" defaultValue={experienceDetails.companyLocation} />
         </Form.Group>
         <Form.Group>
           <Form.Label>startDate</Form.Label>
-          <Form.Control type='date' name='startDate' defaultValue={experienceDetails.startDate}/>
+          <Form.Control type="date" name="startDate" defaultValue={experienceDetails.startDate} />
         </Form.Group>
         <Form.Group>
           <Form.Label>endDate</Form.Label>
-          <Form.Control type='date' name='endDate' defaultValue={experienceDetails.endDate}/>
+          <Form.Control type="date" name="endDate" defaultValue={experienceDetails.endDate} />
         </Form.Group>
         <Form.Group>
           <Form.Label>workDescription</Form.Label>
-          <Form.Control as="textarea" name='workDescription' defaultValue={experienceDetails.workDescription}/>
+          <Form.Control as="textarea" name="workDescription" defaultValue={experienceDetails.workDescription} />
         </Form.Group>
-        <Button type='submit'>Update</Button>
+        <Button type="submit">Update</Button>
       </Form>
-    </main>    
+    </main>
   );
 }
 

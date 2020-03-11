@@ -1,17 +1,19 @@
 import React from 'react';
-import {Card,Image,Button} from 'react-bootstrap';
-import EditProfileSvg from './../../EditProfileSvg';
+import { Card, Image, Button } from 'react-bootstrap';
+import EditProfileSvg from '../../EditProfileSvg';
 import { storedUserInfo } from '../../../utility';
 
 function IdentityCardShow(props) {
-  let studentProfile = props.studentProfile
-  let educationDetails = studentProfile.educationDetails[0] || {}
-  let image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png`;
+  const { studentProfile } = props;
+  const educationDetails = studentProfile.educationDetails[0] || {};
+  const image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png`;
   let editButton = null;
-  if(studentProfile.id === storedUserInfo().profile.id){
-    editButton =<Button variant='link' onClick={e => props.setstateObj({state: 'edit', studentProfile: studentProfile})} style={{float: 'right', width:'10px'}}>
-    <EditProfileSvg/>
-  </Button>
+  if (studentProfile.id === storedUserInfo().profile.id) {
+    editButton = (
+      <Button variant="link" onClick={(e) => props.setstateObj({ state: 'edit', studentProfile })} style={{ float: 'right', width: '10px' }}>
+        <EditProfileSvg />
+      </Button>
+    );
   }
   return (
     <Card className="text-center" fluid>
@@ -19,11 +21,23 @@ function IdentityCardShow(props) {
         <div>
           {editButton}
         </div>
-        <Image style={{'max-width':'200px','max-height':'200px'}} variant="center" src={image_path} roundedCircle thumbnail fluid/>
-        <Card.Title>{studentProfile.firstName} {studentProfile.lastName}</Card.Title>
+        <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid />
+        <Card.Title>
+          {studentProfile.firstName}
+          {' '}
+          {studentProfile.lastName}
+        </Card.Title>
         <Card.Text>{studentProfile.currentCollegeName}</Card.Text>
-        <Card.Text>{educationDetails.degree}, {educationDetails.major}</Card.Text>
-        <Card.Text>Year of Passing {educationDetails.yearOfPassing}</Card.Text>
+        <Card.Text>
+          {educationDetails.degree}
+          ,
+          {' '}
+          {educationDetails.major}
+        </Card.Text>
+        <Card.Text>
+          Year of Passing
+          {educationDetails.yearOfPassing}
+        </Card.Text>
       </Card.Body>
     </Card>
   );

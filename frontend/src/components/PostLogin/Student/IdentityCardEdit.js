@@ -1,74 +1,78 @@
 import React, { useState } from 'react';
-import {Card, Image, Button, Form, Modal, Alert} from 'react-bootstrap';
-import CameraSvg from './../../CameraSvg';
+import {
+  Card, Image, Button, Form, Modal, Alert,
+} from 'react-bootstrap';
 import axios from 'axios';
-import {studentProfileSubmit} from './../../../utility'
+import CameraSvg from '../../CameraSvg';
+import { studentProfileSubmit } from '../../../utility';
 
 function IdentityCardEdit(props) {
-  let [showModal,setShowModal] = useState(false);
-  let [fileUploadErrorMsg,setfileUploadErrorMsg] = useState(null);
-  let [profileErrorMsg,setprofileErrorMsg] = useState(null);
-  let studentProfile = props.studentProfile
-  let educationDetails = studentProfile.educationDetails[0] || {}
-  let image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png?${showModal}`;
-  
-  let handleClose = e => setShowModal(false)
-  let handleOpen = e => setShowModal(true)
+  const [showModal, setShowModal] = useState(false);
+  const [fileUploadErrorMsg, setfileUploadErrorMsg] = useState(null);
+  const [profileErrorMsg, setprofileErrorMsg] = useState(null);
+  const { studentProfile } = props;
+  const educationDetails = studentProfile.educationDetails[0] || {};
+  const image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png?${showModal}`;
 
-  let handleFileUpload = (e) =>{
-    let formData = new FormData();
+  const handleClose = (e) => setShowModal(false);
+  const handleOpen = (e) => setShowModal(true);
+
+  const handleFileUpload = (e) => {
+    const formData = new FormData();
     formData.append('profilePic', e.currentTarget.form.elements.profilePic.files[0]);
-    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}/upload_profile_pic`,formData,{
+    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}/upload_profile_pic`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }})
-    .then(resp => {
-      if(resp.status === 200 && resp.data.success){
-        setShowModal(false);
-      }else{
-      fileUploadErrorMsg(<Alert variant='danger'>{resp.data.error}</Alert>);
-      }
-    });
-  }
-  let handleProfileSubmit = async (e) =>{
-    e.preventDefault();
-    let form = e.currentTarget;
-    let formData = {
-      studentProfile: {
-            firstName: form.firstName.value,
-            lastName: form.lastName.value,
-            currentCollegeName: form.currentCollegeName.value
-      }
-    }
-    let resp = await studentProfileSubmit(formData,studentProfile.id);
-    if(resp.status === 200 && resp.data.success){
-      props.setstateObj({
-        state: 'show', 
-        studentProfile: Object.assign({},studentProfile,formData.studentProfile)
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((resp) => {
+        if (resp.status === 200 && resp.data.success) {
+          setShowModal(false);
+        } else {
+          fileUploadErrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
+        }
       });
-    }else{
-    setprofileErrorMsg(<Alert variant='danger'>{resp.data.error}</Alert>)
+  };
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = {
+      studentProfile: {
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        currentCollegeName: form.currentCollegeName.value,
+      },
+    };
+    const resp = await studentProfileSubmit(formData, studentProfile.id);
+    if (resp.status === 200 && resp.data.success) {
+      props.setstateObj({
+        state: 'show',
+        studentProfile: { ...studentProfile, ...formData.studentProfile },
+      });
+    } else {
+      setprofileErrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
     }
-  }
+  };
   return (
     <Card className="text-center" fluid>
       <Card.Body>
         {profileErrorMsg}
         <Form onSubmit={handleProfileSubmit}>
-          <Button variant='secondary' onClick={handleOpen}>
-          <Image style={{'max-width':'200px','max-height':'200px'}} variant="center" src={image_path} roundedCircle thumbnail fluid/>
+          <Button variant="secondary" onClick={handleOpen}>
+            <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid />
             <div>
-              <CameraSvg/>
+              <CameraSvg />
               <div>Edit Photo</div>
             </div>
           </Button>
-          <Form.Control name='firstName' placeholder='First Name' defaultValue={studentProfile.firstName} required/>
-          <Form.Control name='lastName' placeholder='Last Name' defaultValue={studentProfile.lastName} required/>
-          <Form.Control name='currentCollegeName' placeholder='Current College Name' defaultValue={studentProfile.currentCollegeName} required/>
-          <Button variant='secondary' onClick={e => props.setstateObj({state: 'show', studentProfile: studentProfile})} style={{float: 'right'}}>
+          <Form.Control name="firstName" placeholder="First Name" defaultValue={studentProfile.firstName} required />
+          <Form.Control name="lastName" placeholder="Last Name" defaultValue={studentProfile.lastName} required />
+          <Form.Control name="currentCollegeName" placeholder="Current College Name" defaultValue={studentProfile.currentCollegeName} required />
+          <Button variant="secondary" onClick={(e) => props.setstateObj({ state: 'show', studentProfile })} style={{ float: 'right' }}>
             Cancel
-          </Button>&nbsp;
-          <Button variant='primary' type='submit' style={{float: 'right'}}>
+          </Button>
+&nbsp;
+          <Button variant="primary" type="submit" style={{ float: 'right' }}>
             Save
           </Button>
         </Form>
@@ -79,10 +83,10 @@ function IdentityCardEdit(props) {
             </Modal.Header>
             <Modal.Body>
               {fileUploadErrorMsg}
-                <Form.Group>
-                  <Form.Label>Browse Photos</Form.Label>
-                  <Form.Control type='file' name='profilePic' required accept=".png" />
-                </Form.Group>
+              <Form.Group>
+                <Form.Label>Browse Photos</Form.Label>
+                <Form.Control type="file" name="profilePic" required accept=".png" />
+              </Form.Group>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>

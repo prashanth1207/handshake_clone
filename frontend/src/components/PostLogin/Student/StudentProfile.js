@@ -1,14 +1,12 @@
 import React from 'react';
-import {useParams, Redirect} from 'react-router-dom'
-import StudentBody from './StudentBody'
-import RedirectToHome from './../../RedirectToHome'
+import { useParams } from 'react-router-dom';
+import StudentBody from './StudentBody';
 
-export default function StudentProfile(){
-  let {id} = useParams();
-  return(
+export default function StudentProfile() {
+  const { id } = useParams();
+  return (
     <div>
-      <RedirectToHome />
-      <StudentBody studentProfileId={id}/>
+      <StudentBody studentProfileId={id} />
     </div>
-  )
+  );
 }

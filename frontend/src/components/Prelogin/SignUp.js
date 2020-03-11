@@ -1,28 +1,29 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import RedirectToProfile from '../RedirectToProfile';
-import {Button, Container, Row, Col} from 'react-bootstrap';
+import {
+  Button, Row, Col,
+} from 'react-bootstrap';
+import RedirectToJobsPage from '../RedirectToJobsPage';
 
 
-function SignUp(){
-  return(
+function SignUp() {
+  return (
     <div>
-      <RedirectToProfile />
+      <RedirectToJobsPage />
       <br />
       <Row>
-        <Col></Col>
+        <Col />
         <Col>
           <Row>
             <Col>
-              <Button href='/company_signup'>Company</Button>
+              <Button href="/company_signup">Company</Button>
             </Col>
-            <Col></Col>
+            <Col />
             <Col>
               <Button href="/student_signup">Student</Button>
             </Col>
           </Row>
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
     </div>
   );

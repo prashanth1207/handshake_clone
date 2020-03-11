@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 
-export default function CompanyContactInformation(props){
-  return(
+export default function CompanyContactInformation(props) {
+  return (
     <Card>
       <Card.Body>
         <Card.Title>
@@ -13,5 +13,5 @@ export default function CompanyContactInformation(props){
         </Card.Text>
       </Card.Body>
     </Card>
-  )
+  );
 }

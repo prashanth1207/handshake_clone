@@ -1,16 +1,18 @@
 import React from 'react';
-import EditProfileSvg from './../../EditProfileSvg'
-import {Card, Button} from 'react-bootstrap'
+import { Card, Button } from 'react-bootstrap';
+import EditProfileSvg from '../../EditProfileSvg';
 import { storedUserInfo } from '../../../utility';
 
 function CareerObjectiveShow(props) {
   let editButton = null;
-  if(props.studentProfile.id === storedUserInfo().profile.id){
-    editButton =<Button variant='link' onClick={e => props.setstateObj({state: 'edit', studentProfile: props.studentProfile})} style={{float: 'right', width:'10px'}}>
-    <EditProfileSvg/>
-  </Button>
+  if (props.studentProfile.id === storedUserInfo().profile.id) {
+    editButton = (
+      <Button variant="link" onClick={(e) => props.setstateObj({ state: 'edit', studentProfile: props.studentProfile })} style={{ float: 'right', width: '10px' }}>
+        <EditProfileSvg />
+      </Button>
+    );
   }
-  return(
+  return (
     <Card>
       <Card.Body>
         <div>
@@ -20,7 +22,7 @@ function CareerObjectiveShow(props) {
         <Card.Text>{props.studentProfile.careerObjective}</Card.Text>
       </Card.Body>
     </Card>
-  )
+  );
 }
 
 export default CareerObjectiveShow;

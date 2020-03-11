@@ -1,49 +1,50 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import RedirectToProfile from '../RedirectToProfile';
-import {Container,Row,Col,Form,Button,Alert} from 'react-bootstrap'
+import {
+  Container, Row, Col, Form, Button, Alert,
+} from 'react-bootstrap';
+import RedirectToJobsPage from '../RedirectToJobsPage';
 
 
-function CompanySignUp(){
-  let [errorMsg,setErrorMsg] = useState(null);
+function CompanySignUp() {
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  function handleSubmit(e){
+  function handleSubmit(e) {
     e.preventDefault();
-    let form = e.currentTarget;
-    let form_data = {
+    const form = e.currentTarget;
+    const form_data = {
       userData: {
         emailId: form.emailId.value,
         password: form.password.value,
-        role: 'Company'
+        role: 'Company',
       },
-      profileData:{
+      profileData: {
         name: form.name.value,
-        location: form.location.value
-      }
-    }
+        location: form.location.value,
+      },
+    };
     axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/users/register',form_data)
-      .then(response =>{
-        if(response.status === 200){
-          if (response.data.success === true){
-              sessionStorage.setItem('userInfo',JSON.stringify(response.data.userInfo))
-          } else{
+    axios.post('http://localhost:3001/users/register', form_data)
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data.success === true) {
+            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+          } else {
             setErrorMsg(response.data.error);
           }
-      }
-      })
-
+        }
+      });
   }
   let errorTag = null;
-  if(errorMsg){
-    errorTag = <Alert variant='danger'>{errorMsg}</Alert>;
+  if (errorMsg) {
+    errorTag = <Alert variant="danger">{errorMsg}</Alert>;
   }
 
-  return(
+  return (
     <Container>
-      <RedirectToProfile />
+      <RedirectToJobsPage />
       <Row>
-        <Col></Col>
+        <Col />
         <Col>
           <br />
           <h2>Sign Up</h2>
@@ -51,28 +52,28 @@ function CompanySignUp(){
             {errorTag}
             <Form.Group>
               <Form.Label>Company Name</Form.Label>
-              <Form.Control name='name' required />
+              <Form.Control name="name" required />
             </Form.Group>
             <Form.Group>
               <Form.Label>Email Id</Form.Label>
-              <Form.Control name='emailId' required type='email'/>
+              <Form.Control name="emailId" required type="email" />
             </Form.Group>
             <Form.Group>
               <Form.Label>Password</Form.Label>
-              <Form.Control name='password' required type='password'/>
+              <Form.Control name="password" required type="password" />
             </Form.Group>
             <Form.Group>
               <Form.Label>Location</Form.Label>
-              <Form.Control name='location' required />
+              <Form.Control name="location" required />
             </Form.Group>
-            <Button type='submit' variant='primary'>Register</Button>
+            <Button type="submit" variant="primary">Register</Button>
           </Form>
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <br />
     </Container>
-  )
+  );
 }
 
 export default CompanySignUp;

@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import StudentBodyEdit from './StudentBodyEdit' 
 import { useParams } from 'react-router-dom';
+import StudentBodyEdit from './StudentBodyEdit';
 
-export default function StudentProfileEdit(props){
-  let {studentProfileId} = useParams();
-  let [studentProfileResp,setData] = useState({status: 'loading', studentProfile: null});
-  useEffect(() =>{
-    if(studentProfileResp.status === 'loading'){
-      axios.get(`http://localhost:3001/student_profile/${studentProfileId}`, { 
-        validateStatus: false 
-      }).then((resp)=>{
-        if(resp.status === 200){
-          setData({status: 'recordFound',studentProfile: resp.data});
-        }else{
-          setData({status: 'recordNotFound'});
+export default function StudentProfileEdit() {
+  const { studentProfileId } = useParams();
+  const [studentProfileResp, setData] = useState({ status: 'loading', studentProfile: null });
+  useEffect(() => {
+    if (studentProfileResp.status === 'loading') {
+      axios.get(`http://localhost:3001/student_profile/${studentProfileId}`, {
+        validateStatus: false,
+      }).then((resp) => {
+        if (resp.status === 200) {
+          setData({ status: 'recordFound', studentProfile: resp.data });
+        } else {
+          setData({ status: 'recordNotFound' });
         }
-      })
+      });
     }
   });
 
-  if(studentProfileResp.status === 'loading'){
-    return <h3>Loading Profile...</h3>
-  }else if(studentProfileResp.status === 'recordNotFound'){
-    return <h3>Profile Not Found</h3>
+  if (studentProfileResp.status === 'loading') {
+    return <h3>Loading Profile...</h3>;
+  } if (studentProfileResp.status === 'recordNotFound') {
+    return <h3>Profile Not Found</h3>;
   }
-  return(
+  return (
     <StudentBodyEdit studentProfileResp={studentProfileResp} />
-  )
+  );
 }
