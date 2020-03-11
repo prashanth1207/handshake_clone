@@ -2,8 +2,8 @@ import React from 'react';
 import CompanyBasicInfo from './CompanyBasicInfo';
 import CompanyDescription from './CompanyDescription';
 import CompanyContactInformation from './CompanyContactInformation';
-import './companyprofile.css'
 import axios from 'axios'
+import { Container,Row,Col } from 'react-bootstrap';
 
 export default function CompanyBody(props){
   let companyProfileResp = props.companyProfileResp;
@@ -15,14 +15,20 @@ export default function CompanyBody(props){
   }
 
   return(
-    <div class="clearfix new-topbar-nux">
-      <div data-hook="container" class="style__container___15r1p style__large___3HKaH style__fitted___2ndoo">
-        <CompanyBasicInfo companyProfile={companyProfileResp.companyProfile}/>
-        <div data-hook="row" class="style__row___273Yw">
+    <div>
+      <Row className='my-3'>
+        <Col>
+          <CompanyBasicInfo companyProfile={companyProfileResp.companyProfile}/>
+        </Col>
+      </Row>
+      <Row className='my-3'>
+        <Col xs={9}>
           <CompanyDescription companyProfile={companyProfileResp.companyProfile}/>
+        </Col>
+        <Col>
           <CompanyContactInformation companyProfile={companyProfileResp.companyProfile}/>
-        </div>
-      </div>
-    </div>  
+        </Col>
+      </Row>
+    </div>
   )
 }

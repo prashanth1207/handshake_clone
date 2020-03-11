@@ -54,7 +54,7 @@ function App() {
               <PrivateRoute exact path='/student_profile/:id' component={StudentProfile} />
               <PrivateRoute exact path='/company_profile/:id' component={CompanyProfile} />
               <PrivateOwnStudentRoute exact path='/student_profile/:studentProfileId/edit' component={StudentProfileEdit} />
-              <PrivateOwnCompanyRoute exact path='company_profile/:companyProfileId/edit' component={CompanyProfileEdit} />
+              <PrivateOwnCompanyRoute exact path='/company_profile/:companyProfileId/edit' component={CompanyProfileEdit} />
 
               {/* Job postings */}
               <PrivateRoute exect path='/job_postings/:id' component={JobPostingShow} />

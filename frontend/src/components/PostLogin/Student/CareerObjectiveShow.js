@@ -1,15 +1,20 @@
 import React from 'react';
 import EditProfileSvg from './../../EditProfileSvg'
 import {Card, Button} from 'react-bootstrap'
+import { storedUserInfo } from '../../../utility';
 
 function CareerObjectiveShow(props) {
+  let editButton = null;
+  if(props.studentProfile.id === storedUserInfo().profile.id){
+    editButton =<Button variant='link' onClick={e => props.setstateObj({state: 'edit', studentProfile: props.studentProfile})} style={{float: 'right', width:'10px'}}>
+    <EditProfileSvg/>
+  </Button>
+  }
   return(
     <Card>
       <Card.Body>
         <div>
-          <Button variant='link' onClick={e => props.setstateObj({state: 'edit', studentProfile: props.studentProfile})} style={{float: 'right', width:'10px'}}>
-            <EditProfileSvg/>
-          </Button>
+          {editButton}
         </div>
         <Card.Title>My Journey</Card.Title>
         <Card.Text>{props.studentProfile.careerObjective}</Card.Text>

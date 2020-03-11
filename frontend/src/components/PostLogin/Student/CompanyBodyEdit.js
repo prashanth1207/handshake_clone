@@ -1,31 +1,32 @@
 import React,{useEffect, useState} from 'react';
-import './companyprofile.css'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom';
+import { Form, Alert, Button } from 'react-bootstrap';
 
 export default function CompanyBodyEdit(props){
   let {companyProfile} = props.companyProfileResp;
-  let [name,setname] = useState(companyProfile.name);
-  let [location,setlocation] = useState(companyProfile.location);
-  let [description,setdescription] = useState(companyProfile.description);
-  let [contactInformation,setcontactInformation] = useState(companyProfile.contactInformation);
   let [errorMsg,seterrorMsg] = useState(null);
   let [updateSuccess,setUpdateSuccess] = useState(false);
   let handleSubmit = (e) => {
     e.preventDefault();
-    let formData = {
-      name: name,
-      location: location,
-      description: description,
-      contactInformation: contactInformation
-    }
+    let form = e.currentTarget;
+    let formData = new FormData();
+    formData.append('name', form.name.value);
+    formData.append('location', form.location.value);
+    formData.append('description', form.description.value);
+    formData.append('contactInformation', form.contactInformation.value);
+    formData.append('companyLogo',form.elements.companyLogo.files[0]);
     axios.defaults.withCredentials = false;
-    axios.post(`http://localhost:3001/company_profile/${companyProfile.id}`,formData)
+    axios.post(`http://localhost:3001/company_profile/${companyProfile.id}`,formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }})
       .then(resp => {
-        if(resp.status === 200 && resp.body.success){
+        if(resp.status === 200 && resp.data.success){
             setUpdateSuccess(true)
         }else{
-          seterrorMsg(resp.data.error);
+          seterrorMsg(<Alert variant='danger'>resp.body.error</Alert>);
         }
       });
   }
@@ -34,54 +35,34 @@ export default function CompanyBodyEdit(props){
     errTag = <p color='red'>{errorMsg}</p>
   }
   if(updateSuccess){
-    return <Redirect to={`/student/company_profile/${companyProfile.id}`} />
+    return <Redirect to={`/company_profile/${companyProfile.id}`} />
   }
   return(
     <div>
-      <div class="clearfix new-topbar-nux">
-        <div data-hook="container" class="style__container___15r1p style__large___3HKaH style__fitted___2ndoo">
-          <div class="style__cover___EcB_L style__card___1rhof">
-            <h2 class="style__heading___29i1Z style__extra-large___PY8Kd">
-              Edit  {name}
-            </h2>
-            <form class='form-group comp-prof-edit'>
-              {errTag}
-              <div>
-                <label class="control-label">CompanyName</label>
-                <div>
-                <input type='text' name='name' value={name} onChange={e => setname(e.target.value)}/>
-                </div>
-              </div>
-              <br />
-              <div>
-                <label class="control-label">Location</label>
-                <div>
-                  <input type='text' name='location' value={location} onChange={e => setlocation(e.target.value)}/>
-                </div>
-              </div>
-              <br />
-              <div>
-                <label class="control-label">Description</label>
-                <div>
-                  <textarea name='description' value={description} onChange={e => setdescription(e.target.value)}/>
-                  </div>
-              </div>
-              <br />
-              <div>
-                <label class="control-label">Contact Information</label>
-                <div>
-                <textarea type='text' name='contactInformation' value={contactInformation} onChange={e => setcontactInformation(e.target.value)}/>
-                </div>
-              </div>
-              <br />
-              <div>
-                <input type='submit' value='Update' onClick={handleSubmit}/>
-              </div>
-              <br />
-            </form>
-          </div>
-        </div>
-      </div>  
+      <Form onSubmit={handleSubmit}>
+        {errorMsg}
+        <Form.Group>
+          <Form.Label>Upload Company Logo</Form.Label>
+          <Form.Control name='companyLogo' type='file' accept=".png"/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Name</Form.Label>
+          <Form.Control name='name' defaultValue={companyProfile.name} placeholder='Name'/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Location</Form.Label>
+          <Form.Control name='location' defaultValue={companyProfile.location} placeholder='Location'/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Description</Form.Label>
+          <Form.Control as='textarea' name='description' defaultValue={companyProfile.description} placeholder='Description'/>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Contact Information</Form.Label>
+          <Form.Control as='textarea' name='contactInformation' defaultValue={companyProfile.contactInformation} placeholder='Contact Information'/>
+        </Form.Group>
+        <Button variant='primary' type='submit'>Update</Button>
+      </Form>
     </div>
   )
 }

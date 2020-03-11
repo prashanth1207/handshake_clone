@@ -1,5 +1,7 @@
 let models = require('./../models')
-let CompanyProfile = models.CompanyProfile
+let CompanyProfile = models.CompanyProfile;
+const formidable = require('formidable');
+let fs = require('fs');
 
 module.exports.get_company_profile = async (req,resp) => {
   let id = req.params.id;
@@ -12,24 +14,40 @@ module.exports.get_company_profile = async (req,resp) => {
   }
 }
 
-module.exports.update_company_profile = async (req,resp) => {
+module.exports.update_company_profile = async (req,res) => {
   let id = req.params.id;
-  let companyProfileData = req.body;
-    let companyProfile = await CompanyProfile.findBy({column: {id: id}})
-  if(companyProfile){
-    companyProfile.name = companyProfileData.name;
-    companyProfile.location = companyProfileData.location;
-    companyProfile.description = companyProfileData.description;
-    companyProfile.contactInfomation = companyProfileData.contactInfomation;
-    companyProfile.save()
-    .then(cp => {
-      resp.json({success: true})
+  CompanyProfile.findBy({column: {id: id}})
+  .then(companyProfile =>{
+    if(!companyProfile){
+      return res.json({
+        success: false,
+        error: 'no record found'
+      })
+    }
+    new formidable.IncomingForm().parse(req,async (err,fields,files) =>{
+      if(err){
+        res.json({
+          success: false,
+          error: err
+        })
+      }
+      companyProfile.name = fields.name;
+      companyProfile.location = fields.location;
+      companyProfile.description = fields.description;
+      companyProfile.contactInfomation = fields.contactInformation;
+      companyProfile.save().catch(err => {
+        return res.json({
+          success: false,
+          error: err
+        })
+      })
+      let companyLogo = files.companyLogo;
+      if(companyLogo){
+        fs.renameSync(companyLogo.path,__basedir+`/public/images/profile_pics/${companyProfile.userId}.png`)
+      }
+      return res.json({
+        success: true
+      })
     })
-    .catch(e =>{
-      resp.json({success: false,error: e})
-    })
-  }else{
-    resp.status(404)
-      .json({error: 'Record not found'});
-  }
+  })
 }

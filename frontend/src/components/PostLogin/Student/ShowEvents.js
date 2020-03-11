@@ -69,7 +69,7 @@ function ShowEvents(props) {
   let create_event_tag = null;
   if(props.for === 'Company'){
     create_event_tag = <div>
-    <Button style={{'float': 'right'}} variant='primary' href={`/company/${storedUserInfo().profile.id}/create_event`}>Create New Job</Button>
+    <Button style={{'float': 'right'}} variant='primary' href={`/company/${storedUserInfo().profile.id}/create_event`}>Create New Event</Button>
     <br/>
     <br/>
     </div>

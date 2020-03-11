@@ -61,10 +61,9 @@ module.exports.show_all_events_for_student = async (req,res) =>{
 }
 
 module.exports.show_all_events_for_company = (req,res) =>{
-  let query_params = req.params;
-  let companyProfileId = query_params.companyProfileId;
-  delete query_params.companyProfileId
-  Event.findAll(Object.assign({},{where: {companyProfileId: companyProfileId}},query_params)).then(events =>{
+  let {companyProfileId} = req.params;
+  let query_params = Object.assign({},searchableQuery(req.query),{companyProfileId: companyProfileId});
+  Event.findAll({where: query_params}).then(events =>{
     return res.json({
       events: events
     })
