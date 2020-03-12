@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -r esm ./app.js",
+    "start": "node -r dotenv/config ./app.js",
     "console": "node -r esm --inspect --experimental-repl-await console",
     "test": "mocha test"
   },

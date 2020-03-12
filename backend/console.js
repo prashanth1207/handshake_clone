@@ -24,7 +24,7 @@
  * app > // Here we have all sequelize models
  * app > (await User.findOne()).toJSON() // return {..user} json object
  */
-
+require('dotenv').config();
 let repl = require('repl');
 let models = require('./models');
 Object.keys(models).forEach(modelName => {

@@ -20,15 +20,7 @@ var app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 
-
-// //const Dotenv = require('dotenv-webpack');
-// const webpackConfig = {
-//   node: { global: true, fs: 'empty' }, // Fix: "Uncaught ReferenceError: global is not defined", and "Can't resolve 'fs'".
-//   output: {
-//     libraryTarget: 'umd' // Fix: "Uncaught ReferenceError: exports is not defined".
-//   },
-// //  plugins: [new Dotenv()]
-// };
+require('dotenv').config();
 
 // global var __basedir to get base directory
 global.__basedir = __dirname;
