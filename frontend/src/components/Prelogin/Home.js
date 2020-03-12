@@ -8,7 +8,7 @@ function Home() {
   return (
     <Container>
       <br />
-      <RedirectToJobsPage />
+      {/* <RedirectToJobsPage /> */}
       <Row>
         <Col />
         <Col>
