@@ -6,7 +6,7 @@ let EducationDetail = models.EducationDetail;
 let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.show_event = (req, res) =>{
-  Event.findByPk(req.param('id')).then(event =>{
+  Event.findByPk(req.params.id).then(event =>{
     return res.json(event);
   }).catch(e =>{
     return res.status(404).json({error: 'Record not found'});

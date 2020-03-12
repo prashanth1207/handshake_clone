@@ -88,7 +88,7 @@ module.exports.create_job_application = async (req, res) =>{
 }
 
 module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
-  let jobPostingId = req.param('jobPostingId');
+  let {jobPostingId} = req.query;
   JobApplication.findAll({where: {jobPostingId: jobPostingId},include: [{model: StudentProfile,as: 'studentProfile'}]})
     .then(jobPostings => {
       res.json({data: jobPostings})
