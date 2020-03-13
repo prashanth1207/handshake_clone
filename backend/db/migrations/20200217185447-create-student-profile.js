@@ -16,7 +16,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      collegeName: {
+      currentCollegeName: {
         allowNull: false,
         type: Sequelize.STRING
       },

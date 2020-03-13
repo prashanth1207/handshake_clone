@@ -17,7 +17,7 @@ var eventRouter = require('./routes/event');
 var eventRegistrationRouter = require('./routes/event_registration');
 
 var app = express();
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_ENDPOINT, credentials: true }));
 
 
 // global var __basedir to get base directory
@@ -69,7 +69,7 @@ module.exports = app;
 
 //Allow Access Control
 app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_ENDPOINT);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
