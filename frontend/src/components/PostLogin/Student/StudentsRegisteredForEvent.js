@@ -4,12 +4,14 @@ import {
   Container, Row, Col, Card, Modal, Button,
 } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { rooturl } from '../../../config/config';
+
 
 function StudentsRegisteredForEvent(props) {
   const { id: eventId } = useParams();
   const [eventRegistrationsResp, seteventRegistrationsResp] = useState({ status: 'loading', eventRegistrations: null });
   if (eventRegistrationsResp.status === 'loading') {
-    axios.get(`http://localhost:3001/event_registrations?eventId=${eventId}`)
+    axios.get(`${rooturl}/event_registrations?eventId=${eventId}`)
       .then((resp) => {
         seteventRegistrationsResp({ status: 'loaded', eventRegistrations: resp.data.data || [] });
       });

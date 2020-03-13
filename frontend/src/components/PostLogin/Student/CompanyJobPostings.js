@@ -4,13 +4,15 @@ import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import JobPostingSummary from './JobPostingSummary';
 import { storedUserInfo } from '../../../utility';
+import { rooturl } from '../../../config/config';
+
 
 function CompanyJobPostings(props) {
   const companyProfileId = storedUserInfo().profile.id;
   const [jobPostingResp, setData] = useState({ status: 'loading', jobPostings: null });
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.get('http://localhost:3001/job_postings', { params: { companyProfileId } }, {
+    axios.get(`${rooturl}/job_postings`, { params: { companyProfileId } }, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {

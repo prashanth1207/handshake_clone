@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { DEGREES, MAJORS } from '../../../utility';
+import { rooturl } from '../../../config/config';
+
 
 function StudentBodyEdit(props) {
   // basic profile
@@ -54,7 +56,7 @@ function StudentBodyEdit(props) {
       },
     };
     axios.defaults.withCredentials = false;
-    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}`, formData)
+    axios.post(`${rooturl}/student_profile/${studentProfile.id}`, formData)
       .then((resp) => {
         if (resp.status === 200 && resp.data.success) {
           setUpdateSuccess(true);

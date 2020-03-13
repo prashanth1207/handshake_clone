@@ -4,6 +4,7 @@ import {
   Row, Col, Card, Container,
 } from 'react-bootstrap';
 import axios from 'axios';
+import { rooturl } from '../../../config/config';
 import LocationSvg from '../../LocationSvg';
 
 
@@ -11,7 +12,7 @@ function ShowEventDetails() {
   const { id: eventId } = useParams();
   const [eventResp, setData] = useState({ status: 'loading', event: null });
   if (eventResp.status === 'loading') {
-    axios.get(`http://localhost:3001/events/show/${eventId}`, {
+    axios.get(`${rooturl}/events/show/${eventId}`, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {

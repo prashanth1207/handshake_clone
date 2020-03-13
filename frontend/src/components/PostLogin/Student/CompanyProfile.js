@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { rooturl } from '../../../config/config';
 import CompanyBody from './CompanyBody';
 
 export default function CompanyProfile() {
@@ -8,7 +9,7 @@ export default function CompanyProfile() {
   const [companyProfileResp, setData] = useState({ status: 'loading', companyProfile: {} });
   useEffect(() => {
     if (companyProfileResp.status === 'loading') {
-      axios.get(`http://localhost:3001/company_profile/${id}`, {
+      axios.get(`${rooturl}/company_profile/${id}`, {
         validateStatus: false,
       }).then((resp) => {
         if (resp.status === 200) {

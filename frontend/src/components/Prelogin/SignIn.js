@@ -5,6 +5,7 @@ import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
 import { LoginIn } from '../../redux/actions/index';
+import { rooturl } from '../../config/config';
 import RedirectToProfile from '../RedirectToJobsPage';
 
 function SignIn(props) {
@@ -20,7 +21,7 @@ function SignIn(props) {
       emailId: form.emailId.value,
       password: form.password.value,
     };
-    axios.post('http://localhost:3001/users/login', formData)
+    axios.post(`${rooturl}/users/login`, formData)
       .then((response) => {
         console.log('Status Code : ', response.status);
         if (response.status === 200) {

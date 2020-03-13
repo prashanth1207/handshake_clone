@@ -6,13 +6,14 @@ import {
 import { useParams } from 'react-router-dom';
 import StudentBody from './StudentBody';
 import JobApplicationStatus from './JobApplicationStatus';
+import { rooturl } from '../../../config/config';
 
 function AllJobApplications(props) {
   const { id: jobPostingId } = useParams();
   const [jobApplicationsResp, setjobApplicationsResp] = useState({ status: 'loading', jobApplications: null });
   const [studentProfile, setStudentProfile] = useState(null);
   if (jobApplicationsResp.status === 'loading') {
-    axios.get(`http://localhost:3001/job_application?jobPostingId=${jobPostingId}`)
+    axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
       .then((resp) => {
         setjobApplicationsResp({ status: 'loaded', jobApplications: resp.data.data || [] });
       });
@@ -61,7 +62,7 @@ function AllJobApplications(props) {
               {new Date(jobApplication.createdAt).toLocaleString('en-US', { dateStyle: 'full' })}
             </Card.Text>
             <Card.Text>
-              <Card.Link target="_blank" href={`http://localhost:3001/resume/${jobApplication.resumePath}`} id={jobApplication.studentProfileId}>Resume</Card.Link>
+              <Card.Link target="_blank" href={`${rooturl}/resume/${jobApplication.resumePath}`} id={jobApplication.studentProfileId}>Resume</Card.Link>
             </Card.Text>
             <Card.Text><JobApplicationStatus jobApplication={jobApplication} /></Card.Text>
             <Card.Text>

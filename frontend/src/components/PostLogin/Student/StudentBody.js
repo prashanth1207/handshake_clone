@@ -5,13 +5,14 @@ import {
   Row, Col,
 } from 'react-bootstrap';
 import LeftDetails from './LeftDetails';
+import { rooturl } from '../../../config/config';
 import RightDetails from './RightDetails';
 
 export default function StudentBody(props) {
   const [studentProfileResp, setData] = useState({ status: 'loading', studentProfile: null });
   useEffect(() => {
     if (studentProfileResp.status === 'loading') {
-      axios.get(`http://localhost:3001/student_profile/${props.studentProfileId}`, {
+      axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
         validateStatus: false,
       }).then((resp) => {
         console.log(resp.status);

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, Image, Button } from 'react-bootstrap';
 import EditProfileSvg from '../../EditProfileSvg';
+import { rooturl } from '../../../config/config';
 import { storedUserInfo } from '../../../utility';
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
   const educationDetails = studentProfile.educationDetails[0] || {};
-  const image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png`;
   let editButton = null;
   if (studentProfile.id === storedUserInfo().profile.id) {
     editButton = (

@@ -3,6 +3,8 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { MAJORS } from '../../../utility';
+import { rooturl } from '../../../config/config';
+
 
 function CreateEvent(props) {
   const [submitted, setsubmitted] = useState(false);
@@ -20,7 +22,7 @@ function CreateEvent(props) {
       location: form.location.value,
       eligibility: form.eligibility.value,
     };
-    axios.post('http://localhost:3001/events', formData, { validateStatus: false }).then((resp) => {
+    axios.post(`${rooturl}/events`, formData, { validateStatus: false }).then((resp) => {
       if (resp.status == 200 & resp.data.success) {
         setsubmitted(true);
       } else {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
+import { rooturl } from '../../../config/config';
 import { storedUserInfo } from '../../../utility';
 
 function ApplyForJobButton(props) {
@@ -8,7 +9,7 @@ function ApplyForJobButton(props) {
   const [status, setStatus] = useState(null);
 
   if (status === null) {
-    axios.post('http://localhost:3001/job_application/status', { studentProfileId: usrInfo.profile.id, jobPostingId: props.jobPostingId })
+    axios.post(`${rooturl}/job_application/status`, { studentProfileId: usrInfo.profile.id, jobPostingId: props.jobPostingId })
       .then((resp) => {
         setStatus(resp.data.status);
       });

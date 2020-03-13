@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Modal, Badge, Button, Form,
 } from 'react-bootstrap';
+import { rooturl } from '../../../config/config';
 import axios from 'axios';
 
 function JobApplicationStatus(props) {
@@ -23,7 +24,7 @@ function JobApplicationStatus(props) {
   const submitStatus = (e) => {
     e.preventDefault();
     const formData = { status: e.currentTarget.elements.status.value };
-    axios.post(`http://localhost:3001/job_application/${props.jobApplication.id}/set_status`, formData, { validateStatus: false })
+    axios.post(`${rooturl}/job_application/${props.jobApplication.id}/set_status`, formData, { validateStatus: false })
       .then((resp) => {
         debugger;
         if (resp.status == 200 && resp.data.success) {

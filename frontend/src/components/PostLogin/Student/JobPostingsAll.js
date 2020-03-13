@@ -4,6 +4,8 @@ import {
   Row, Col, Card, Form, Button,
 } from 'react-bootstrap';
 import JobPostingSummary from './JobPostingSummary';
+import { rooturl } from '../../../config/config';
+
 
 
 function JobPostingsAll(props) {
@@ -11,7 +13,7 @@ function JobPostingsAll(props) {
   const [jobPostingResp, setData] = useState({ status: 'loading', jobPostings: null });
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.get('http://localhost:3001/job_postings', { params: { companyProfileId } }, {
+    axios.get(`${rooturl}/job_postings`, { params: { companyProfileId } }, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {
@@ -28,7 +30,7 @@ function JobPostingsAll(props) {
       jobCategory: form.jobCategory.value,
       location: form.location.value,
     };
-    axios.get('http://localhost:3001/job_postings', { params: queryData }, { validateStatus: false }).then((resp) => {
+    axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
       if (resp.status === 200) {
         setData({ status: 'recordFound', jobPostings: resp.data });
       } else {

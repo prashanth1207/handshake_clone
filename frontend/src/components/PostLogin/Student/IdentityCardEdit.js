@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import CameraSvg from '../../CameraSvg';
+import { rooturl } from '../../../config/config';
 import { studentProfileSubmit } from '../../../utility';
 
 function IdentityCardEdit(props) {
@@ -12,7 +13,7 @@ function IdentityCardEdit(props) {
   const [profileErrorMsg, setprofileErrorMsg] = useState(null);
   const { studentProfile } = props;
   const educationDetails = studentProfile.educationDetails[0] || {};
-  const image_path = `http://localhost:3001/images/profile_pics/${studentProfile.userId}.png?${showModal}`;
+  const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png?${showModal}`;
 
   const handleClose = (e) => setShowModal(false);
   const handleOpen = (e) => setShowModal(true);
@@ -20,7 +21,7 @@ function IdentityCardEdit(props) {
   const handleFileUpload = (e) => {
     const formData = new FormData();
     formData.append('profilePic', e.currentTarget.form.elements.profilePic.files[0]);
-    axios.post(`http://localhost:3001/student_profile/${studentProfile.id}/upload_profile_pic`, formData, {
+    axios.post(`${rooturl}/student_profile/${studentProfile.id}/upload_profile_pic`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

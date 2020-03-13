@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Badge, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { rooturl } from '../../../config/config';
+
 
 function EventRegister(props) {
   const { event } = props;
@@ -22,7 +24,7 @@ function EventRegister(props) {
       eventId,
       studentProfileId,
     };
-    axios.post('http://localhost:3001/event_registrations', formData, { validateStatus: false })
+    axios.post(`${rooturl}/event_registrations`, formData, { validateStatus: false })
       .then((resp) => {
         if (resp.status === 200 && resp.data.success) {
           setregistered(true);

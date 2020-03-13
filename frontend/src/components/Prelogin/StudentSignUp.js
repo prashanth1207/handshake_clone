@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
+import { rooturl } from '../../config/config';
 import RedirectToJobsPage from '../RedirectToJobsPage';
 
 function StudentSignUp() {
@@ -24,7 +25,7 @@ function StudentSignUp() {
       },
     };
     axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/users/register', form_data)
+    axios.post(`${rooturl}/users/register`, form_data)
       .then((response) => {
         if (response.status === 200) {
           if (response.data.success === true) {

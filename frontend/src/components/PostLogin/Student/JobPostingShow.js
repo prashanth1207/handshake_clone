@@ -6,13 +6,14 @@ import {
   Row, Col, Card, Container,
 } from 'react-bootstrap';
 import JobPostingSummary from './JobPostingSummary';
+import { rooturl } from '../../../config/config';
 import ApplyForJobButton from './ApplyForJobButton';
 
 function JobPostingShow(props) {
   const { id: jobPostingId } = useParams();
   const [jobPostingResp, setData] = useState({ status: 'loading', jobPosting: null });
   if (jobPostingResp.status === 'loading') {
-    axios.get(`http://localhost:3001/job_postings/${jobPostingId}`, {
+    axios.get(`${rooturl}/job_postings/${jobPostingId}`, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {

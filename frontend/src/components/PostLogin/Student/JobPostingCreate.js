@@ -3,6 +3,7 @@ import axios from 'axios';
 import './companyprofile.css';
 import { Redirect } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { rooturl } from '../../../config/config';
 import { storedUserInfo } from '../../../utility';
 
 function JobPostingCreate(props) {
@@ -22,7 +23,7 @@ function JobPostingCreate(props) {
       jobDescription: form.jobDescription.value,
       jobCategory: selectedJobCategoryList.join(','),
     };
-    axios.post(`http://localhost:3001/job_postings/${companyProfileId}/create`, formData, {
+    axios.post(`${rooturl}/job_postings/${companyProfileId}/create`, formData, {
       validateStatus: false,
     }).then((resp) => {
       console.dir(resp);

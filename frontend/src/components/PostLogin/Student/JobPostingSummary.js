@@ -5,6 +5,8 @@ import {
 import LocationSvg from '../../LocationSvg';
 import CategorySvg from '../../CategorySvg';
 import SalarySvg from '../../SalarySvg';
+import { rooturl } from '../../../config/config';
+
 
 function JobPostingSummary(props) {
   const { jobPosting } = props;
@@ -17,7 +19,7 @@ function JobPostingSummary(props) {
   )) || null;
   let job_title = jobPosting.jobTitle;
   const profile_path = `/company_profile/${jobPosting.companyProfile.id}`;
-  const image_path = `http://localhost:3001/images/profile_pics/${jobPosting.companyProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${jobPosting.companyProfile.userId}.png`;
   if (props.linkJobTitle) {
     job_title = <a href={`/job_postings/${jobPosting.id}`}>{job_title}</a>;
   }

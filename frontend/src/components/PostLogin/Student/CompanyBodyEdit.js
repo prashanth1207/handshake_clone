@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import { Form, Alert, Button } from 'react-bootstrap';
+import { rooturl } from '../../../config/config';
 
 export default function CompanyBodyEdit(props) {
   const { companyProfile } = props.companyProfileResp;
@@ -17,7 +18,7 @@ export default function CompanyBodyEdit(props) {
     formData.append('contactInformation', form.contactInformation.value);
     formData.append('companyLogo', form.elements.companyLogo.files[0]);
     axios.defaults.withCredentials = false;
-    axios.post(`http://localhost:3001/company_profile/${companyProfile.id}`, formData,
+    axios.post(`${rooturl}/company_profile/${companyProfile.id}`, formData,
       {
         headers: {
           'Content-Type': 'multipart/form-data',

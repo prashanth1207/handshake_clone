@@ -5,11 +5,13 @@ import {
 } from 'react-bootstrap';
 import { storedUserInfo } from '../../../utility';
 import EventRegister from './EventRegister';
+import { rooturl } from '../../../config/config';
+
 
 function ShowEvents(props) {
   const [eventResp, setEventResp] = useState({ status: 'loading', events: null });
   if (eventResp.status === 'loading') {
-    axios.get(`http://localhost:3001/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { validationStatus: false }).then((resp) => resp.data).then((resp) => {
+    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { validationStatus: false }).then((resp) => resp.data).then((resp) => {
       if (resp.error) {
         return setEventResp({ status: 'error', events: [] });
       }
@@ -23,7 +25,7 @@ function ShowEvents(props) {
       eventName: form.eventName.value,
     };
     console.dir(queryData);
-    axios.get(`http://localhost:3001/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
+    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
       if (resp.error) {
         return setEventResp({ status: 'error', events: [] });
       }

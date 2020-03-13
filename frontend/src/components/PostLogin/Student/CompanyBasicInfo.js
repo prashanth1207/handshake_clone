@@ -5,10 +5,12 @@ import {
 import LocationSvg from '../../LocationSvg';
 import EditProfileSvg from '../../EditProfileSvg';
 import { storedUserInfo } from '../../../utility';
+import { rooturl } from '../../../config/config';
+
 
 export default function CompanyBasicInfo(props) {
   const { companyProfile } = props;
-  const image_path = `http://localhost:3001/images/profile_pics/${companyProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${companyProfile.userId}.png`;
   let editButton = null;
   if (companyProfile.id === storedUserInfo().profile.id) {
     editButton = (

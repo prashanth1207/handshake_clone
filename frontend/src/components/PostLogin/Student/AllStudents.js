@@ -4,12 +4,14 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import { MAJORS, storedUserInfo } from '../../../utility';
+import { rooturl } from '../../../config/config';
+
 
 function AllStudents(props) {
   const [studentsResp, setstudentsResp] = useState({ status: 'loading', students: null });
 
   if (studentsResp.status === 'loading') {
-    axios.get('http://localhost:3001/student_profile', { validateStatus: false }).then((resp) => {
+    axios.get(`${rooturl}/student_profile`, { validateStatus: false }).then((resp) => {
       if (resp.status == 200 && resp.data.data) {
         const students = resp.data.data.filter((student) => student.id != storedUserInfo().profile.id);
         setstudentsResp({ status: 'loaded', students });
@@ -31,7 +33,7 @@ function AllStudents(props) {
       },
     };
     console.dir(queryData);
-    axios.get('http://localhost:3001/student_profile', { params: queryData }, { validateStatus: false }).then((resp) => {
+    axios.get(`${rooturl}/student_profile`, { params: queryData }, { validateStatus: false }).then((resp) => {
       if (resp.status == 200 && resp.data.data) {
         const students = resp.data.data.filter((student) => student.id != storedUserInfo().profile.id);
         setstudentsResp({ status: 'loaded', students });
@@ -54,7 +56,7 @@ function AllStudents(props) {
   }
   const students_tag = studentsResp.students.map((student) => {
     const educationDetails = student.educationDetails[0] || {};
-    const image_path = `http://localhost:3001/images/profile_pics/${student.userId}.png`;
+    const image_path = `${rooturl}/images/profile_pics/${student.userId}.png`;
     const profile_path = `/student_profile/${student.id}`;
     return (
       <Row className="my-3">

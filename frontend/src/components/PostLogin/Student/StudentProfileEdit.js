@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { rooturl } from '../../../config/config';
 import StudentBodyEdit from './StudentBodyEdit';
 
 export default function StudentProfileEdit() {
@@ -8,7 +9,7 @@ export default function StudentProfileEdit() {
   const [studentProfileResp, setData] = useState({ status: 'loading', studentProfile: null });
   useEffect(() => {
     if (studentProfileResp.status === 'loading') {
-      axios.get(`http://localhost:3001/student_profile/${studentProfileId}`, {
+      axios.get(`${rooturl}/student_profile/${studentProfileId}`, {
         validateStatus: false,
       }).then((resp) => {
         if (resp.status === 200) {

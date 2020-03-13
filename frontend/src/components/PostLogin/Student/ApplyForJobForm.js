@@ -3,12 +3,14 @@ import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { rooturl } from '../../../config/config';
 import axios from 'axios';
 
 function ApplyForJobForm(props) {
   const { studentProfileId, id: jobProfileId } = useParams();
   const [submitStatus, setsubmitStatus] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +18,7 @@ function ApplyForJobForm(props) {
     formData.append('jobPostingId', jobProfileId);
     formData.append('studentProfileId', studentProfileId);
     formData.append('resume', e.currentTarget.elements.resume.files[0]);
-    axios.post('http://localhost:3001/job_application/create', formData, {
+    axios.post(`${rooturl}/job_application/create`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
