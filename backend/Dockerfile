@@ -10,6 +10,6 @@ COPY . .
 
 EXPOSE 3001
 
-CMD npx sequelize-cli db:migrate
+CMD npx sequelize db:migrate
 
 CMD npm start

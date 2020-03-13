@@ -20,8 +20,6 @@ var app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 
-require('dotenv').config();
-
 // global var __basedir to get base directory
 global.__basedir = __dirname;
 
