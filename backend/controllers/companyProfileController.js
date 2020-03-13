@@ -34,8 +34,8 @@ module.exports.update_company_profile = async (req,res) => {
       companyProfile.name = fields.name;
       companyProfile.location = fields.location;
       companyProfile.description = fields.description;
-      companyProfile.contactInfomation = fields.contactInformation;
-      companyProfile.save().catch(err => {
+      companyProfile.contactInformation = fields.contactInformation;
+      await companyProfile.save().catch(err => {
         return res.json({
           success: false,
           error: err

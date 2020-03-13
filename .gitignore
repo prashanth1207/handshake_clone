@@ -3,5 +3,3 @@ backend/node_modules
 .DS_Store
 **/__snapshots__
 backend/.env
-backend/public/images/*
-backend/public/resume/*
