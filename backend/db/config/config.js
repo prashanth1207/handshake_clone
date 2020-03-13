@@ -27,7 +27,7 @@ module.exports = {
     dialect: 'mysql',
     pool: {
       maxConnections: process.env.DB_POOL_MAX || 5,
-      minConnections: process.env.DB_POOL_MIN || 0,
+      minConnections: process.env.DB_POOL_MIN || 1,
       acquire: 30000,
       idle: 10000
     }
