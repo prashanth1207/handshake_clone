@@ -52,32 +52,32 @@ module.exports.post_register = async (req,res) =>{
   req.body.userData
   let userData = req.body.userData;
   let profileData = req.body.profileData
-  let user = await User.findBy({emailId: userData.emailId});
+  let user = await User.findBy({column: {emailId: userData.emailId}});
   if(user){
     return res.json({
       success: false,
       error: 'EmailId already exists' 
     })
   }
-  sequelize.transaction(async() => {
-    User.create(userData).then(async new_user => {
-        let profileKlass = eval(new_user.role + 'Profile')
-        return await profileKlass.create(Object.assign({},profileData,{userId: new_user.id}))
-    }).then( profile =>{
+  try{
+    await sequelize.transaction(async(t) => {
+      new_user = await User.create(userData, { transaction: t });
+      let profileKlass = eval(new_user.role + 'Profile')
+      let profile = await profileKlass.create(Object.assign({},profileData,{userId: new_user.id}), { transaction: t })
       let sessionStorageInfo = {
-        id: user.id,
-        type: user.role,
-        profile: profile.dataValues
+        id: profile.userId,
+        type: new_user.role,
+        profile: profile
       };
       return res.json({
         success: true,
         userInfo: sessionStorageInfo
       })
-    }).catch(e =>{
-      return res.json({
-        success: false,
-        error: e.errors[0].message
-      })
-    });
-  });
+    })
+  } catch(err) {
+    return res.json({
+      success: false,
+      error: err.message
+    })
+  };
 }

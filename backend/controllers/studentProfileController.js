@@ -68,7 +68,8 @@ module.exports.update_student_profile = async(req,res) => {
           if(!educationDetails){
             return true
           }
-          await EducationDetail.update(req.body.educationDetails,{where: {id: educationDetails.id,studentProfileId: id}});
+          educationDetails.studentProfileId = id;
+          await EducationDetail.createOrUpdate(req.body.educationDetails,{where: {studentProfileId: id}});
           return true
         })
         .then(async result =>{
@@ -76,7 +77,8 @@ module.exports.update_student_profile = async(req,res) => {
           if(!experienceDetails){
             return true
           }
-          await ExperienceDetail.update(req.body.experienceDetails,{where: {id: experienceDetails.id,studentProfileId: id}});
+          experienceDetails.studentProfileId = id;
+          await ExperienceDetail.createOrUpdate(req.body.experienceDetails,{where: {studentProfileId: id}});
           return true
         })
         .then(result =>{

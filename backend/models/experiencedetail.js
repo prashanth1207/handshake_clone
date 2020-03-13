@@ -36,6 +36,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     workDescription: DataTypes.TEXT
   }, {});
+  //class methods
+  ExperienceDetail.createOrUpdate = async (data,condtion) =>{
+    let experienceDetail = await ExperienceDetail.findBy({column: condtion.where});
+    if(experienceDetail){
+      return experienceDetail.update(data);
+    }
+    return ExperienceDetail.create(data);
+  }
+
+  ExperienceDetail.findBy = async (queryObject) => {
+    let where_query = {where: queryObject.column}
+    delete queryObject.column
+    let final_query = Object.assign({},where_query, queryObject)
+    let res = await ExperienceDetail.findAll(final_query)
+    return res[0]
+  }
+
   ExperienceDetail.associate = function(models) {
     ExperienceDetail.belongsTo(models.StudentProfile,{
       as: 'studentProfile',

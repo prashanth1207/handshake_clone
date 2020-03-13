@@ -5,8 +5,10 @@ import {
 } from 'react-bootstrap';
 import { rooturl } from '../../config/config';
 import RedirectToJobsPage from '../RedirectToJobsPage';
+import { connect } from 'react-redux';
+import { LoginIn } from '../../redux/actions/index';
 
-function StudentSignUp() {
+function StudentSignUp(props) {
   const [errorMsg, setErrorMsg] = useState(null);
 
   function handleSubmit(e) {
@@ -30,6 +32,7 @@ function StudentSignUp() {
         if (response.status === 200) {
           if (response.data.success === true) {
             sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+            props.loggedIn();
           } else {
             setErrorMsg(response.data.error);
           }
@@ -55,17 +58,14 @@ function StudentSignUp() {
               <Form.Label>First Name</Form.Label>
               <Form.Control name="firstName" required />
             </Form.Group>
-            <br />
             <Form.Group>
               <Form.Label>Last Name</Form.Label>
               <Form.Control name="lastName" required />
             </Form.Group>
-            <br />
             <Form.Group>
               <Form.Label>Email Id</Form.Label>
               <Form.Control name="emailId" required type="email" />
             </Form.Group>
-            <br />
             <Form.Group>
               <Form.Label>Password</Form.Label>
               <Form.Control name="password" required type="password" />
@@ -74,7 +74,6 @@ function StudentSignUp() {
               <Form.Label>College</Form.Label>
               <Form.Control name="currentCollegeName" required />
             </Form.Group>
-            <br />
             <Button variant="primary" type="submit">Register</Button>
           </Form>
         </Col>
@@ -85,4 +84,8 @@ function StudentSignUp() {
   );
 }
 
-export default StudentSignUp;
+const mapDispatchToProps = {
+  loggedIn: LoginIn,
+};
+const ConnectedStudentSignUp = connect(null, mapDispatchToProps)(StudentSignUp);
+export default ConnectedStudentSignUp;

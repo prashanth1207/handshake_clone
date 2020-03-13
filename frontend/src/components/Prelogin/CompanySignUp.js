@@ -5,10 +5,10 @@ import {
 } from 'react-bootstrap';
 import RedirectToJobsPage from '../RedirectToJobsPage';
 import { rooturl } from '../../config/config';
+import { connect } from 'react-redux';
+import { LoginIn } from '../../redux/actions/index';
 
-
-
-function CompanySignUp() {
+function CompanySignUp(props) {
   const [errorMsg, setErrorMsg] = useState(null);
 
   function handleSubmit(e) {
@@ -31,6 +31,7 @@ function CompanySignUp() {
         if (response.status === 200) {
           if (response.data.success === true) {
             sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+            props.loggedIn();
           } else {
             setErrorMsg(response.data.error);
           }
@@ -78,4 +79,8 @@ function CompanySignUp() {
   );
 }
 
-export default CompanySignUp;
+const mapDispatchToProps = {
+  loggedIn: LoginIn,
+};
+const ConnectedCompanySignUp = connect(null, mapDispatchToProps)(CompanySignUp);
+export default ConnectedCompanySignUp;

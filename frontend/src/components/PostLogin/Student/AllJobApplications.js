@@ -47,7 +47,7 @@ function AllJobApplications(props) {
     setStudentProfile(null);
   };
 
-  const jobApplication_tag = jobApplicationsResp.jobApplications.map((jobApplication) => (
+  let jobApplication_tag = jobApplicationsResp.jobApplications.map((jobApplication) => (
     <Row>
       <Col>
         <Card>
@@ -74,6 +74,7 @@ function AllJobApplications(props) {
       </Col>
     </Row>
   ));
+  jobApplication_tag = jobApplication_tag.length > 0 ? jobApplication_tag : <h3 style={{textAlign: 'center'}}>No students have applied!</h3>;
   return (
     <Container>
       <h2>Applied Students</h2>

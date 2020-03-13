@@ -29,8 +29,8 @@ function CompanyJobPostings(props) {
   }
   const { jobPostings } = jobPostingResp;
   console.dir(jobPostings);
-  const jobPostingsDivs = jobPostings.map((jobPosting) => {
-    const jobApplicationTag = (
+  let jobPostingsDivs = jobPostings.map((jobPosting) => {
+    let jobApplicationTag = (
       <Button style={{ float: 'right' }} variant="link" href={`/${companyProfileId}/job_postings/${jobPosting.id}/job_applications`}>
         Job applications
       </Button>
@@ -41,6 +41,7 @@ function CompanyJobPostings(props) {
       </div>
     );
   });
+  jobPostingsDivs = jobPostingsDivs.length > 0 ? jobPostingsDivs : <h2>No Jobs Posted</h2>;
   return (
     <div className="clearfix new-topbar-nux style__container___15r1p style__large___3HKaH style__fitted___2ndoo">
       <br />

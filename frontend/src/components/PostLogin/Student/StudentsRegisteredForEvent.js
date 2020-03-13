@@ -20,7 +20,7 @@ function StudentsRegisteredForEvent(props) {
     return <div>Loading...</div>;
   }
 
-  const eventRegistrations_tag = eventRegistrationsResp.eventRegistrations.map((eventRegistration) => (
+  let eventRegistrations_tag = eventRegistrationsResp.eventRegistrations.map((eventRegistration) => (
     <Row>
       <Col>
         <Card>
@@ -43,6 +43,7 @@ function StudentsRegisteredForEvent(props) {
       </Col>
     </Row>
   ));
+  eventRegistrations_tag = eventRegistrations_tag.length > 0 ? eventRegistrations_tag : <h3 style={{textAlign: 'center'}}>No students have registered!</h3>;
   return (
     <Container>
       <h2>Registered Students</h2>

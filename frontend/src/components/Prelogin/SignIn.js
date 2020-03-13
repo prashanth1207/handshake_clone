@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { LoginIn } from '../../redux/actions/index';
 import axios from 'axios';
 import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
-import { LoginIn } from '../../redux/actions/index';
 import { rooturl } from '../../config/config';
 import RedirectToProfile from '../RedirectToJobsPage';
 

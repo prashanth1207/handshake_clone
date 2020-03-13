@@ -27,6 +27,7 @@ function JobPostingsAll(props) {
   const handleOnChange = (e) => {
     const { form } = e.currentTarget;
     const queryData = {
+      jobTitle: form.jobTitle.value,
       jobCategory: form.jobCategory.value,
       location: form.location.value,
     };
@@ -77,9 +78,20 @@ function JobPostingsAll(props) {
                     </Card.Title>
                   </Card.Body>
                   <Card.Body class="list-group-item">
+                    <Card.Text>Title</Card.Text>
+                    <Card.Text>
+                      <Form.Control type="text" name="jobTitle" onChange={handleOnChange} placeholder="Job Title" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body class="list-group-item" style={{width: '100%'}}>
                     <Card.Text>Category</Card.Text>
                     <Card.Text>
-                      <Form.Control type="text" name="jobCategory" onChange={handleOnChange} placeholder="Full Time, Part Time" className="mr-sm-2" />
+                      <Form.Control as="select" name="jobCategory" onChange={handleOnChange} placeholder="Full Time, Part Time" style={{width: '100%'}}>
+                      <option key='' value=''>All</option>
+                        <option key='Full Time' value='Full Time'>Full Time</option>
+                        <option key='Part Time' value='Part Time'>Part Time</option>
+                        <option key='Internship' value='Internship'>Internship</option>
+                      </Form.Control>
                     </Card.Text>
                   </Card.Body>
                   <Card.Body class="list-group-item">

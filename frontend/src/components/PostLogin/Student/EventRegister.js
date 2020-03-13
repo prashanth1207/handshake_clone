@@ -5,8 +5,7 @@ import { rooturl } from '../../../config/config';
 
 
 function EventRegister(props) {
-  const { event } = props;
-  const { studentProfileId, eventId } = props;
+  const { event, studentProfileId } = props;
   const [registered, setregistered] = useState(event.registered);
   if (registered) {
     return <Badge variant="success">Registered</Badge>;
@@ -20,9 +19,10 @@ function EventRegister(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    debugger
     const formData = {
-      eventId,
-      studentProfileId,
+      eventId: event.id,
+      studentProfileId: studentProfileId,
     };
     axios.post(`${rooturl}/event_registrations`, formData, { validateStatus: false })
       .then((resp) => {
