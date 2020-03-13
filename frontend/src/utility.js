@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { rooturl } from './config/config';
 
 export const DEGREES = ['Junior', 'Senior', 'Masters', 'Alumni'];
 
@@ -26,6 +27,6 @@ export const storedUserInfo = () => JSON.parse(sessionStorage.getItem('userInfo'
 
 export function studentProfileSubmit(formData, studentProfileId) {
   axios.defaults.withCredentials = false;
-  return axios.post(`http://localhost:3001/student_profile/${studentProfileId}`, formData)
+  return axios.post(`${rooturl}/student_profile/${studentProfileId}`, formData)
     .then((resp) => resp);
 }
