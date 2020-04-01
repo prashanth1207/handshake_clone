@@ -8,26 +8,26 @@ import SignUp from './components/Prelogin/SignUp';
 import StudentSignUp from './components/Prelogin/StudentSignUp';
 import CompanySignUp from './components/Prelogin/CompanySignUp';
 import Header from './components/Header';
-import StudentProfile from './components/PostLogin/Student/StudentProfile';
-import CompanyProfile from './components/PostLogin/Student/CompanyProfile';
-import CompanyProfileEdit from './components/PostLogin/Student/CompanyProfileEdit';
-import StudentProfileEdit from './components/PostLogin/Student/StudentProfileEdit';
-import JobPostingShow from './components/PostLogin/Student/JobPostingShow';
-import JobPostingCreate from './components/PostLogin/Student/JobPostingCreate';
-import JobPostingsAll from './components/PostLogin/Student/JobPostingsAll';
-import CompanyJobPostings from './components/PostLogin/Student/CompanyJobPostings';
-import ShowEventDetails from './components/PostLogin/Student/ShowEventDetails';
-import StudentJobApplications from './components/PostLogin/Student/StudentJobApplications';
+import StudentProfile from './components/PostLogin/Student/Profile/StudentProfile';
+import CompanyProfile from './components/PostLogin/Company/Profile/CompanyProfile';
+import CompanyProfileEdit from './components/PostLogin/Company/Profile/CompanyProfileEdit';
+import StudentProfileEdit from './components/PostLogin/Student/Profile/StudentProfileEdit';
+import JobPostingShow from './components/PostLogin/Student/Jobs/JobPostingShow';
+import JobPostingCreate from './components/PostLogin/Company/Jobs/JobPostingCreate';
+import JobPostingsAll from './components/PostLogin/Student/Jobs/JobPostingsAll';
+import CompanyJobPostings from './components/PostLogin/Company/Jobs/CompanyJobPostings';
+import ShowEventDetails from './components/PostLogin/Common/ShowEventDetails';
+import StudentJobApplications from './components/PostLogin/Student/Applications/StudentJobApplications';
 
 import {
   PrivateRoute, PrivateCompanyRoute, PrivateOwnCompanyRoute, PrivateStudentRoute, PrivateOwnStudentRoute,
 } from './PrivateRoutes';
-import ApplyForJobForm from './components/PostLogin/Student/ApplyForJobForm';
-import AllJobApplications from './components/PostLogin/Student/AllJobApplications';
-import CreateEvent from './components/PostLogin/Student/CreateEvent';
-import ShowEvents from './components/PostLogin/Student/ShowEvents';
-import StudentsRegisteredForEvent from './components/PostLogin/Student/StudentsRegisteredForEvent';
-import AllStudents from './components/PostLogin/Student/AllStudents';
+import ApplyForJobForm from './components/PostLogin/Student/Jobs/ApplyForJobForm';
+import AllJobApplications from './components/PostLogin/Company/Jobs/AllJobApplications';
+import CreateEvent from './components/PostLogin/Company/Event/CreateEvent';
+import ShowEvents from './components/PostLogin/Common/ShowEvents';
+import StudentsRegisteredForEvent from './components/PostLogin/Company/Event/StudentsRegisteredForEvent';
+import AllStudents from './components/PostLogin/Common/AllStudents';
 
 
 function App({ loggedIn }) {

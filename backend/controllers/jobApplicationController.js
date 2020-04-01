@@ -110,17 +110,15 @@ module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
 module.exports.get_job_applications_for_a_student = (req, res) =>{
   let {studentProfileId} = req.params;
   let queryParams = searchableQuery(req.query);
-  JobApplication.findAll({
-    where: Object.assign({},queryParams,{studentProfileId: studentProfileId}),
-    include: [{
-      model: JobPosting,
-      as:'jobPosting'
-    }]
+  JobApplication.find({
+    ...queryParams,
+    studentProfile: studentProfileId
   })
-    .then(jobPostings => {
-      res.json({data: jobPostings})
-    })
-    .catch(e => {
-      res.json({error: e})
-    })
+  .populate('jobPosting')
+  .then(jobPostings => {
+    res.json({data: jobPostings})
+  })
+  .catch(e => {
+    res.json({error: e})
+  })
 }

@@ -46,7 +46,7 @@ module.exports.show_all_events_for_student = async (req,res) =>{
     });
     let eventsWithRegistrationInfo =  events.map(event =>{
       event._doc.registered = eventRegistrations.some(registration => {
-          return registration.event === event._id
+          return registration.event.toString() === event._id.toString()
       })
       return event
     })

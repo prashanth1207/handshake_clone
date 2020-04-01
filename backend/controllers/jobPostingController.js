@@ -4,9 +4,14 @@ let CompanyProfile = mongoose.model('CompanyProfile');
 let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.show_all_job_postings = async (req,resp) => {
-  let filter_params = searchableQuery(req.query);
-  let jobPostings = await JobPosting.find(filter_params).populate('companyProfile');
-  resp.json(jobPostings);
+  JobPosting.find(req.query)
+    .populate('companyProfile')
+    .then(jobPostings => {
+      return resp.json(jobPostings)
+    })
+    .catch(error => {
+      return resp.json({error: error.message})
+    });
 }
 
 module.exports.get_job_posting = async (req,resp) => {

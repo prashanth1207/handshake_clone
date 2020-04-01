@@ -12,35 +12,27 @@ module.exports.get_all_students_profile = (req,res) =>{
   delete query_params.educationDetails
   let studentProfileQuery = searchableQuery(query_params);
   let educationDetailsQuery = searchableQuery(JSON.parse(educationDetails_query));
-  // let includeEducationDetails = {
-  //   model: EducationDetail,
-  //   as : 'educationDetails',
-  // }
-  // let includeExperienceDetail = {
-    //   model: ExperienceDetail,
-    //   as: 'experienceDetails'
-    // }
-    StudentProfile.find(studentProfileQuery)
-    .populate('educationDetails')
-    .populate('experienceDetails')
-    .then(studentProfiles =>{
-      if(Object.keys(educationDetailsQuery).length > 0) {
-        studentProfiles = studentProfiles.filter(profile =>{
-          let educationDetail = profile.educationDetails[0];
-          if(!educationDetail){
-            return false;
-          }
-          let match = false;
-          for(let [col_name,col_val] of Object.entries(educationDetailsQuery)){
-            match = educationDetail[col_name].match(col_val.$regex);
-          }
-          return match;
-        });
-      }
-      return res.json({data: studentProfiles});
-    }).catch(e => {
-      return res.json({error: e})
-    })
+  StudentProfile.find(studentProfileQuery)
+  .populate('educationDetails')
+  .populate('experienceDetails')
+  .then(studentProfiles =>{
+    if(Object.keys(educationDetailsQuery).length > 0) {
+      studentProfiles = studentProfiles.filter(profile =>{
+        let educationDetail = profile.educationDetails[0];
+        if(!educationDetail){
+          return false;
+        }
+        let match = false;
+        for(let [col_name,col_val] of Object.entries(educationDetailsQuery)){
+          match = educationDetail[col_name].match(col_val.$regex);
+        }
+        return match;
+      });
+    }
+    return res.json({data: studentProfiles});
+  }).catch(e => {
+    return res.json({error: e})
+  })
 }
 
 module.exports.get_student_profile = async (req,res) => {
@@ -73,7 +65,7 @@ module.exports.update_student_profile = async(req,res) => {
       }
       let studentProfileData = req.body.studentProfile;
       if(studentProfileData){
-        await studentProfile.save(studentProfileData);
+        await studentProfile.update(studentProfileData);
       }
       return res.json({success: true})
     }catch(error){
