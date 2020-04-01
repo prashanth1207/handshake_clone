@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import EditProfileSvg from '../../../EditProfileSvg';
+import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { storedUserInfo } from '../../../../utility';
 
 function WorkExperienceShow(props) {

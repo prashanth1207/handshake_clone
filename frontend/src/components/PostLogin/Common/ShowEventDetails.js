@@ -5,7 +5,7 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import { rooturl } from '../../../config/config';
-import LocationSvg from '../../LocationSvg';
+import LocationSvg from '../../svg/LocationSvg';
 
 
 function ShowEventDetails() {

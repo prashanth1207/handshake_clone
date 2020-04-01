@@ -1,17 +1,17 @@
 import React from 'react';
-import PreLoginHandShakeLogo from './PreLoginHandShakeLogo';
+import PreLoginHandShakeLogoSvg from './svg/PreLoginHandShakeLogoSvg';
 import '../css/registration.css';
 import { Link } from 'react-router-dom';
-import StudentHeader from './StudentHeader';
+import NavigationBar from './NavigationBar';
 
 const Header = ({ loggedIn }) => {
   if (loggedIn) {
-    return <StudentHeader />;
+    return <NavigationBar />;
   }
   return (
     <div className="prelogin-header">
       <Link to="/">
-        <PreLoginHandShakeLogo />
+        <PreLoginHandShakeLogoSvg />
       </Link>
     </div>
   );

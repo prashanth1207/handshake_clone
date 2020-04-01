@@ -3,7 +3,7 @@ import {
   Card, Image, Button, Form, Modal, Alert,
 } from 'react-bootstrap';
 import axios from 'axios';
-import CameraSvg from '../../../CameraSvg';
+import CameraSvg from '../../../svg/CameraSvg';
 import { rooturl } from '../../../../config/config';
 import { studentProfileSubmit } from '../../../../utility';
 

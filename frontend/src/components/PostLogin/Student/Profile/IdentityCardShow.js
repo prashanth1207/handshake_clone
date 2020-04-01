@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Image, Button } from 'react-bootstrap';
-import EditProfileSvg from '../../../EditProfileSvg';
+import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
 

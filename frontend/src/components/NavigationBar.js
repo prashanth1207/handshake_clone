@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Navbar, Nav } from 'react-bootstrap';
 import { LogOut } from '../redux/actions/index';
-import './postLoginNavbar.css';
 import PostLoginHandshakeLogo from './PostLoginHandshakeLogo';
 import { storedUserInfo } from '../utility';
 
-const StudentHeader = (props) => {
+const NavigationBar = (props) => {
   const handleLogout = () => {
     sessionStorage.removeItem('userInfo');
     props.logout();
@@ -40,5 +39,5 @@ const StudentHeader = (props) => {
 const mapDispatchToProps = {
   logout: LogOut,
 };
-const ConnectedStudentHeader = connect(null, mapDispatchToProps)(StudentHeader);
-export default ConnectedStudentHeader;
+const ConnectedNavigationBar = connect(null, mapDispatchToProps)(NavigationBar);
+export default ConnectedNavigationBar;

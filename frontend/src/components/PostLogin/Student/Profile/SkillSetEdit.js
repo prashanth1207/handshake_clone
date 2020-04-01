@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Card, Badge, Button, Form, Row, Col, Alert,
 } from 'react-bootstrap';
-import SkillRemoveSvg from '../../../skillRemoveSvg';
+import SkillRemoveSvg from '../../../svg/skillRemoveSvg';
 import { studentProfileSubmit } from '../../../../utility';
 
 function SkillSetEdit(props) {

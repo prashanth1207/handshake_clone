@@ -2,9 +2,9 @@ import React from 'react';
 import {
   Card, Row, Col, Image, Badge,
 } from 'react-bootstrap';
-import LocationSvg from '../../../LocationSvg';
-import CategorySvg from '../../../CategorySvg';
-import SalarySvg from '../../../SalarySvg';
+import LocationSvg from '../../../svg/LocationSvg';
+import CategorySvg from '../../../svg/CategorySvg';
+import SalarySvg from '../../../svg/SalarySvg';
 import { rooturl } from '../../../../config/config';
 
 function JobPostingSummary(props) {
