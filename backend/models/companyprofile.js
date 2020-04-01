@@ -1,44 +1,54 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const CompanyProfile = sequelize.define('CompanyProfile', {
+
+var mongoose = require('mongoose');
+
+const CompanyProfileSchema = new mongoose.Schema(
+  {
     name: {
-      type: DataTypes.STRING,
-      allowNull:false,
-      validate: {
-        notNull: 'Name cannot be empty'
-      }
+      type: String,
+      required: true,
+      // validate: {
+      //   notNull: 'Name cannot be empty'
+      // }
     },
     location: {
-      type: DataTypes.STRING,
-      allowNull:false,
-      validate: {
-        notNull: 'Location cannot be empty'
-      }
+      type: String,
+      required: true,
+      // validate: {
+      //   notNull: 'Location cannot be empty'
+      // }
     },
     description:{
-      type: DataTypes.TEXT
+      type: String
     },
     contactInformation:{
-      type: DataTypes.TEXT
-    }
-  }, {});
+      type: String
+    },
+    jobPostings: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'JobPosting' 
+    }],
+    events: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event'
+    }],
+    user: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User'
+    },
+  },
+  {
+    timestamps: true
+  },
+)
+  
+module.exports = mongoose.models.CompanyProfile || mongoose.model('CompanyProfile', CompanyProfileSchema);
 
-  // class methods
-  CompanyProfile.findBy = async (queryObject) => {
-    let where_query = {where: queryObject.column}
-    delete queryObject.column
-    let final_query = Object.assign({},where_query, queryObject)
-    let res = await CompanyProfile.findAll(final_query)
-    return res[0]
-  }
-
-  CompanyProfile.associate = function(models) {
-    CompanyProfile.belongsTo(models.User, {
-      as: 'user',
-    });
-    CompanyProfile.hasMany(models.JobPosting, {
-      as: 'jobPosting',
-    });
-  };
-  return CompanyProfile;
-};
+// CompanyProfile.associate = function(models) {
+//   CompanyProfile.belongsTo(models.User, {
+//     as: 'user',
+//   });
+//   CompanyProfile.hasMany(models.JobPosting, {
+//     as: 'jobPosting',
+//   });
+// };

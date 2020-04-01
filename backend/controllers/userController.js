@@ -1,8 +1,8 @@
-let models = require('./../models')
-let User = models.User
-let StudentProfile = models.StudentProfile;
-let CompanyProfile = models.CompanyProfile;
-let sequelize = models.sequelize
+const mongoose = require('mongoose');
+let User = mongoose.model('User');
+let StudentProfile = mongoose.model('StudentProfile');
+let CompanyProfile =mongoose.model('CompanyProfile');
+//let sequelize = models.sequelize
 
 
 function isDataEmpty(data_arr){
@@ -13,7 +13,7 @@ function isDataEmpty(data_arr){
   });
 }
 
-module.exports.post_login = async (req,res) =>{
+module.exports.post_login = async function(req,res){
   let emailId = req.body.emailId;
   let password = req.body.password;
   if (isDataEmpty([emailId,password])){
@@ -22,7 +22,7 @@ module.exports.post_login = async (req,res) =>{
         error: 'All fields are mandatory' 
       })
   }
-  let user = await User.findBy({column: {emailId: emailId}});
+  let user = await User.findOne({emailId: emailId});
   let error = 'Invalid email id or password';
   if (!user || !user.is_password_valid(password)){
     return res.json({
@@ -30,11 +30,11 @@ module.exports.post_login = async (req,res) =>{
       error: error 
     })
   }
-  let profile = await eval(user.role + 'Profile').findBy({column:{userId: user.id}})
+  let profile = await eval(user.role + 'Profile').findOne({user: user._id});
     let sessionStorageInfo = {
       id: user.id,
       type: user.role,
-      profile: profile.dataValues
+      profile: profile
     };
   return res.json({
     success: true,
@@ -43,7 +43,7 @@ module.exports.post_login = async (req,res) =>{
 };
 module.exports.post_register = async (req,res) =>{
 
-  if (isDataEmpty([...Object.values(req.body.userData),...Object.values(req.body.profileData)])){
+  if(isDataEmpty([...Object.values(req.body.userData),...Object.values(req.body.profileData)])){
       return res.json({
         success: false,
         error: 'All fields are mandatory' 
@@ -52,29 +52,35 @@ module.exports.post_register = async (req,res) =>{
   req.body.userData
   let userData = req.body.userData;
   let profileData = req.body.profileData
-  let user = await User.findBy({column: {emailId: userData.emailId}});
+  let user = await User.findOne({emailId: userData.emailId});
   if(user){
     return res.json({
       success: false,
       error: 'EmailId already exists' 
     })
   }
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try{
-    await sequelize.transaction(async(t) => {
-      new_user = await User.create(userData, { transaction: t });
-      let profileKlass = eval(new_user.role + 'Profile')
-      let profile = await profileKlass.create(Object.assign({},profileData,{userId: new_user.id}), { transaction: t })
-      let sessionStorageInfo = {
-        id: profile.userId,
-        type: new_user.role,
-        profile: profile
-      };
-      return res.json({
-        success: true,
-        userInfo: sessionStorageInfo
-      })
-    })
+    let user = new User(userData)
+    await user.save(session);
+    let profileKlass = eval(user.role + 'Profile');
+    let profile = new profileKlass(Object.assign({},profileData,{user: user._id}));
+    await profile.save(session);
+    let sessionStorageInfo = {
+      id: user._id,
+      type: user.role,
+      profile: profile
+    };
+    await session.commitTransaction();
+    session.endSession();
+    return res.json({
+      success: true,
+      userInfo: sessionStorageInfo
+    });
   } catch(err) {
+    await session.abortTransaction();
+    session.endSession();
     return res.json({
       success: false,
       error: err.message

@@ -1,13 +1,13 @@
-let models = require('./../models')
-let CompanyProfile = models.CompanyProfile;
+let mongoose = require('mongoose');
+let CompanyProfile = mongoose.model('CompanyProfile');
 const formidable = require('formidable');
 let fs = require('fs');
 
 module.exports.get_company_profile = async (req,resp) => {
   let id = req.params.id;
-    let companyProfile = await CompanyProfile.findBy({column: {id: id}})
+    let companyProfile = await CompanyProfile.findById(id);
   if(companyProfile){
-    resp.json(JSON.parse(JSON.stringify(companyProfile.dataValues)))
+    resp.json(companyProfile)
   }else{
     resp.status(404)
       .json({error: 'Record not found'});
@@ -16,7 +16,7 @@ module.exports.get_company_profile = async (req,resp) => {
 
 module.exports.update_company_profile = async (req,res) => {
   let id = req.params.id;
-  CompanyProfile.findBy({column: {id: id}})
+  CompanyProfile.findById(id)
   .then(companyProfile =>{
     if(!companyProfile){
       return res.json({
@@ -26,9 +26,9 @@ module.exports.update_company_profile = async (req,res) => {
     }
     new formidable.IncomingForm().parse(req,async (err,fields,files) =>{
       if(err){
-        res.json({
+        return res.json({
           success: false,
-          error: err
+          error: err.message
         })
       }
       companyProfile.name = fields.name;

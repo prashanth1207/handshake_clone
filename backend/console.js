@@ -27,11 +27,24 @@
 require('dotenv').config();
 let repl = require('repl');
 let models = require('./models');
+const mongoose = require('mongoose');
+var options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
+    bufferMaxEntries: 0
+};
+mongoose.connect(process.env.MONGO_DB_URL, options, (err, res) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+});
 Object.keys(models).forEach(modelName => {
   global[modelName] = models[modelName];
 });
-
-// global['DateTime'] = require('./lib/DateTime').default;
 
 let replServer = repl.start({
   prompt: 'app > '

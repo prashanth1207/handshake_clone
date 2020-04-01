@@ -2,18 +2,24 @@
 
 const fs = require('fs');
 const path = require('path');
-const Sequelize = require('sequelize');
+const mongoose = require('mongoose');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../db/config/config')[env];
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+var options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
+    bufferMaxEntries: 0,
+};
+mongoose.connect(process.env.MONGO_DB_URL, options, (err, res) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+});
 
 fs
   .readdirSync(__dirname)
@@ -21,17 +27,18 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
-    const model = sequelize['import'](path.join(__dirname, file));
-    db[model.name] = model;
+    // const model = sequelize['import'](path.join(__dirname, file));
+    // db[model.name] = model;
+    require(path.join(__dirname, file))
   });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
 
-module.exports = db;
+// module.exports = db;

@@ -1,7 +1,7 @@
-let models = require('./../models')
-let JobApplication = models.JobApplication;
-let StudentProfile = models.StudentProfile;
-let JobPosting = models.JobPosting;
+let mongoose = require('mongoose')
+let JobApplication = mongoose.model('JobApplication');
+let StudentProfile = mongoose.model('StudentProfile');
+let JobPosting = mongoose.model('JobPosting');
 const formidable = require('formidable')
 let fs = require('fs');
 let searchableQuery = require('./../utility/search').searchableQuery;
@@ -9,20 +9,21 @@ let searchableQuery = require('./../utility/search').searchableQuery;
 
 module.exports.getApplicationStatus = async (req, res) => {
   let {jobPostingId,studentProfileId} = req.body;
-  JobApplication.findBy({column: {jobPostingId: jobPostingId, studentProfileId: studentProfileId}})
-  .then(jobApplications =>{
+  JobApplication.findOne({jobPosting: jobPostingId, studentProfile: studentProfileId})
+  .then(jobApplication =>{
     res.json({
-      status: jobApplications ? jobApplications.status : 'Not Applied'
+      status: jobApplication ? jobApplication.status : 'Not Applied'
     })
   });
   
-}
+};
 
 module.exports.setApplicationStatus = async (req, res) => {
-  JobApplication.findBy({column: {id: req.param('id')}})
+  JobApplication.findById(req.param('id'))
     .then(async jobApplication => {
       if(jobApplication){
-        let status = await jobApplication.update({status: req.body.status}).then(_ =>{
+        jobApplication.status = req.body.status;
+        jobApplication.save().then(_ =>{
           return res.json({
             success: true
           });
@@ -51,15 +52,13 @@ module.exports.create_job_application = async (req, res) =>{
       })
     }
     let createData = {
-      jobPostingId: fields.jobPostingId,
-      studentProfileId: fields.studentProfileId,
+      jobPosting: fields.jobPostingId,
+      studentProfile: fields.studentProfileId,
       resumePath: `${fields.jobPostingId}_${fields.studentProfileId}_resume.pdf`
     }
-    let jobApplication = await JobApplication.findBy({
-      column: {
-        jobPostingId: createData.jobPostingId, 
-        studentProfileId: createData.studentProfileId
-      }
+    let jobApplication = await JobApplication.findOne({
+      jobPosting: fields.jobPostingId, 
+      studentProfile: fields.studentProfileId
     });
     if(jobApplication){
       return res.json({
@@ -68,14 +67,24 @@ module.exports.create_job_application = async (req, res) =>{
       })
     } 
     let resume = files.resume;
-    JobApplication.create(createData)
+    let newJobApplication = new JobApplication(createData);
+    newJobApplication.save()
+    .then(async jobApplication => {
+      let studentProfile = await StudentProfile.findById(fields.studentProfileId);
+      let jobPosting = await JobPosting.findById(fields.jobPostingId);
+      studentProfile.jobApplications.push(jobApplication._id);
+      jobPosting.jobApplications.push(jobApplication._id);
+      await studentProfile.save();
+      await jobPosting.save();
+      return jobApplication;
+    })
     .then(_ =>{
       res.json({success: true});  
     })
     .catch(error => {
       res.json({
         success: false,
-        error: error.errors[0].message
+        error: error.message
       })
     })
     fs.renameSync(resume.path,__basedir+'/public/resume/'+createData.resumePath)
@@ -89,7 +98,7 @@ module.exports.create_job_application = async (req, res) =>{
 
 module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
   let {jobPostingId} = req.query;
-  JobApplication.findAll({where: {jobPostingId: jobPostingId},include: [{model: StudentProfile,as: 'studentProfile'}]})
+  JobApplication.find({jobPosting: jobPostingId}).populate('studentProfile')
     .then(jobPostings => {
       res.json({data: jobPostings})
     })

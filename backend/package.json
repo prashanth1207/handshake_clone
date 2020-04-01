@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node -r dotenv/config ./app.js",
+    "debug": "node --inspect -r dotenv/config ./app.js -r esm",
     "console": "node -r esm --inspect --experimental-repl-await console",
     "test": "mocha test"
   },
@@ -25,6 +26,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mocha": "^7.1.0",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.5",
     "morgan": "~1.9.1",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.2",
