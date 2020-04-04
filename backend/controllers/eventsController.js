@@ -37,8 +37,16 @@ module.exports.create_event = (req,res) => {
 
 module.exports.show_all_events_for_student = async (req,res) =>{
   let {studentProfileId} = req.params;
-  let query_params = searchableQuery(req.query);
+  let query_params = req.query;
+  let page = parseInt(query_params.page || 1) - 1;
+  let perPage = parseInt(query_params.perPage || 10);
+  delete query_params.page;
+  delete query_params.perPage;
+  query_params = searchableQuery(query_params);
+  let totalRecordCount = await Event.find(query_params).count();
   Event.find(query_params)
+  .skip(page > -1 ? page : 0)
+  .limit(perPage)
   .sort('-time')
   .then(async events =>{
     let eventRegistrations = await EventRegistration.find({
@@ -53,22 +61,38 @@ module.exports.show_all_events_for_student = async (req,res) =>{
     let studentProfile = await StudentProfile.findById(studentProfileId)
       .populate('educationDetails');
     let major = (studentProfile.educationDetails[0] || {}).major;
-    return res.json({events: eventsWithRegistrationInfo, studentMajor: major})
+    return res.json({
+      events: eventsWithRegistrationInfo, 
+      studentMajor: major, 
+      totalRecordCount: totalRecordCount
+    })
   }).catch(e => {
     console.log(e);
     res.json({error: 'Something went wrong'})
   });
 }
 
-module.exports.show_all_events_for_company = (req,res) =>{
+module.exports.show_all_events_for_company = async (req,res) =>{
   let {companyProfileId} = req.params;
-  let query_params = searchableQuery(req.query);
+  let query_params = req.query;
+  let page = parseInt(query_params.page || 1) - 1;
+  let perPage = parseInt(query_params.perPage || 10);
+  delete query_params.page;
+  delete query_params.perPage;
+  query_params = searchableQuery(query_params);
+  let totalRecordCount = await Event.find({...query_params,
+    companyProfile: companyProfileId}).count();
   Event.find({
     ...query_params,
     companyProfile: companyProfileId
-  }).then(events =>{
+  })
+  .skip(page > -1 ? page : 0)
+  .limit(perPage)
+  .sort('-time')
+  .then(events =>{
     return res.json({
-      events: events
+      events: events,
+      totalRecordCount: totalRecordCount
     })
   }).catch(e => {
     res.json({error: 'Something went wrong'})

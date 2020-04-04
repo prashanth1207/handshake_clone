@@ -6,7 +6,7 @@ import { storedUserInfo } from '../../../../utility';
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
-  const educationDetails = studentProfile.educationDetails || {};
+  const educationDetails = (props.studentProfile.educationDetails || [])[0] || {};
   const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png`;
   let editButton = null;
   if (studentProfile._id === storedUserInfo().profile._id) {

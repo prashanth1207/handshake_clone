@@ -4,8 +4,8 @@ import '../css/registration.css';
 import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 
-const Header = ({ loggedIn }) => {
-  if (loggedIn) {
+const Header = ({ userInfo }) => {
+  if (userInfo) {
     return <NavigationBar />;
   }
   return (

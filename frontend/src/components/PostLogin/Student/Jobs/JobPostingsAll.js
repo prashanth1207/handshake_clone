@@ -5,40 +5,86 @@ import {
 } from 'react-bootstrap';
 import JobPostingSummary from './JobPostingSummary';
 import { rooturl } from '../../../../config/config';
+import MyPagination from '../../Common/MyPagination';
 
 
 
 function JobPostingsAll(props) {
+  let perPage = 10;
   const { companyProfileId } = props;
-  const [jobPostingResp, setData] = useState({ status: 'loading', jobPostings: null });
+  const [jobPostingResp, setData] = useState({ 
+    status: 'loading', 
+    jobPostings: null, 
+    currentPage: 1, 
+    totalPages: null
+  });
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.get(`${rooturl}/job_postings`, { params: { companyProfile: companyProfileId } }, {
+    axios.get(`${rooturl}/job_postings`, { params: {
+      page: 1,
+      perPage: perPage,
+      companyProfile: companyProfileId 
+    } }, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPostings: resp.data });
+        setData({ 
+          status: 'recordFound', 
+          jobPostings: resp.data,
+          currentPage: 1,
+          totalPages: Math.ceil(resp.data.totalRecords / perPage),
+        });
       } else {
         setData({ status: 'recordNotFound' });
       }
     });
   }
 
-  const handleOnChange = (e) => {
-    const { form } = e.currentTarget;
+
+
+  const handleOnChange = (e,page=1,formElement=null) => {
+    const form = formElement || e.currentTarget.form;
     const queryData = {
+      page: page,
+      perPage: perPage,
       jobTitle: form.jobTitle.value,
       jobCategory: form.jobCategory.value,
       location: form.location.value,
     };
     axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
       if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPostings: resp.data });
+        setData({ 
+          status: 'recordFound', 
+          jobPostings: resp.data, 
+          currentPage: queryData.page,
+          totalPages: Math.ceil(resp.data.totalRecords / perPage),
+        });
       } else {
-        setData({ status: 'error', jobPostings: null });
+        setData({ 
+          status: 'error', 
+          jobPostings: null,
+          currentPage: queryData.page,
+          totalPages: null
+        });
       }
     });
   };
+
+  const handlePrevPage = () =>{
+    if(jobPostingResp.currentPage === 1){
+      return
+    }
+    let form = document.getElementById('jobPostingForm');
+    handleOnChange(null,jobPostingResp.currentPage - 1,form);
+  }
+
+  const handleNextPage = () =>{
+    if(jobPostingResp.currentPage === jobPostingResp.totalPages){
+      return
+    }
+    let form = document.getElementById('jobPostingForm');
+    handleOnChange(null,jobPostingResp.currentPage + 1,form);
+  }
 
   const resetForm = (e) => {
     e.currentTarget.form.reset();
@@ -54,7 +100,7 @@ function JobPostingsAll(props) {
 
   const { jobPostings } = jobPostingResp;
   console.dir(jobPostings);
-  const jobPostingsDivs = jobPostings.map((jobPosting) => (
+  const jobPostingsDivs = jobPostings.data.map((jobPosting) => (
     <Row className="my-3">
       <Col>
         <JobPostingSummary jobPosting={jobPosting} linkJobTitle />
@@ -70,7 +116,7 @@ function JobPostingsAll(props) {
           <Row className="my-3">
             <Col>
               <Card>
-                <Form inline>
+                <Form id='jobPostingForm'>
                   <Card.Body>
                     <Card.Title>
                       Filters
@@ -107,6 +153,7 @@ function JobPostingsAll(props) {
         </Col>
         <Col>
           {jobPostingsDivs}
+          <MyPagination handlePrevPage={handlePrevPage} currentPage={jobPostingResp.currentPage} totalPages={jobPostingResp.totalPages} handleNextPage={handleNextPage}/>
         </Col>
       </Row>
     </div>

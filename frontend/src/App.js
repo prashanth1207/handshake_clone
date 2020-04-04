@@ -30,7 +30,7 @@ import StudentsRegisteredForEvent from './components/PostLogin/Company/Event/Stu
 import AllStudents from './components/PostLogin/Common/AllStudents';
 
 
-function App({ loggedIn }) {
+function App({ userInfo }) {
   return (
     <Router>
       <link
@@ -41,8 +41,7 @@ function App({ loggedIn }) {
       />
       <div className="App">
         <Container>
-
-          <Header loggedIn={loggedIn} />
+          <Header userInfo={userInfo} />
           <Switch>
             {/* SignUp and Registrations */}
             <Route exact path="/" component={Home} />
@@ -77,6 +76,8 @@ function App({ loggedIn }) {
     </Router>
   );
 }
-const mapStateToProps = (state) => ({ loggedIn: state.loggedIn });
+const mapStateToProps = (state) => ({ 
+  userInfo: state.user.userInfo 
+});
 const ConnectedApp = connect(mapStateToProps)(App);
 export default ConnectedApp;

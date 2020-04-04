@@ -6,33 +6,45 @@ let searchableQuery =  require('./../utility/search').searchableQuery;
 const formidable = require('formidable')
 let fs = require('fs');
 
-module.exports.get_all_students_profile = (req,res) =>{
+module.exports.get_all_students_profile = async (req,res) =>{
   let query_params = req.query;
+  let page = parseInt(query_params.page || 1) - 1;
+  let perPage = parseInt(query_params.perPage || 10);
+  delete query_params.page;
+  delete query_params.perPage;
   let educationDetails_query = query_params.educationDetails || null;
-  delete query_params.educationDetails
+  delete query_params.educationDetails;
   let studentProfileQuery = searchableQuery(query_params);
   let educationDetailsQuery = searchableQuery(JSON.parse(educationDetails_query));
-  StudentProfile.find(studentProfileQuery)
-  .populate('educationDetails')
-  .populate('experienceDetails')
-  .then(studentProfiles =>{
-    if(Object.keys(educationDetailsQuery).length > 0) {
-      studentProfiles = studentProfiles.filter(profile =>{
-        let educationDetail = profile.educationDetails[0];
-        if(!educationDetail){
-          return false;
-        }
-        let match = false;
-        for(let [col_name,col_val] of Object.entries(educationDetailsQuery)){
-          match = educationDetail[col_name].match(col_val.$regex);
-        }
-        return match;
-      });
-    }
-    return res.json({data: studentProfiles});
-  }).catch(e => {
-    return res.json({error: e})
-  })
+  try{
+    let totalRecordCount = await StudentProfile.find(studentProfileQuery).count();
+    StudentProfile.find(studentProfileQuery)
+    .populate('educationDetails')
+    .populate('experienceDetails')
+    .skip(page > -1 ? page : 0)
+    .limit(perPage)
+    .then(studentProfiles =>{
+      if(Object.keys(educationDetailsQuery).length > 0) {
+        studentProfiles = studentProfiles.filter(profile =>{
+          let educationDetail = profile.educationDetails[0];
+          if(!educationDetail){
+            return false;
+          }
+          let match = false;
+          for(let [col_name,col_val] of Object.entries(educationDetailsQuery)){
+            match = educationDetail[col_name].match(col_val.$regex);
+          }
+          return match;
+        });
+      }
+      return res.json({totalRecordCount: totalRecordCount, data: studentProfiles});
+    }).catch(e => {
+      return res.json({error: e})
+    })
+  }catch(error){
+    console.log(error);
+    res.json({error: 'Something went wrong'});
+  }
 }
 
 module.exports.get_student_profile = async (req,res) => {

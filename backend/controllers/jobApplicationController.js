@@ -107,16 +107,27 @@ module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
     })
 }
 
-module.exports.get_job_applications_for_a_student = (req, res) =>{
+module.exports.get_job_applications_for_a_student = async (req, res) =>{
   let {studentProfileId} = req.params;
-  let queryParams = searchableQuery(req.query);
+  let queryParams = req.query;
+  let page = parseInt(queryParams.page || 1) - 1;
+  let perPage = parseInt(queryParams.perPage || 10);
+  delete queryParams.page;
+  delete queryParams.perPage;
+  queryParams = searchableQuery(queryParams);
+  let totalRecords = await JobApplication.find({
+    ...queryParams,
+    studentProfile: studentProfileId
+  }).count();
   JobApplication.find({
     ...queryParams,
     studentProfile: studentProfileId
   })
   .populate('jobPosting')
+  .skip(page > -1 ? page : 0)
+  .limit(perPage)
   .then(jobPostings => {
-    res.json({data: jobPostings})
+    res.json({data: jobPostings,totalRecords: totalRecords})
   })
   .catch(e => {
     res.json({error: e})

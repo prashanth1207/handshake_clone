@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import { Form, Alert, Button } from 'react-bootstrap';
-import { rooturl } from '../../../../config/config';
+import { Form, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import {updateCompanyProfile } from './../../../../redux/companyProfile/companyProfileActions'
 
-export default function CompanyBodyEdit(props) {
+function CompanyBodyEdit(props) {
   const { companyProfile } = props.companyProfileResp;
-  const [errorMsg, seterrorMsg] = useState(null);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const errorMsg = props.errorMsg;
+  const updateSuccess = props.updateSuccess;
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -18,19 +19,7 @@ export default function CompanyBodyEdit(props) {
     formData.append('contactInformation', form.contactInformation.value);
     formData.append('companyLogo', form.elements.companyLogo.files[0]);
     axios.defaults.withCredentials = false;
-    axios.post(`${rooturl}/company_profile/${companyProfile._id}`, formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then((resp) => {
-        if (resp.status === 200 && resp.data.success) {
-          setUpdateSuccess(true);
-        } else {
-          seterrorMsg(<Alert variant="danger">resp.body.error</Alert>);
-        }
-      });
+    props.updateCompanyProfile(companyProfile._id,formData);
   };
   let errTag = null;
   if (errorMsg) {
@@ -68,3 +57,10 @@ export default function CompanyBodyEdit(props) {
     </div>
   );
 }
+
+const mapStateToProp = (state) => ({
+  errorMsg: state.companyProfile.updateProfile.errorMsg,
+  updateSuccess: state.companyProfile.updateProfile.success,
+})
+
+export default connect(mapStateToProp, {updateCompanyProfile})(CompanyBodyEdit);

@@ -1,33 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Container, Row, Col, Image, Card, Form, Button,
+  Container, Row, Col, Image, Card, Form, Button
 } from 'react-bootstrap';
-import axios from 'axios';
-import { MAJORS, storedUserInfo } from '../../../utility';
-import { rooturl } from '../../../config/config';
-
+import { MAJORS } from '../../../utility';
+import {connect} from 'react-redux';
+import { getStudentProfiles } from './../../../redux/studentProfiles/studentProfilesActions'
+import AllStudentsSearchResult from './AllStudentsSearchResult';
 
 function AllStudents(props) {
-  const [studentsResp, setstudentsResp] = useState({ status: 'loading', students: null });
-
-  const getStudentProfiles = async (queryData) =>{
-    axios.get(`${rooturl}/student_profile`, { params: queryData }, { validateStatus: false }).then((resp) => {
-      if (resp.status == 200 && resp.data.data) {
-        const students = resp.data.data.filter((student) => student._id != storedUserInfo().profile._id);
-        setstudentsResp({ status: 'loaded', students });
-      } else {
-        setstudentsResp({ status: 'error', students: null });
-      }
-    });
-  }
-
-  if (studentsResp.status === 'loading') {
-    getStudentProfiles({});
-  }
+  let perPage = 10;
+    props.getStudentProfiles({page: 1, perPage: perPage});
 
   const handleOnChange = (e) => {
     const { form } = e.currentTarget;
     const queryData = {
+      page: 1,
+      perPage: perPage,
       firstName: form.firstName.value,
       lastName: form.lastName.value,
       currentCollegeName: form.currentCollegeName.value,
@@ -36,64 +24,14 @@ function AllStudents(props) {
         major: form.major.value,
       },
     };
-    getStudentProfiles(queryData);
+    props.getStudentProfiles(queryData);
   };
+
 
   const resetForm = (e) => {
     e.currentTarget.form.reset();
     handleOnChange(e);
   };
-
-  if (studentsResp.status === 'loading') {
-    return <div> Loading Profiles..</div>;
-  }
-  if (studentsResp.status === 'error') {
-    return <div>Something went wrong</div>;
-  }
-  const students_tag = studentsResp.students.map((student) => {
-    const educationDetails = student.educationDetails[0] || {};
-    const image_path = `${rooturl}/images/profile_pics/${student.userId}.png`;
-    const profile_path = `/student_profile/${student._id}`;
-    return (
-      <Row className="my-3">
-        <Col>
-          <Card>
-            <Card.Body>
-              <Row>
-                <Col xs={3} style={{ 'max-width': '100px', 'max-height': '100px' }}><a href={profile_path}><Image variant="center" src={image_path} roundedCircle thumbnail fluid /></a></Col>
-                <Col>
-                  <Row>
-                    <Col>
-                      <Card.Title>
-                        <a href={profile_path}>
-                          {student.firstName}
-                          {' '}
-                          {student.lastName}
-                        </a>
-                      </Card.Title>
-                      <div>{student.currentCollegeName}</div>
-                      <Row>
-                        <Col>
-                          {educationDetails.degree}
-                          ,
-                          {' '}
-                          {educationDetails.major}
-                        </Col>
-                        <Col>
-                          Year of Passing
-                          {educationDetails.yearOfPassing}
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    );
-  });
   const majorOptions = MAJORS.map((major) => <option key={major} value={major}>{major}</option>);
   return (
     <Container>
@@ -102,7 +40,7 @@ function AllStudents(props) {
           <Row className="my-3">
             <Col>
               <Card>
-                <Form inline>
+                <Form id='search-student-form'>
                   <Card.Body>
                     <Card.Title>
                       Filters
@@ -145,11 +83,19 @@ function AllStudents(props) {
           </Row>
         </Col>
         <Col>
-          {students_tag}
+        <Row className="my-3">
+          <Col>
+            <Card>
+              <Card.Body>
+                <AllStudentsSearchResult />
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
         </Col>
       </Row>
     </Container>
   );
 }
 
-export default AllStudents;
+export default connect(null,{getStudentProfiles})(AllStudents);

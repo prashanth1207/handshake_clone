@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Navbar, Nav } from 'react-bootstrap';
-import { LogOut } from '../redux/actions/index';
+import { userLogout } from '../redux/entry/entryActions';
 import PostLoginHandshakeLogo from './PostLoginHandshakeLogo';
 import { storedUserInfo } from '../utility';
 
@@ -37,7 +37,7 @@ const NavigationBar = (props) => {
 };
 
 const mapDispatchToProps = {
-  logout: LogOut,
+  logout: userLogout,
 };
 const ConnectedNavigationBar = connect(null, mapDispatchToProps)(NavigationBar);
 export default ConnectedNavigationBar;

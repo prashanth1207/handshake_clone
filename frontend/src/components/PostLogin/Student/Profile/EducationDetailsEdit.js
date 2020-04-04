@@ -6,7 +6,7 @@ import { DEGREES, MAJORS, studentProfileSubmit } from '../../../../utility';
 
 function EducationDetailsEdit(props) {
   const [errorMsg, seterrorMsg] = useState(null);
-  const educationDetails = props.studentProfile.educationDetails[0] || {};
+  const educationDetails = (props.studentProfile.educationDetails || [])[0] || {};
   const degreeSelectionTag = DEGREES.map((degree) => <option key={degree} defaultValue={degree}>{degree}</option>);
 
   const majorSelectionTag = MAJORS.map((major) => <option key={major} defaultValue={major}>{major}</option>);

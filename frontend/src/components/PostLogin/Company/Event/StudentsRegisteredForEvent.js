@@ -5,22 +5,17 @@ import {
 } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { rooturl } from '../../../../config/config';
-
+import {connect} from 'react-redux';
+import { registeredStudentsForEvents } from './../../../../redux/event/eventActions';
 
 function StudentsRegisteredForEvent(props) {
   const { id: eventId } = useParams();
-  const [eventRegistrationsResp, seteventRegistrationsResp] = useState({ status: 'loading', eventRegistrations: null });
-  if (eventRegistrationsResp.status === 'loading') {
-    axios.get(`${rooturl}/event_registrations?event=${eventId}`)
-      .then((resp) => {
-        seteventRegistrationsResp({ status: 'loaded', eventRegistrations: resp.data.data || [] });
-      });
-  }
-  if (eventRegistrationsResp.status === 'loading') {
+  props.registeredStudentsForEvents(eventId);
+  if (props.eventRegistrationsResp.status === 'loading') {
     return <div>Loading...</div>;
   }
 
-  let eventRegistrations_tag = eventRegistrationsResp.eventRegistrations.map((eventRegistration) => (
+  let eventRegistrations_tag = props.eventRegistrationsResp.data.eventRegistrations.map((eventRegistration) => (
     <Row>
       <Col>
         <Card>
@@ -52,4 +47,8 @@ function StudentsRegisteredForEvent(props) {
   );
 }
 
-export default StudentsRegisteredForEvent;
+const mapStateToProp = (state) => ({
+  eventRegistrationsResp: state.event.registeredStudents
+});
+
+export default connect(mapStateToProp,{registeredStudentsForEvents})(StudentsRegisteredForEvent);

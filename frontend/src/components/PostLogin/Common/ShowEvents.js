@@ -4,71 +4,29 @@ import {
   Container, Row, Col, Card, Form, Button,
 } from 'react-bootstrap';
 import { storedUserInfo } from '../../../utility';
-import EventRegister from '../Student/Events/EventRegister';
-import { rooturl } from '../../../config/config';
+import ShowEventsSearchResults from './ShowEventsSearchResults';
+import { searchEvents } from './../../../redux/event/eventActions'
+import { connect } from 'react-redux';
 
 
 function ShowEvents(props) {
-  const [eventResp, setEventResp] = useState({ status: 'loading', events: null });
-  if (eventResp.status === 'loading') {
-    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile._id}`, { validationStatus: false }).then((resp) => resp.data).then((resp) => {
-      if (resp.error) {
-        return setEventResp({ status: 'error', events: [] });
-      }
-      console.dir(resp);
-      setEventResp({ status: 'loaded', events: resp.events, major: resp.studentMajor });
-    });
-  }
+  let perPage = 10;
+  props.searchEvents(props.for,{page: 1, perPage: perPage});
   const handleOnChange = (e) => {
     const { form } = e.currentTarget;
     const queryData = {
+      page: 1,
+      perPage: perPage,
       eventName: form.eventName.value,
     };
     console.dir(queryData);
-    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile._id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
-      if (resp.error) {
-        return setEventResp({ status: 'error', events: [] });
-      }
-      console.dir(resp.data);
-      setEventResp({ status: 'loaded', events: resp.events, major: resp.studentMajor });
-    });
+    props.searchEvents(props.for,queryData);
   };
 
   const resetForm = (e) => {
     e.currentTarget.form.reset();
     handleOnChange(e);
   };
-
-  if (eventResp.status === 'loading') {
-    return <h3>Loading Events...</h3>;
-  }
-  if (eventResp.status === 'error') {
-    return <h3>Something went wrong!</h3>;
-  }
-  const eventsSection = eventResp.events.map((event) => {
-    let externalTag = null;
-    if (props.for === 'Student') {
-      externalTag = <EventRegister event={event} studentProfileId={storedUserInfo().profile._id} studentMajor={eventResp.major} />;
-    } else {
-      externalTag = <Card.Link href={`/company/events/${event._id}/students`}>Registrations</Card.Link>;
-    }
-    return (
-      <Row className="my-3">
-        <Col>
-          <Card>
-            <Card.Body>
-              <Card.Title>{event.eventName}</Card.Title>
-              <Card.Text>{event.readableTime}</Card.Text>
-              <Card.Text><Card.Link href={`/events/show/${event._id}`}>More Info</Card.Link></Card.Text>
-              <Card.Text>
-                {externalTag}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    );
-  });
 
   let create_event_tag = null;
   if (props.for === 'Company') {
@@ -109,12 +67,11 @@ function ShowEvents(props) {
             </Row>
           </Col>
           <Col>
-            {eventsSection}
+            <ShowEventsSearchResults/>
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
-
-export default ShowEvents;
+export default connect(null,{searchEvents})(ShowEvents);

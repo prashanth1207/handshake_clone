@@ -4,10 +4,22 @@ let CompanyProfile = mongoose.model('CompanyProfile');
 let searchableQuery =  require('./../utility/search').searchableQuery;
 
 module.exports.show_all_job_postings = async (req,resp) => {
-  JobPosting.find(req.query)
+  let query_params = req.query;
+  let page = parseInt(query_params.page || 1) - 1;
+  let perPage = parseInt(query_params.perPage || 10);
+  delete query_params.page;
+  delete query_params.perPage;
+  let companyProfile = query_params.companyProfile;
+  delete query_params.companyProfile;
+  let finalQuery = searchableQuery(query_params);
+  companyProfile && (finalQuery.companyProfile = companyProfile);
+  let totalRecords = await JobPosting.find(finalQuery).count();
+  JobPosting.find(finalQuery)
     .populate('companyProfile')
+    .skip(page > -1 ? page : 0)
+    .limit(perPage)
     .then(jobPostings => {
-      return resp.json(jobPostings)
+      return resp.json({data:jobPostings, totalRecords: totalRecords});
     })
     .catch(error => {
       return resp.json({error: error.message})

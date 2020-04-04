@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { rooturl } from '../../../../config/config';
 import CompanyBody from './CompanyBody';
+import { connect } from 'react-redux';
+import {getCompanyProfile} from './../../../../redux/companyProfile/companyProfileActions';
 
-export default function CompanyProfile() {
+function CompanyProfile(props) {
   const { id } = useParams();
-  const [companyProfileResp, setData] = useState({ status: 'loading', companyProfile: {} });
-  useEffect(() => {
-    if (companyProfileResp.status === 'loading') {
-      axios.get(`${rooturl}/company_profile/${id}`, {
-        validateStatus: false,
-      }).then((resp) => {
-        if (resp.status === 200) {
-          setData({ status: 'recordFound', companyProfile: resp.data });
-        } else {
-          setData({ status: 'recordNotFound' });
-        }
-      });
-    }
-  });
-  if (companyProfileResp.status === 'loading') {
+  if (props.companyProfileResp.status === 'loading') {
+    props.getCompanyProfile(id);
     return <h3>Loading Profile...</h3>;
-  } if (companyProfileResp.status === 'recordNotFound') {
+  } if (props.companyProfileResp.status === 'recordNotFound') {
     return <h3>Profile Not Found</h3>;
   }
   return (
     <div>
-      <CompanyBody companyProfileResp={companyProfileResp} />
+      <CompanyBody companyProfileResp={props.companyProfileResp} />
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  companyProfileResp: state.companyProfile.getProfile
+})
+
+export default connect(mapStateToProps,{getCompanyProfile})(CompanyProfile);

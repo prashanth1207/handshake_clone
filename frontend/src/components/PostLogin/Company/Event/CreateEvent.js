@@ -4,11 +4,10 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { MAJORS } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
-
+import { createEvent } from './../../../../redux/event/eventActions';
+import {connect} from 'react-redux';
 
 function CreateEvent(props) {
-  const [submitted, setsubmitted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
   const { companyProfileId } = useParams();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,15 +21,9 @@ function CreateEvent(props) {
       location: form.location.value,
       eligibility: form.eligibility.value,
     };
-    axios.post(`${rooturl}/events`, formData, { validateStatus: false }).then((resp) => {
-      if (resp.status == 200 & resp.data.success) {
-        setsubmitted(true);
-      } else {
-        setErrorMsg(resp.data.error);
-      }
-    });
+    props.createEvent(formData);
   };
-  if (submitted) {
+  if (props.eventResp.success) {
     return (
       <Alert variant="success">
         Event created successfully!
@@ -38,10 +31,10 @@ function CreateEvent(props) {
     );
   }
   let errTag = null;
-  if (errorMsg) {
+  if (props.eventResp.error) {
     errTag = (
       <Alert variant="danger">
-        {errorMsg}
+        {props.eventResp.error}
       </Alert>
     );
   }
@@ -82,4 +75,7 @@ function CreateEvent(props) {
   );
 }
 
-export default CreateEvent;
+const mapStateToProps = (state) => ({
+   eventResp: state.event.createEvent
+})
+export default connect(mapStateToProps,{createEvent})(CreateEvent);

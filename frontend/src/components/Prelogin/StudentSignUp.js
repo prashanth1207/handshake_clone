@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
-import { rooturl } from '../../config/config';
 import RedirectToJobsPage from '../RedirectToJobsPage';
 import { connect } from 'react-redux';
-import { LoginIn } from '../../redux/actions/index';
+import { userSignUp } from '../../redux/entry/entryActions';
 
 function StudentSignUp(props) {
-  const [errorMsg, setErrorMsg] = useState(null);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -26,28 +23,16 @@ function StudentSignUp(props) {
         currentCollegeName: form.currentCollegeName.value,
       },
     };
-    axios.defaults.withCredentials = true;
-    axios.post(`${rooturl}/users/register`, form_data)
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data.success === true) {
-            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
-            props.loggedIn();
-          } else {
-            setErrorMsg(response.data.error);
-          }
-        }
-      });
+    props.userSignUp(form_data);
   }
   let errorTag = null;
-  if (errorMsg) {
-    errorTag = <Alert variant="danger">{errorMsg}</Alert>;
+  if (props.user.error) {
+    errorTag = <Alert variant="danger">{props.user.error}</Alert>;
   }
   return (
     <Container>
       <RedirectToJobsPage />
       <br />
-
       <Row>
         <Col />
         <Col>
@@ -84,8 +69,13 @@ function StudentSignUp(props) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
 const mapDispatchToProps = {
-  loggedIn: LoginIn,
+  userSignUp: userSignUp,
 };
-const ConnectedStudentSignUp = connect(null, mapDispatchToProps)(StudentSignUp);
+
+const ConnectedStudentSignUp = connect(mapStateToProps, mapDispatchToProps)(StudentSignUp);
 export default ConnectedStudentSignUp;

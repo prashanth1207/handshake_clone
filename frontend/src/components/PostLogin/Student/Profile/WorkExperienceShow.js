@@ -4,7 +4,7 @@ import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { storedUserInfo } from '../../../../utility';
 
 function WorkExperienceShow(props) {
-  const experienceDetails = props.studentProfile.experienceDetails || {};
+  const experienceDetails = (props.studentProfile.experienceDetails || [])[0] || {};
   let editButton = null;
   if (props.studentProfile._id === storedUserInfo().profile._id) {
     editButton = (

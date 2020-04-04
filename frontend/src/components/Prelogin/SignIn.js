@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { LoginIn } from '../../redux/actions/index';
+import { userLogin } from '../../redux/entry/entryActions';
 import axios from 'axios';
 import {
   Container, Row, Col, Form, Button, Alert,
@@ -9,7 +9,6 @@ import { rooturl } from '../../config/config';
 import RedirectToProfile from '../RedirectToJobsPage';
 
 function SignIn(props) {
-  const [errorMsg, setErrorMsg] = useState(null);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -21,22 +20,11 @@ function SignIn(props) {
       emailId: form.emailId.value,
       password: form.password.value,
     };
-    axios.post(`${rooturl}/users/login`, formData)
-      .then((response) => {
-        console.log('Status Code : ', response.status);
-        if (response.status === 200) {
-          if (response.data.success === true) {
-            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
-            props.loggedIn();
-          } else {
-            setErrorMsg(response.data.error);
-          }
-        }
-      });
+    props.loggedIn(formData);
   }
   let errTag = null;
-  if (errorMsg) {
-    errTag = <Alert variant="danger">{errorMsg}</Alert>;
+  if (props.user.error) {
+    errTag = <Alert variant="danger">{props.user.error}</Alert>;
   }
   return (
     <div className="user-signin div-center-align">
@@ -69,8 +57,12 @@ function SignIn(props) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
 const mapDispatchToProps = {
-  loggedIn: LoginIn,
+  loggedIn: userLogin,
 };
-const ConnectedSignIn = connect(null, mapDispatchToProps)(SignIn);
+const ConnectedSignIn = connect(mapStateToProps, mapDispatchToProps)(SignIn);
 export default ConnectedSignIn;

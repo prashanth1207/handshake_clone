@@ -4,12 +4,10 @@ import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
 import RedirectToJobsPage from '../RedirectToJobsPage';
-import { rooturl } from '../../config/config';
 import { connect } from 'react-redux';
-import { LoginIn } from '../../redux/actions/index';
+import { userSignUp } from '../../redux/entry/entryActions';
 
 function CompanySignUp(props) {
-  const [errorMsg, setErrorMsg] = useState(null);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -26,21 +24,11 @@ function CompanySignUp(props) {
       },
     };
     axios.defaults.withCredentials = true;
-    axios.post(`${rooturl}/users/register`, form_data)
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data.success === true) {
-            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
-            props.loggedIn();
-          } else {
-            setErrorMsg(response.data.error);
-          }
-        }
-      });
+    props.userSignUp(form_data);
   }
   let errorTag = null;
-  if (errorMsg) {
-    errorTag = <Alert variant="danger">{errorMsg}</Alert>;
+  if (props.user.error) {
+    errorTag = <Alert variant="danger">{props.user.error}</Alert>;
   }
 
   return (
@@ -79,8 +67,12 @@ function CompanySignUp(props) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
 const mapDispatchToProps = {
-  loggedIn: LoginIn,
+  userSignUp: userSignUp,
 };
-const ConnectedCompanySignUp = connect(null, mapDispatchToProps)(CompanySignUp);
+const ConnectedCompanySignUp = connect(mapStateToProps, mapDispatchToProps)(CompanySignUp);
 export default ConnectedCompanySignUp;

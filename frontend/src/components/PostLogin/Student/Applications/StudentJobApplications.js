@@ -5,15 +5,31 @@ import {
 } from 'react-bootstrap';
 import { storedUserInfo } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
+import MyPagination from '../../Common/MyPagination';
 
 
 function StudentJobApplications() {
-  const [applicationResp, setapplicationResp] = useState({ status: 'loading', applications: null, queryParams: {} });
+  let perPage = 1;
+  const [applicationResp, setapplicationResp] = useState({ 
+    status: 'loading', 
+    applications: null, 
+    queryParams: {
+      page: 1,
+      perPage: perPage,
+      status: ''
+    }, 
+    totalPages: null
+  });
   if (applicationResp.status === 'loading') {
     Axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile._id}`, { params: applicationResp.queryParams }, { validateStatus: false })
       .then((resp) => {
         if (resp.status === 200 && resp.data.data) {
-          return setapplicationResp({ status: 'loaded', applications: resp.data.data, queryParams: applicationResp.queryParams });
+          return setapplicationResp({ 
+            status: 'loaded', 
+            applications: resp.data.data, 
+            queryParams: applicationResp.queryParams,
+            totalPages: Math.ceil(resp.data.totalRecords / perPage)
+          });
         }
         return setapplicationResp({ status: 'error', applications: null, queryParams: applicationResp.queryParams });
       });
@@ -21,8 +37,47 @@ function StudentJobApplications() {
 
   const handleOnChange = (e) => {
     const status = e.currentTarget.value;
-    setapplicationResp({ status: 'loading', applications: null, queryParams: { status } });
+    debugger
+    setapplicationResp({ 
+      status: 'loading', 
+      applications: null, 
+      queryParams: {
+        status: status , 
+        page : applicationResp.queryParams.page
+      },
+      currentPage: 1, 
+      totalPages: null
+    });
   };
+  const handlePrevPage = () =>{
+    if(applicationResp.currentPage === 1){
+      return
+    }
+    setapplicationResp({ 
+      status: 'loading', 
+      applications: null, 
+      queryParams: {
+        ...applicationResp.queryParams,
+        page: applicationResp.queryParams.page - 1
+      },
+      totalPages: null
+    });
+  }
+
+  const handleNextPage = () =>{
+    if(applicationResp.currentPage === applicationResp.totalPages){
+      return
+    }
+    setapplicationResp({ 
+      status: 'loading', 
+      applications: null, 
+      queryParams: {
+        ...applicationResp.queryParams,
+        page: applicationResp.queryParams.page + 1
+      },
+      totalPages: null
+    });
+  }
 
   if (applicationResp.status === 'loading') {
     return <h3>Loading Applications..</h3>;
@@ -72,6 +127,7 @@ function StudentJobApplications() {
       </Col>
       <Col>
         {application_tag}
+        <MyPagination handlePrevPage={handlePrevPage} currentPage={applicationResp.queryParams.page} totalPages={applicationResp.totalPages} handleNextPage={handleNextPage}/>
       </Col>
     </Row>
   );
