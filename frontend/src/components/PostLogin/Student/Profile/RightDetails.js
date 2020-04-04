@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import CareerObjective from './CareerObjective';
 import EducationDetails from './EducationDetails';
-import WorkExperience from './WorkExperience';
+import WorkExperiences from './WorkExperiences';
 
 export default function RightDetails(props) {
   return (
@@ -19,7 +19,7 @@ export default function RightDetails(props) {
       </Row>
       <Row className="my-3">
         <Col>
-          <WorkExperience studentProfile={props.studentProfile} />
+          <WorkExperiences studentProfile={props.studentProfile} />
         </Col>
       </Row>
     </Container>

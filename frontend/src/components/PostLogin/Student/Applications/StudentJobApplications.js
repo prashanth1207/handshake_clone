@@ -37,7 +37,6 @@ function StudentJobApplications() {
 
   const handleOnChange = (e) => {
     const status = e.currentTarget.value;
-    debugger
     setapplicationResp({ 
       status: 'loading', 
       applications: null, 

@@ -60,15 +60,21 @@ ExperienceDetailSchema.virtual('readableEndDate').get(function(){
   }
 });
 
-ExperienceDetailSchema.statics.createOrUpdate = async function(data,condition){
-  let experienceDetail = await this.findOne(condition.where);
+ExperienceDetailSchema.statics.createOrUpdate = async function(data){
+  let experienceDetail = await this.findOne({_id: data.id});
+  delete data.id
   if(experienceDetail){
-    return this.updateOne({ _id: experienceDetail._id },{ $set: data });
+    this.findOneAndUpdate(
+      { _id: experienceDetail._id },
+      { $set: data }, 
+      {"new": true})
+    .exec()
+    .then( experienceDetail => experienceDetail);
   }
   let newExperienceDetail = new this(data)
   return newExperienceDetail.save(data).then(async (experienceDetail) => {
     let StudentProfile = mongoose.model('StudentProfile');
-    let studentProfile = await StudentProfile.findById(condition.where.studentProfile)
+    let studentProfile = await StudentProfile.findById(data.studentProfile)
     studentProfile.experienceDetails.push(experienceDetail._id);
     await studentProfile.save();
     return experienceDetail;

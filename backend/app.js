@@ -16,6 +16,8 @@ var jobPostingRouter = require('./routes/job_posting');
 var jobApplicationRouter = require('./routes/job_application');
 var eventRouter = require('./routes/event');
 var eventRegistrationRouter = require('./routes/event_registration');
+var experienceDetailRouter = require('./routes/experience_detail');
+var educationDetailRouter = require('./routes/education_detail');
 
 var app = express();
 app.use(cors({ origin: process.env.FRONTEND_ENDPOINT, credentials: true }));
@@ -46,6 +48,8 @@ app.use('/job_postings', jobPostingRouter);
 app.use('/job_application', jobApplicationRouter);
 app.use('/events', eventRouter);
 app.use('/event_registrations', eventRegistrationRouter);
+app.use('/experience_details',experienceDetailRouter);
+app.use('/education_details',educationDetailRouter);
 
 
 // catch 404 and forward to error handler

@@ -37,14 +37,21 @@ const EducationDetailSchema = new mongoose.Schema(
   } 
   )
 EducationDetailSchema.statics.createOrUpdate = async function(data,condition){
-  let educationDetail = await this.findOne(condition.where);
+  let educationDetail = await this.findOne({_id: data.id});
+  delete data.id;
   if(educationDetail){
-    return this.updateOne({ _id: educationDetail._id },{ $set: data });
+    return this.findOneAndUpdate(
+      { _id: educationDetail._id },
+      { $set: data },
+      { 'new': true }
+    )
+    .exec()
+    .then(educationDetail => educationDetail)
   }
   let newEducationDetail = new this(data)
   return newEducationDetail.save(data).then(async (educationDetail) => {
     let StudentProfile = mongoose.model('StudentProfile');
-    let studentProfile = await StudentProfile.findById(condition.where.studentProfile)
+    let studentProfile = await StudentProfile.findById(data.studentProfile)
     studentProfile.educationDetails.push(educationDetail._id);
     await studentProfile.save();
     return educationDetail;

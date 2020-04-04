@@ -68,18 +68,13 @@ module.exports.update_student_profile = async(req,res) => {
       let educationDetailsData = req.body.educationDetails;
       if(educationDetailsData){
         educationDetailsData.studentProfile = id;
-        await EducationDetail.createOrUpdate(educationDetailsData,{where: {studentProfile: id}});
-      }
-      let experienceDetailsData = req.body.experienceDetails;
-      if(experienceDetailsData){
-        experienceDetailsData.studentProfile = id;
-        await ExperienceDetail.createOrUpdate(experienceDetailsData,{where: {studentProfile: id}});
+        await EducationDetail.createOrUpdate(educationDetailsData);
       }
       let studentProfileData = req.body.studentProfile;
       if(studentProfileData){
         await studentProfile.update(studentProfileData);
       }
-      return res.json({success: true})
+      return res.json({success: true});
     }catch(error){
       res.json({
         success: false,

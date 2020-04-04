@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import EducationDetailsShow from './EducationDetailsShow';
-import EducationDetailsEdit from './EducationDetailsEdit';
+import React from 'react';
+import EducationDetail from './EducationDetail';
+import { Card } from 'react-bootstrap';
 
 export default function EducationDetails(props) {
-  const [stateObj, setstateObj] = useState({ state: 'show', studentProfile: props.studentProfile });
-  if (stateObj.state === 'show') {
-    return <EducationDetailsShow studentProfile={stateObj.studentProfile} setstateObj={setstateObj} />;
-  }
-  return <EducationDetailsEdit studentProfile={stateObj.studentProfile} setstateObj={setstateObj} />;
+  const educationDetails = (props.studentProfile.educationDetails || []);
+  let educationDetailsTag =  educationDetails.map(educationDetail =>{
+    return <EducationDetail educationDetail={educationDetail}/>
+  });
+  educationDetailsTag.push(<hr />)
+  educationDetailsTag.push(<EducationDetail state='new' educationDetail={{studentProfile: props.studentProfile._id}}/>)
+  return <Card>
+    <Card.Body>
+      <Card.Title>Education</Card.Title>
+        {educationDetailsTag}
+      </Card.Body>
+    </Card>
 }

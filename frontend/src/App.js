@@ -11,7 +11,6 @@ import Header from './components/Header';
 import StudentProfile from './components/PostLogin/Student/Profile/StudentProfile';
 import CompanyProfile from './components/PostLogin/Company/Profile/CompanyProfile';
 import CompanyProfileEdit from './components/PostLogin/Company/Profile/CompanyProfileEdit';
-import StudentProfileEdit from './components/PostLogin/Student/Profile/StudentProfileEdit';
 import JobPostingShow from './components/PostLogin/Student/Jobs/JobPostingShow';
 import JobPostingCreate from './components/PostLogin/Company/Jobs/JobPostingCreate';
 import JobPostingsAll from './components/PostLogin/Student/Jobs/JobPostingsAll';
@@ -54,7 +53,6 @@ function App({ userInfo }) {
             <PrivateRoute exact path="/student_profiles" component={AllStudents} />
             <PrivateRoute exact path="/student_profile/:id" component={StudentProfile} />
             <PrivateRoute exact path="/company_profile/:id" component={CompanyProfile} />
-            <PrivateOwnStudentRoute exact path="/student_profile/:studentProfileId/edit" component={StudentProfileEdit} />
             <PrivateOwnCompanyRoute exact path="/company_profile/:companyProfileId/edit" component={CompanyProfileEdit} />
 
             {/* Job postings */}
