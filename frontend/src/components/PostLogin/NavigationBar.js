@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Navbar, Nav } from 'react-bootstrap';
-import { userLogout } from '../redux/entry/entryActions';
-import PostLoginHandshakeLogo from './PostLoginHandshakeLogo';
-import { storedUserInfo } from '../utility';
+import { Link } from 'react-router-dom';
+import { userLogout } from '../../redux/entry/entryActions';
+import PostLoginHandshakeLogo from '../PostLoginHandshakeLogo';
+import { storedUserInfo } from '../../utility';
 
 const NavigationBar = (props) => {
   const handleLogout = () => {
-    sessionStorage.removeItem('userInfo');
     props.logout();
   };
   const profileId = storedUserInfo().profile._id;
@@ -15,21 +15,23 @@ const NavigationBar = (props) => {
   const jobsLink = role === 'Student' ? '/student/job_postings' : '/company/job_postings';
   const eventsLink = `/${role}/show_all_events`;
   const profileLink = `/${role}_profile/${profileId}`;
-  const applicationLink = role === 'Student' ? <Nav.Link href={`/student/${profileId}/applications`}>Applications</Nav.Link> : null;
+  const applicationLink = role === 'Student' ? <Nav.Link><Link to={`/student/${profileId}/applications`}>Applications</Link></Nav.Link> : null;
   return (
     <Navbar bg="white" variant="white">
-      <Navbar.Brand href="#home">
+      <Navbar.Brand><Link to="#home">
         {' '}
         <PostLoginHandshakeLogo />
+        </Link>
       </Navbar.Brand>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <Nav.Link href={jobsLink}>Jobs</Nav.Link>
+          <Nav.Link><Link to={jobsLink}>Jobs</Link></Nav.Link>
           {applicationLink}
-          <Nav.Link href={eventsLink}>Events</Nav.Link>
-          <Nav.Link href="/student_profiles">Students</Nav.Link>
-          <Nav.Link href={profileLink}>My Profile</Nav.Link>
-          <Nav.Link href="#" onClick={handleLogout}>Logout</Nav.Link>
+          <Nav.Link><Link to={eventsLink}>Events</Link></Nav.Link>
+          <Nav.Link><Link to="/student_profiles">Students</Link></Nav.Link>
+          <Nav.Link><Link to={profileLink}>My Profile</Link></Nav.Link>
+          <Nav.Link><Link to='/messages'>Messages</Link></Nav.Link>
+          <Nav.Link><Link to="#" onClick={handleLogout}>Logout</Link></Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -17,6 +17,7 @@ import JobPostingsAll from './components/PostLogin/Student/Jobs/JobPostingsAll';
 import CompanyJobPostings from './components/PostLogin/Company/Jobs/CompanyJobPostings';
 import ShowEventDetails from './components/PostLogin/Common/ShowEventDetails';
 import StudentJobApplications from './components/PostLogin/Student/Applications/StudentJobApplications';
+import ShowMessages from './components/PostLogin/Common/messageWindow/ShowMessages';
 
 import {
   PrivateRoute, PrivateCompanyRoute, PrivateOwnCompanyRoute, PrivateStudentRoute, PrivateOwnStudentRoute,
@@ -68,6 +69,7 @@ function App({ userInfo }) {
             <PrivateRoute exect path="/events/show/:id" component={ShowEventDetails} />
             <PrivateCompanyRoute exact path="/company/events/:id/students" component={StudentsRegisteredForEvent} />
             <PrivateOwnStudentRoute exact path="/student/:studentProfileId/applications" component={StudentJobApplications} />
+            <PrivateRoute exect path="/messages" component={ShowMessages} />
           </Switch>
         </Container>
       </div>

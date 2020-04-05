@@ -13,7 +13,8 @@ function AllJobApplications(props) {
   const [jobApplicationsResp, setjobApplicationsResp] = useState({ status: 'loading', jobApplications: null });
   const [studentProfile, setStudentProfile] = useState(null);
   if (jobApplicationsResp.status === 'loading') {
-    axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
       .then((resp) => {
         setjobApplicationsResp({ status: 'loaded', jobApplications: resp.data.data || [] });
       });

@@ -18,7 +18,8 @@ function CompanyJobPostings(props) {
   });
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.get(`${rooturl}/job_postings`, { params: { 
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_postings`, { params: { 
       companyProfile: companyProfileId,
       page: jobPostingResp.currentPage,
       perPage: perPage

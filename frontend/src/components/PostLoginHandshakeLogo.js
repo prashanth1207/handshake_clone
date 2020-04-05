@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function PostLoginHandshakeLogo() {
   return (
-    <a href="/" aria-label="Homepage">
+    <Link to="/" aria-label="Homepage">
       <svg xmlns="http://www.w3.org/2000/svg" id="logo-icon" viewBox="0 0 80.1 96.1" className="style__logo-icon___1eROG" width="32" height="32">
         <title>Handshake</title>
         <path
@@ -21,7 +22,7 @@ export default function PostLoginHandshakeLogo() {
           "
         />
       </svg>
-    </a>
+    </Link>
 
   );
 }

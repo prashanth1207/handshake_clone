@@ -36,6 +36,10 @@ const CompanyProfileSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'User'
     },
+    messageWindows:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MessageWindow'
+    }]
   },
   {
     timestamps: true

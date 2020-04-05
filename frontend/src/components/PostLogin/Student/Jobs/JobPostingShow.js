@@ -13,7 +13,8 @@ function JobPostingShow(props) {
   const { id: jobPostingId } = useParams();
   const [jobPostingResp, setData] = useState({ status: 'loading', jobPosting: null });
   if (jobPostingResp.status === 'loading') {
-    axios.get(`${rooturl}/job_postings/${jobPostingId}`, {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_postings/${jobPostingId}`, {
       validateStatus: false,
     }).then((resp) => {
       if (resp.status === 200) {

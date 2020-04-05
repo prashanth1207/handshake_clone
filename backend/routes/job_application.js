@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 let JobApplicationController = require('./../controllers/jobApplicationController');
+let checkAuth = require('./../config/passport').checkAuth;
 
-router.get('/', JobApplicationController.get_job_applications_for_a_job_posting);
-router.post('/create', JobApplicationController.create_job_application);
-router.post('/status', JobApplicationController.getApplicationStatus);
-router.post('/:id/set_status', JobApplicationController.setApplicationStatus);
-router.get('/student_applications/:studentProfileId', JobApplicationController.get_job_applications_for_a_student);
+router.get('/', checkAuth, JobApplicationController.get_job_applications_for_a_job_posting);
+router.post('/create', checkAuth, JobApplicationController.create_job_application);
+router.post('/status', checkAuth, JobApplicationController.getApplicationStatus);
+router.post('/:id/set_status', checkAuth, JobApplicationController.setApplicationStatus);
+router.get('/student_applications/:studentProfileId', checkAuth, JobApplicationController.get_job_applications_for_a_student);
 
 module.exports = router;

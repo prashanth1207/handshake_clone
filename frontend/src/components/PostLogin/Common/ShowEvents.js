@@ -7,6 +7,7 @@ import { storedUserInfo } from '../../../utility';
 import ShowEventsSearchResults from './ShowEventsSearchResults';
 import { searchEvents } from './../../../redux/event/eventActions'
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 function ShowEvents(props) {
@@ -32,7 +33,9 @@ function ShowEvents(props) {
   if (props.for === 'Company') {
     create_event_tag = (
       <div>
-        <Button style={{ float: 'right' }} variant="primary" href={`/company/${storedUserInfo().profile._id}/create_event`}>Create New Event</Button>
+        <Link to={`/company/${storedUserInfo().profile._id}/create_event`}>
+        <Button style={{ float: 'right' }} variant="primary">Create New Event</Button>
+        </Link>
         <br />
         <br />
       </div>

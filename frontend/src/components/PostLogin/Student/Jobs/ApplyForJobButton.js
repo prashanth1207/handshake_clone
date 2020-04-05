@@ -9,7 +9,8 @@ function ApplyForJobButton(props) {
   const [status, setStatus] = useState(null);
 
   if (status === null) {
-    axios.post(`${rooturl}/job_application/status`, { studentProfileId: usrInfo.profile._id, jobPostingId: props.jobPostingId })
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/job_application/status`, { studentProfileId: usrInfo.profile._id, jobPostingId: props.jobPostingId })
       .then((resp) => {
         setStatus(resp.data.status);
       });

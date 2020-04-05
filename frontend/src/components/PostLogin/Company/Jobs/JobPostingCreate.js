@@ -23,7 +23,8 @@ function JobPostingCreate(props) {
       jobDescription: form.jobDescription.value,
       jobCategory: selectedJobCategoryList.join(','),
     };
-    axios.post(`${rooturl}/job_postings/${companyProfileId}/create`, formData, {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/job_postings/${companyProfileId}/create`, formData, {
       validateStatus: false,
     }).then((resp) => {
       console.dir(resp);

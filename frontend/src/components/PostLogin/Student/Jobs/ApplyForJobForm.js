@@ -18,7 +18,8 @@ function ApplyForJobForm(props) {
     formData.append('jobPostingId', jobProfileId);
     formData.append('studentProfileId', studentProfileId);
     formData.append('resume', e.currentTarget.elements.resume.files[0]);
-    axios.post(`${rooturl}/job_application/create`, formData, {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/job_application/create`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

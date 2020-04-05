@@ -12,7 +12,8 @@ import { rooturl } from '../../config/config';
 import { storedUserInfo } from '../../utility';
 
 export const getEventDetails = (eventId) => dispatch =>{
-  axios.get(`${rooturl}/events/show/${eventId}`, {
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/events/show/${eventId}`, {
     validateStatus: false,
   }).then((resp) => {
     if (resp.status === 200) {
@@ -29,7 +30,8 @@ export const getEventDetails = (eventId) => dispatch =>{
 }
 
 export const searchEvents = (userType,queryData) => dispatch =>{
-  axios.get(`${rooturl}/events/${userType.toLowerCase()}/${storedUserInfo().profile._id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/events/${userType.toLowerCase()}/${storedUserInfo().profile._id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
     if (resp.error) {
       dispatch({
         type: EVENT_SEARCH_DETAILS_ERROR
@@ -50,7 +52,8 @@ export const searchEvents = (userType,queryData) => dispatch =>{
 }
 
 export const createEvent = (formData) => dispatch => {
-  axios.post(`${rooturl}/events`, formData, { validateStatus: false }).then((resp) => {
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/events`, formData, { validateStatus: false }).then((resp) => {
     if (resp.status == 200 & resp.data.success) {
       dispatch({
         type: CREATE_EVENT_SUCCESS
@@ -65,7 +68,8 @@ export const createEvent = (formData) => dispatch => {
 }
 
 export const registeredStudentsForEvents = (eventId) => dispatch => {
-  axios.get(`${rooturl}/event_registrations?event=${eventId}`)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/event_registrations?event=${eventId}`)
       .then((resp) => {
         dispatch({
           type: EVENT_REGISTERED_STUDENTS,

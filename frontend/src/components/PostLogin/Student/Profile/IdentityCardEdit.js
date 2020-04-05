@@ -20,7 +20,8 @@ function IdentityCardEdit(props) {
   const handleFileUpload = (e) => {
     const formData = new FormData();
     formData.append('profilePic', e.currentTarget.form.elements.profilePic.files[0]);
-    axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`, formData, {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

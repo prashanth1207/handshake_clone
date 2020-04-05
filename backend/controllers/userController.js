@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 let User = mongoose.model('User');
 let StudentProfile = mongoose.model('StudentProfile');
 let CompanyProfile =mongoose.model('CompanyProfile');
-//let sequelize = models.sequelize
-
+let createJwtToken = require('./../utility/search').createJwtToken;
 
 function isDataEmpty(data_arr){
   if(!data_arr)
@@ -31,15 +30,7 @@ module.exports.post_login = async function(req,res){
     })
   }
   let profile = await eval(user.role + 'Profile').findOne({user: user._id});
-    let sessionStorageInfo = {
-      id: user.id,
-      type: user.role,
-      profile: profile
-    };
-  return res.json({
-    success: true,
-    userInfo: sessionStorageInfo
-  })
+  return res.json({success: true, jwtToken: createJwtToken(user,profile)});
 };
 module.exports.post_register = async (req,res) =>{
 
@@ -67,16 +58,11 @@ module.exports.post_register = async (req,res) =>{
     let profileKlass = eval(user.role + 'Profile');
     let profile = new profileKlass(Object.assign({},profileData,{user: user._id}));
     await profile.save(session);
-    let sessionStorageInfo = {
-      id: user._id,
-      type: user.role,
-      profile: profile
-    };
     await session.commitTransaction();
     session.endSession();
     return res.json({
       success: true,
-      userInfo: sessionStorageInfo
+      jwtToken: createJwtToken(user,profile)
     });
   } catch(err) {
     await session.abortTransaction();

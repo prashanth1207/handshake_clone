@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { rooturl } from '../../../config/config';
 import { getStudentProfiles } from './../../../redux/studentProfiles/studentProfilesActions'
 import MyPagination from './MyPagination';
+import Avatar from 'react-avatar';
+import { Link } from 'react-router-dom';
 
 
 function AllStudentsSearchResult(props) {
@@ -45,36 +47,39 @@ function AllStudentsSearchResult(props) {
     const image_path = `${rooturl}/images/profile_pics/${student._id}.png`;
     const profile_path = `/student_profile/${student._id}`;
     return (
-      <Row>
-        <Col xs={3} style={{ 'max-width': '100px', 'max-height': '100px' }}><a href={profile_path}><Image variant="center" src={image_path} roundedCircle thumbnail fluid /></a></Col>
-        <Col>
+      <Card>
+        <Card.Body>
           <Row>
+            <Col xs={3} style={{ 'max-width': '100px', 'max-height': '100px' }}><Link to={profile_path}> <Avatar name={`${student.firstName} ${student.lastName}`} src={image_path} size={50} round="50px"/></Link></Col>
             <Col>
-              <Card.Title>
-                <a href={profile_path}>
-                  {student.firstName}
-                  {' '}
-                  {student.lastName}
-                </a>
-              </Card.Title>
-              <div>{student.currentCollegeName}</div>
               <Row>
                 <Col>
-                  {educationDetails.degree}
-                  ,
-                  {' '}
-                  {educationDetails.major}
-                </Col>
-                <Col>
-                  Year of Passing
-                  {educationDetails.yearOfPassing}
+                  <Card.Title>
+                    <Link to={profile_path}>
+                      {student.firstName}
+                      {' '}
+                      {student.lastName}
+                    </Link>
+                  </Card.Title>
+                  <div>{student.currentCollegeName}</div>
+                  <Row>
+                    <Col>
+                      {educationDetails.degree}
+                      ,
+                      {' '}
+                      {educationDetails.major}
+                    </Col>
+                    <Col>
+                      Year of Passing&nbsp;&nbsp;
+                      {educationDetails.yearOfPassing}
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Col>
-          </Row>
-        </Col>
-      </Row>
-            
+          </Row>    
+        </Card.Body>
+      </Card>
     );
   });
   let noDataTag = <h2>No results found</h2>

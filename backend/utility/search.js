@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+let jwt = require('jsonwebtoken');
 
 const searchableQuery = (queryObject) => {
   let searchableQuery = {};
@@ -12,6 +12,18 @@ const searchableQuery = (queryObject) => {
     }
   }
   return searchableQuery
+}
+
+module.exports.createJwtToken = (user, profile) =>{
+  let payload = {
+    id: user._id,
+    type: user.role,
+    profile: profile
+  };
+  let token = jwt.sign(payload, process.env.JWT_SECRECT_KEY, {
+    expiresIn: 1008000
+  });
+  return token
 }
 
 module.exports.searchableQuery = searchableQuery;

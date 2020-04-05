@@ -85,11 +85,7 @@ function AllStudents(props) {
         <Col>
         <Row className="my-3">
           <Col>
-            <Card>
-              <Card.Body>
-                <AllStudentsSearchResult />
-              </Card.Body>
-            </Card>
+            <AllStudentsSearchResult />
           </Col>
         </Row>
         </Col>

@@ -11,7 +11,8 @@ export const getStudentProfiles = (queryData) => dispatch => {
   dispatch({
     type: STUDENT_PROFILES_LOADING
   });
-  axios.get(`${rooturl}/student_profile`, { params: queryData }, { validateStatus: false }).then((resp) => {
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/student_profile`, { params: queryData }, { validateStatus: false }).then((resp) => {
     if (resp.status == 200 && resp.data.data) {
       const students = resp.data.data.filter((student) => student._id != storedUserInfo().profile._id);
       dispatch({

@@ -24,7 +24,8 @@ function JobApplicationStatus(props) {
   const submitStatus = (e) => {
     e.preventDefault();
     const formData = { status: e.currentTarget.elements.status.value };
-    axios.post(`${rooturl}/job_application/${props.jobApplication._id}/set_status`, formData, { validateStatus: false })
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/job_application/${props.jobApplication._id}/set_status`, formData, { validateStatus: false })
       .then((resp) => {
         if (resp.status == 200 && resp.data.success) {
           setStatus(formData.status);

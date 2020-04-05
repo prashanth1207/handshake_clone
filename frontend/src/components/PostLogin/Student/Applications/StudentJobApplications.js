@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import {
   Card, Row, Col, Form,
 } from 'react-bootstrap';
@@ -21,7 +21,8 @@ function StudentJobApplications() {
     totalPages: null
   });
   if (applicationResp.status === 'loading') {
-    Axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile._id}`, { params: applicationResp.queryParams }, { validateStatus: false })
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile._id}`, { params: applicationResp.queryParams }, { validateStatus: false })
       .then((resp) => {
         if (resp.status === 200 && resp.data.data) {
           return setapplicationResp({ 

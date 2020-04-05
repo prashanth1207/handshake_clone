@@ -23,7 +23,8 @@ function EventRegister(props) {
       event: event._id,
       studentProfile: studentProfileId,
     };
-    axios.post(`${rooturl}/event_registrations`, formData, { validateStatus: false })
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/event_registrations`, formData, { validateStatus: false })
       .then((resp) => {
         if (resp.status === 200 && resp.data.success) {
           setregistered(true);

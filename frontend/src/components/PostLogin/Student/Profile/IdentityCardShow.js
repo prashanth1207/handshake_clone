@@ -3,11 +3,12 @@ import { Card, Image, Button } from 'react-bootstrap';
 import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
+import Avatar from 'react-avatar'
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
   const educationDetails = (props.studentProfile.educationDetails || [])[0] || {};
-  const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${studentProfile.user}.png`;
   let editButton = null;
   if (studentProfile._id === storedUserInfo().profile._id) {
     editButton = (
@@ -22,7 +23,8 @@ function IdentityCardShow(props) {
         <div>
           {editButton}
         </div>
-        <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid />
+        <Avatar name={`${studentProfile.firstName} ${studentProfile.lastName}`} src={image_path}/>
+        {/* <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid /> */}
         <Card.Title>
           {studentProfile.firstName}
           {' '}

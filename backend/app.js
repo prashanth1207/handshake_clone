@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 const session = require('express-session');
+var passport = require('passport');
 
 require('./models')
 var indexRouter = require('./routes/index');
@@ -18,20 +19,23 @@ var eventRouter = require('./routes/event');
 var eventRegistrationRouter = require('./routes/event_registration');
 var experienceDetailRouter = require('./routes/experience_detail');
 var educationDetailRouter = require('./routes/education_detail');
+var messageRouter = require('./routes/message');
 
 var app = express();
 app.use(cors({ origin: process.env.FRONTEND_ENDPOINT, credentials: true }));
+
+app.use(cookieParser());
+require('./config/passport').configAuth(passport);
+// app.use(passport.initialize);
 
 
 // global var __basedir to get base directory
 global.__basedir = __dirname;
 
 //module.exports = webpackConfig;
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
@@ -50,6 +54,7 @@ app.use('/events', eventRouter);
 app.use('/event_registrations', eventRegistrationRouter);
 app.use('/experience_details',experienceDetailRouter);
 app.use('/education_details',educationDetailRouter);
+app.use('/messages',messageRouter);
 
 
 // catch 404 and forward to error handler

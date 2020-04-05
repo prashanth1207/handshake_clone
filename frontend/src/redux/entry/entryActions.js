@@ -1,23 +1,26 @@
 import {
   SUCCESS_LOG_IN_RESPONSE,
   ERROR_LOG_IN_RESPONSE,
-  LOG_OUT,
-  STUDENT_SIGN_UP,
-  COMPANY_SIGN_UP
+  LOG_OUT
 } from '../constants/action-types';
 import axios from 'axios';
 import { rooturl } from '../../config/config';
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode';
 
 export const userLogin = (formData) => dispatch => {
-  axios.post(`${rooturl}/users/login`, formData)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/users/login`, formData)
   .then((response) => {
     console.log('Status Code : ', response.status);
     if (response.status === 200) {
       if (response.data.success === true) {
-        sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+        var decodedUserInfo = JSON.stringify(jwt_decode(response.data.jwtToken));
+        sessionStorage.setItem('token', "JWT "+response.data.jwtToken);
+        sessionStorage.setItem('userInfo', decodedUserInfo);
         dispatch({
           type: SUCCESS_LOG_IN_RESPONSE,
-          payload: response.data.userInfo
+          payload: decodedUserInfo
         });
       } else {
         dispatch({
@@ -30,18 +33,23 @@ export const userLogin = (formData) => dispatch => {
 }
 
 export const userLogout = () => dispatch => {
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('userInfo');
   dispatch({
     type: LOG_OUT,
   })
 }
 
 export const userSignUp = (formData) => dispatch => {
-  axios.post(`${rooturl}/users/register`, formData)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/users/register`, formData)
   .then((response) => {
     console.log('Status Code : ', response.status);
     if (response.status === 200) {
       if (response.data.success === true) {
-        sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
+        var decodedUserInfo = JSON.stringify(jwt_decode(response.data.jwtToken));
+        sessionStorage.setItem('token', "JWT "+response.data.jwtToken);
+        sessionStorage.setItem('userInfo', decodedUserInfo);
         dispatch({
           type: SUCCESS_LOG_IN_RESPONSE,
           payload: response.data.userInfo

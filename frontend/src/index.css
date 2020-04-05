@@ -20,3 +20,15 @@ code {
 body{
   background-color: #f7f7f7!important;
 }
+
+.h-divider{
+  margin-top:5px;
+  margin-bottom:5px;
+  height:1px;
+  width:100%;
+  border-top:1px solid rgb(224, 224, 224);
+ }
+
+ .v-divider{
+  border-right:1px solid rgb(224, 224, 224);
+ }

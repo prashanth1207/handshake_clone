@@ -76,6 +76,12 @@ const StudentProfileSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'JobApplication'
     }
+  ],
+  messageWindows: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MessageWindow'
+    }
   ]
 },
 {

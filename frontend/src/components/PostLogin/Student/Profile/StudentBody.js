@@ -12,7 +12,8 @@ export default function StudentBody(props) {
   const [studentProfileResp, setData] = useState({ status: 'loading', studentProfile: null });
   useEffect(() => {
     if (studentProfileResp.status === 'loading') {
-      axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
+      axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
         validateStatus: false,
       }).then((resp) => {
         console.log(resp.status);

@@ -10,7 +10,8 @@ import axios from 'axios';
 import { rooturl } from '../../config/config';
 
 export const getCompanyProfile = (id) => dispatch => {
-  axios.get(`${rooturl}/company_profile/${id}`, {
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/company_profile/${id}`, {
     validateStatus: false,
   }).then((resp) => {
     if (resp.status === 200) {
@@ -27,7 +28,8 @@ export const getCompanyProfile = (id) => dispatch => {
 };
 
 export const updateCompanyProfile = (companyProfileId,formData) => dispatch => {
-  axios.post(`${rooturl}/company_profile/${companyProfileId}`, formData,
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.post(`${rooturl}/company_profile/${companyProfileId}`, formData,
     {
       headers: {
         'Content-Type': 'multipart/form-data',

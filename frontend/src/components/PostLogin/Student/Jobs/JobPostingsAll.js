@@ -20,7 +20,8 @@ function JobPostingsAll(props) {
   });
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.get(`${rooturl}/job_postings`, { params: {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_postings`, { params: {
       page: 1,
       perPage: perPage,
       companyProfile: companyProfileId 
@@ -51,7 +52,8 @@ function JobPostingsAll(props) {
       jobCategory: form.jobCategory.value,
       location: form.location.value,
     };
-    axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
       if (resp.status === 200) {
         setData({ 
           status: 'recordFound', 
