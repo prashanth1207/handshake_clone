@@ -2,6 +2,7 @@ let mongoose = require('mongoose');
 let MessageWindow = mongoose.model('MessageWindow');
 let CompanyProfile = mongoose.model('CompanyProfile');
 let StudentProfile = mongoose.model('StudentProfile');
+let kafka = require('./../kafka/client')
 
 validParticipants = (params) =>{
   if(params.senderType && params.receiverType){
@@ -13,22 +14,16 @@ validParticipants = (params) =>{
   return false;
 }
 
-module.exports.startConversation = (req,res) => {
+module.exports.startConversation = (req,resp) => {
+  req.params.path = 'startConversation';
   if(validParticipants(req.body)){
-    try{
-      MessageWindow.createNewRecord(req.body).then(messageWindow => {
-        res.json({
-          success: true,
-          data: messageWindow
-        })
-      });
-    }catch(error){
-      console.log(error);
-      res.json({
-        success: false,
-        error: error.message
-      })
-    }
+    kafka.make_request('message',{params: req.params,body: req.body,query: req.query},function(err,result){
+      if(result.error){
+        return resp.json({success: false, error: result.error})
+      }else{
+        resp.json(result);
+      }
+    })
   }else{
     res.json({
       success: false,
@@ -37,61 +32,35 @@ module.exports.startConversation = (req,res) => {
   }
 }
 
-module.exports.getMessageWindow = (req,res) =>{
-  MessageWindow.findById(req.params.id)
-  .populate('initiator')
-  .populate('receiver')
-  .then(messageWindow =>{
-    res.json(messageWindow);
-  });
+module.exports.getMessageWindow = (req,resp) =>{
+  req.params.path = 'getMessageWindow';
+  kafka.make_request('message',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
 }
 
-module.exports.sendMessage = (req,res) => {
-  let messageWindowId = req.body.windowId;
-  let creatorId = req.body.creatorId;
-  let message = req.body.message;
-  MessageWindow.findOne({_id: messageWindowId}).then(messageWindow =>{
-    if(messageWindow){
-      messageWindow.messages.push({
-        creatorId: creatorId,
-        message: message
-      });
-      messageWindow.save().then(messageWindow =>{
-        res.json({
-          messages: messageWindow.messages
-        });
-      }).catch(error => {
-        res.json({
-          success: false,
-          error: error.message
-        })
-      })
+module.exports.sendMessage = (req,resp) => {
+  req.params.path = 'sendMessage';
+  kafka.make_request('message',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
     }else{
-      res.json({
-        success: false,
-        error: 'message window does not exist'
-      })
+      resp.json(result);
     }
   })
 }
 
 const getMessageWindows = (profile,req, resp) => {
-  let id =  req.params.id
-  profile.findOne({_id: id})
-  .populate({path: 'messageWindows',populate:{path: 'initiator'}})
-  .populate({path: 'messageWindows',populate:{path: 'receiver'}})
-  .then(profile => {
-    if(profile){
-        profile.messageWindows.forEach(window => {
-          [window._doc.respondent,window._doc.respondentType] = window.initiator._id.toString() === id ? [window._doc.receiver,window.receiverType] : [window._doc.initiator,window.initiatorType];
-          delete window._doc.initiator;
-          delete window._doc.initiatorType;
-          delete window._doc.receiver;
-          delete window._doc.receiverType;
-        })
-      resp.json({profile: profile});
+  req.params.path = 'getMessageWindows';
+  kafka.make_request('message',{params: req.params,body: req.body,profile: profile.modelName},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
     }else{
-      resp.json({error: 'No Profile Found'});
+      resp.json(result);
     }
   })
 }
@@ -102,4 +71,15 @@ module.exports.getMessageWindowsForStudent = (req, resp) => {
 
 module.exports.getMessageWindowsForCompany = (req, resp) => {
   getMessageWindows(CompanyProfile,req,resp)
+}
+
+module.exports.converstionWindow = (req,resp) => {
+  req.params.path = 'converstionWindow';
+  kafka.make_request('message',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
 }

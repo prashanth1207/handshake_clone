@@ -20,6 +20,7 @@ var eventRegistrationRouter = require('./routes/event_registration');
 var experienceDetailRouter = require('./routes/experience_detail');
 var educationDetailRouter = require('./routes/education_detail');
 var messageRouter = require('./routes/message');
+var imageRouter = require('./routes/image');
 
 var app = express();
 app.use(cors({ origin: process.env.FRONTEND_ENDPOINT, credentials: true }));
@@ -39,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: 'cmpe_273_secure_string',
+  secret: 'cmpe273_kafka_passport_mongo',
   resave: false,
   saveUninitialized: true,
 }));
@@ -55,6 +56,7 @@ app.use('/event_registrations', eventRegistrationRouter);
 app.use('/experience_details',experienceDetailRouter);
 app.use('/education_details',educationDetailRouter);
 app.use('/messages',messageRouter);
+app.use('/images',imageRouter);
 
 
 // catch 404 and forward to error handler

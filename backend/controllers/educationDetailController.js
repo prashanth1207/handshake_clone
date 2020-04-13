@@ -1,31 +1,26 @@
 let mongoose = require('mongoose');
 let StudentProfile = mongoose.model('StudentProfile');
 let EducationDetail = mongoose.model('EducationDetail');
+let kafka = require('./../kafka/client')
 
 module.exports.createOrUpdateEducationDetail = (req,resp) =>{
-  EducationDetail.createOrUpdate(req.body).then(educationDetail =>{
-    return resp.json({success: true,data: educationDetail})
-  }).catch(e =>{
-    return resp.json({success: false, error: e.message})
-  })
+  req.params.path = 'createUpdateEducationDetails';
+  kafka.make_request('educationDetail',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      resp.json({success: false, error: result.error})
+    }else{
+      resp.json({success: true,data: result})
+    }
+  });
 }
 
 module.exports.deleteEducationDetail = async (req, resp) => {
-  let educationDetail = await EducationDetail.findOne({_id: req.params.id});
-  if(educationDetail){
-    educationDetail.delete(educationDetail)
-    .then(async deletedResp => {
-      let studentProfile = await StudentProfile.findById(educationDetail.studentProfile);
-      studentProfile.educationDetails.pull(educationDetail._id);
-      await studentProfile.save();
-      return deletedResp;
-    })
-    .then(_ =>{
-      resp.json({success: true})
-    }).catch(error =>{
-      resp.json({success: false, error: error.message});
-    })
-  }else{
-    return resp.json({success: false, error: 'RecordNotFound'});
-  }
+  req.params.path = 'deleteEducationDetails';
+  kafka.make_request('educationDetail',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      resp.json({success: false, error: result.error})
+    }else{
+      resp.json({success: true,data: result})
+    }
+  });
 }

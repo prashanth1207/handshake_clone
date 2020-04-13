@@ -4,6 +4,7 @@ import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
 import Avatar from 'react-avatar'
+import ProfileMessage from './ProfileMessage';
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
@@ -40,6 +41,9 @@ function IdentityCardShow(props) {
         <Card.Text>
           Year of Passing
           {educationDetails.yearOfPassing}
+        </Card.Text>
+        <Card.Text>
+          <ProfileMessage studentProfile={studentProfile}/>
         </Card.Text>
       </Card.Body>
     </Card>

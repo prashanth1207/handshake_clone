@@ -1,57 +1,45 @@
 let mongoose = require('mongoose');
 let EventRegistration = mongoose.model('EventRegistration');
 let Event = mongoose.model('Event');
+let kafka = require('./../kafka/client')
+
 
 module.exports.create_registration = async (req,res) => {
-  let eventId = req.body.eventId;
-  let studentProfileId = req.body.studentProfileId;
-  let alreadyRegistered = await EventRegistration.findOne({
-    event: eventId,
-    studentProfile: studentProfileId,
-  })
-  if(alreadyRegistered){
-    return res.json({
-      success: false,
-      error: 'Already registered'
-    })
-  }
-  let eventRegistration = new EventRegistration({
-    event: eventId,
-    studentProfile: studentProfileId,
+  req.params.path = 'createRegistrations';
+  kafka.make_request('eventRegistration',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      res.json({
+        success: false,
+        errror: result.error
+      })
+    }else{
+      res.json({success: true});
+    }
   });
-  eventRegistration.save()
-  .then(async eventRegistration =>{
-    let event = await Event.findById(eventId);
-    event.eventRegistrations.push(event._id);
-    await event.save();
-    return eventRegistration
-  })
-  .then(_ => res.json({success: true}))
-  .catch(e =>{
-    return res.json({
-      success: false,
-      errro: e.message
-    })
-  })
 }
 
 module.exports.is_student_registered = (req,resp) => {
-  EventRegistration.findOne({
-    studentProfile: req.param('studentProfileId')
-  }).then(eventRegistation =>{
-    resp.json({
-      registered: eventRegistation ? true : false
-    })
-  })
+  req.params.path = 'is_student_registered';
+  kafka.make_request('eventRegistration',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      resp.json({err: result.error})
+    }else{
+        resp.json({
+          registered: result
+        })
+    }
+  });
 }
 
-module.exports.get_registrations = (req,res) =>{
-  EventRegistration.find(req.query || {})
-  .populate('studentProfile')
-  .populate('event')
-  .then(registrations => {
-    res.json({
-      data: registrations
-    });
-  })
+module.exports.get_registrations = (req,res) => {
+  req.params.path = 'get_registrations';
+  kafka.make_request('eventRegistration',{params: req.params,body: req.body, query: req.query},function(err,result){
+    if(result.error){
+      resp.json({error: result.error})
+    }else{
+      res.json({
+        data: result
+      });
+    }
+  });
 }

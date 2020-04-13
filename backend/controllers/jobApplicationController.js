@@ -5,45 +5,32 @@ let JobPosting = mongoose.model('JobPosting');
 const formidable = require('formidable')
 let fs = require('fs');
 let searchableQuery = require('./../utility/search').searchableQuery;
-
+let kafka = require('./../kafka/client')
 
 module.exports.getApplicationStatus = async (req, res) => {
-  let {jobPostingId,studentProfileId} = req.body;
-  JobApplication.findOne({jobPosting: jobPostingId, studentProfile: studentProfileId})
-  .then(jobApplication =>{
-    res.json({
-      status: jobApplication ? jobApplication.status : 'Not Applied'
-    })
-  });
-  
+  req.params.path = 'getApplicationStatus';
+  kafka.make_request('jobApplication',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      return res.json({error: result.error})
+    }else{
+      res.json({status: result});
+    }
+  })
 };
 
 module.exports.setApplicationStatus = async (req, res) => {
-  JobApplication.findById(req.param('id'))
-    .then(async jobApplication => {
-      if(jobApplication){
-        jobApplication.status = req.body.status;
-        jobApplication.save().then(_ =>{
-          return res.json({
-            success: true
-          });
-        })
-      }else{
-        res.json({
-          success: false,
-          error: 'Record not found'
-        });
-      }
-    })
-    .catch(e => {
-      res.json({
-        success: false,
-        error: e.errors[0].message
-      })
-    });
+  req.params.path = 'setApplicationStatus';
+  kafka.make_request('jobApplication',{params: req.params,body: req.body},function(err,result){
+    if(result.error){
+      return res.json({success: false, error: result.error})
+    }else{
+      res.json({success: true})
+    }
+  })
 }
 
 module.exports.create_job_application = async (req, res) =>{ 
+  req.params.path = 'create_job_application';
   new formidable.IncomingForm().parse(req,async (err,fields,files) =>{
     if(err){
       res.json({
@@ -51,43 +38,15 @@ module.exports.create_job_application = async (req, res) =>{
         error: err
       })
     }
-    let createData = {
-      jobPosting: fields.jobPostingId,
-      studentProfile: fields.studentProfileId,
-      resumePath: `${fields.jobPostingId}_${fields.studentProfileId}_resume.pdf`
-    }
-    let jobApplication = await JobApplication.findOne({
-      jobPosting: fields.jobPostingId, 
-      studentProfile: fields.studentProfileId
-    });
-    if(jobApplication){
-      return res.json({
-        success: false,
-        error: 'Application already submitted'
-      })
-    } 
     let resume = files.resume;
-    let newJobApplication = new JobApplication(createData);
-    newJobApplication.save()
-    .then(async jobApplication => {
-      let studentProfile = await StudentProfile.findById(fields.studentProfileId);
-      let jobPosting = await JobPosting.findById(fields.jobPostingId);
-      studentProfile.jobApplications.push(jobApplication._id);
-      jobPosting.jobApplications.push(jobApplication._id);
-      await studentProfile.save();
-      await jobPosting.save();
-      return jobApplication;
+    kafka.make_request('jobApplication',{params: req.params,body: req.body,fields: fields},function(err,result){
+      if(result.error){
+        return res.json({success: false, error: result.error})
+      }else{
+        fs.renameSync(resume.path,__basedir+'/public/resume/'+result.resumePath)
+        res.json({success: true,data: result})
+      }
     })
-    .then(_ =>{
-      res.json({success: true});  
-    })
-    .catch(error => {
-      res.json({
-        success: false,
-        error: error.message
-      })
-    })
-    fs.renameSync(resume.path,__basedir+'/public/resume/'+createData.resumePath)
   }).catch(e =>{
     res.json({
       success: false,
@@ -97,39 +56,23 @@ module.exports.create_job_application = async (req, res) =>{
 }
 
 module.exports.get_job_applications_for_a_job_posting = (req, res) =>{
-  let {jobPostingId} = req.query;
-  JobApplication.find({jobPosting: jobPostingId}).populate('studentProfile')
-    .then(jobPostings => {
-      res.json({data: jobPostings})
-    })
-    .catch(e => {
-      res.json({error: e})
-    })
+  req.params.path = 'get_job_applications_for_a_job_posting';
+  kafka.make_request('jobApplication',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return res.json({error: result.error})
+    }else{
+      res.json({data: result})
+    }
+  })
 }
 
 module.exports.get_job_applications_for_a_student = async (req, res) =>{
-  let {studentProfileId} = req.params;
-  let queryParams = req.query;
-  let page = parseInt(queryParams.page || 1) - 1;
-  let perPage = parseInt(queryParams.perPage || 10);
-  delete queryParams.page;
-  delete queryParams.perPage;
-  queryParams = searchableQuery(queryParams);
-  let totalRecords = await JobApplication.find({
-    ...queryParams,
-    studentProfile: studentProfileId
-  }).count();
-  JobApplication.find({
-    ...queryParams,
-    studentProfile: studentProfileId
-  })
-  .populate('jobPosting')
-  .skip(page > -1 ? page : 0)
-  .limit(perPage)
-  .then(jobPostings => {
-    res.json({data: jobPostings,totalRecords: totalRecords})
-  })
-  .catch(e => {
-    res.json({error: e})
+  req.params.path = 'get_job_applications_for_a_student';
+  kafka.make_request('jobApplication',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return res.json({error: result.error})
+    }else{
+      res.json(result);
+    }
   })
 }

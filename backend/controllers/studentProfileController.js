@@ -5,121 +5,73 @@ let ExperienceDetail = mongoose.model('ExperienceDetail');
 let searchableQuery =  require('./../utility/search').searchableQuery;
 const formidable = require('formidable')
 let fs = require('fs');
+let kafka = require('./../kafka/client')
 
-module.exports.get_all_students_profile = async (req,res) =>{
-  let query_params = req.query;
-  let page = parseInt(query_params.page || 1) - 1;
-  let perPage = parseInt(query_params.perPage || 10);
-  delete query_params.page;
-  delete query_params.perPage;
-  let educationDetails_query = query_params.educationDetails || null;
-  delete query_params.educationDetails;
-  let studentProfileQuery = searchableQuery(query_params);
-  let educationDetailsQuery = searchableQuery(JSON.parse(educationDetails_query));
-  try{
-    let totalRecordCount = await StudentProfile.find(studentProfileQuery).count();
-    StudentProfile.find(studentProfileQuery)
-    .populate('educationDetails')
-    .populate('experienceDetails')
-    .skip(page > -1 ? page : 0)
-    .limit(perPage)
-    .then(studentProfiles =>{
-      if(Object.keys(educationDetailsQuery).length > 0) {
-        studentProfiles = studentProfiles.filter(profile =>{
-          let educationDetail = profile.educationDetails[0];
-          if(!educationDetail){
-            return false;
-          }
-          let match = false;
-          for(let [col_name,col_val] of Object.entries(educationDetailsQuery)){
-            match = educationDetail[col_name].match(col_val.$regex);
-          }
-          return match;
-        });
-      }
-      return res.json({totalRecordCount: totalRecordCount, data: studentProfiles});
-    }).catch(e => {
-      return res.json({error: e})
-    })
-  }catch(error){
-    console.log(error);
-    res.json({error: 'Something went wrong'});
-  }
+module.exports.get_all_students_profile = async (req,resp) =>{
+  req.params.path = 'get_all_students_profile';
+  kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
 }
 
-module.exports.get_student_profile = async (req,res) => {
-
-  let id = req.params.id;
-  let studentProfile = await StudentProfile.findById(id)
-    .populate('educationDetails').populate('experienceDetails');
-  if(studentProfile){
-    res.json(studentProfile)
-  }else{
-    res.status(404)
-      .json({error: 'Record not found'});
-  }
-};
-
-module.exports.update_student_profile = async(req,res) => {
-  let id = req.params.id;
-  let studentProfile = await StudentProfile.findById(id);
-  if(studentProfile){
-    try{
-      let educationDetailsData = req.body.educationDetails;
-      if(educationDetailsData){
-        educationDetailsData.studentProfile = id;
-        await EducationDetail.createOrUpdate(educationDetailsData);
-      }
-      let studentProfileData = req.body.studentProfile;
-      if(studentProfileData){
-        await studentProfile.update(studentProfileData);
-      }
-      return res.json({success: true});
-    }catch(error){
-      res.json({
-        success: false,
-        error: error.message
-      })
+module.exports.get_student_profile = async (req,resp) => {
+  req.params.path = 'get_student_profile';
+  kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
     }
-  }else{
-    res.status(404)
-      .json({error: 'Record not found'});
-  }
-};
-
-module.exports.upload_profile_pic = (req, res) =>{
-  StudentProfile.findById(req.params.id).then(studentProfile =>{
-    if(!studentProfile){
-      return res.json({
-        success: false,
-        error: 'no record found'
-      })
-    }
-    new formidable.IncomingForm().parse(req,async (err,_fields,files) =>{
-      if(err){
-        res.json({
-          success: false,
-          error: err
-        })
-      }
-      let profilePic = files.profilePic;
-      if(profilePic){
-        fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.user._id}.png`)
-        return res.json({
-          success: true
-        })
-      }else{
-        res.json({
-          success: false,
-          error: "No picture uploaded"
-        })
-      }
-    }).catch(e =>{
-      res.json({
-        success: false,
-        error: error
-      })
-    });
   })
+};
 
+module.exports.update_student_profile = async(req,resp) => {
+  req.params.path = 'update_student_profile';
+  kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
+};
+
+module.exports.upload_profile_pic = (req, resp) =>{
+  req.params.path = 'upload_profile_pic';
+  new formidable.IncomingForm().parse(req,async (err,_fields,files) =>{
+    if(err){
+      res.json({
+        success: false,
+        error: err
+      })
+    }
+    kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
+      if(result.error){
+        return resp.json({error: result.error})
+      }else{
+        resp.json(result);
+      }
+    })
+    let profilePic = files.profilePic;
+    if(profilePic){
+      fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.user._id}.png`)
+      return res.json({
+        success: true
+      })
+    }else{
+      res.json({
+        success: false,
+        error: "No picture uploaded"
+      })
+    }
+  }).catch(e =>{
+    res.json({
+      success: false,
+      error: error
+    })
+  });
 }

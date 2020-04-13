@@ -27,35 +27,35 @@ export const storedUserInfo = () => JSON.parse(sessionStorage.getItem('userInfo'
 
 export function studentProfileSubmit(formData, studentProfileId) {
   axios.defaults.withCredentials = false;
-  return axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/student_profile/${studentProfileId}`, formData)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+  return axios.post(`${rooturl}/student_profile/${studentProfileId}`, formData)
     .then((resp) => resp);
 }
 
 export function experienceDetailEdit(formData){
   axios.defaults.withCredentials = false;
-  return axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/experience_details/create_update`, formData)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+  return axios.post(`${rooturl}/experience_details/create_update`, formData)
     .then((resp) => resp);
 }
 
 export function experienceDetailDelete(id){
   axios.defaults.withCredentials = false;
-  return axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/experience_details/delete/${id}`)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+  return axios.post(`${rooturl}/experience_details/delete/${id}`)
     .then((resp) => resp);
 }
 
 export function educationDetailEdit(formData){
   axios.defaults.withCredentials = false;
-  return axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/education_details/create_update`, formData)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+  return axios.post(`${rooturl}/education_details/create_update`, formData)
     .then((resp) => resp);
 }
 
 export function educationDetailDelete(id){
   axios.defaults.withCredentials = false;
-  return axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/education_details/delete/${id}`)
+  axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+  return axios.post(`${rooturl}/education_details/delete/${id}`)
     .then((resp) => resp);
 }

@@ -6,6 +6,7 @@ import {
 import JobPostingSummary from './JobPostingSummary';
 import { rooturl } from '../../../../config/config';
 import MyPagination from '../../Common/MyPagination';
+import qs from 'qs';
 
 
 
@@ -51,9 +52,15 @@ axios.get(`${rooturl}/job_postings`, { params: {
       jobTitle: form.jobTitle.value,
       jobCategory: form.jobCategory.value,
       location: form.location.value,
+      sort: eval(`(${form.sort.value})`)
     };
     axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
+    axios.get(`${rooturl}/job_postings`, { 
+      params: queryData,
+      paramsSerializer: qs.stringify
+    }, { 
+      validateStatus: false 
+    }).then((resp) => {
       if (resp.status === 200) {
         setData({ 
           status: 'recordFound', 
@@ -146,6 +153,21 @@ axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: fa
                     <Card.Text>Location</Card.Text>
                     <Card.Text>
                       <Form.Control type="text" name="location" onChange={handleOnChange} placeholder="Job Location" className="mr-sm-2" />
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Body class="list-group-item" style={{width: '100%'}}>
+                    <Card.Text>Sort</Card.Text>
+                    <Card.Text>
+                      <Form.Control as="select" name="sort" onChange={handleOnChange} placeholder="sort order" style={{width: '100%'}}>
+                        location /applicationDeadline/postingDate
+                        <option key='' value='{}'>Clear</option>
+                        <option data='location' key='location' value='{location: "asc"}'>Location Ascending</option>
+                        <option key='location' value='{location: "desc"}'>Location Descending</option>
+                        <option key='applicationDeadline' value='{applicationDeadline: "asc"}'>Deadline Ascending</option>
+                        <option key='applicationDeadline' value='{applicationDeadline: "desc"}'>Deadline Descending</option>
+                        <option key='postingDate' value='{postingDate: "asc"}'>Posting Date Ascending</option>
+                        <option key='postingDate' value='{postingDate: "desc"}'>Posting Date Descending</option>
+                      </Form.Control>
                     </Card.Text>
                   </Card.Body>
                 </Form>

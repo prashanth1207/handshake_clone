@@ -2,60 +2,38 @@ let mongoose = require('mongoose');
 let JobPosting = mongoose.model('JobPosting');
 let CompanyProfile = mongoose.model('CompanyProfile');
 let searchableQuery =  require('./../utility/search').searchableQuery;
+let kafka = require('./../kafka/client')
+
 
 module.exports.show_all_job_postings = async (req,resp) => {
-  let query_params = req.query;
-  let page = parseInt(query_params.page || 1) - 1;
-  let perPage = parseInt(query_params.perPage || 10);
-  delete query_params.page;
-  delete query_params.perPage;
-  let companyProfile = query_params.companyProfile;
-  delete query_params.companyProfile;
-  let finalQuery = searchableQuery(query_params);
-  companyProfile && (finalQuery.companyProfile = companyProfile);
-  let totalRecords = await JobPosting.find(finalQuery).count();
-  JobPosting.find(finalQuery)
-    .populate('companyProfile')
-    .skip(page > -1 ? page : 0)
-    .limit(perPage)
-    .then(jobPostings => {
-      return resp.json({data:jobPostings, totalRecords: totalRecords});
-    })
-    .catch(error => {
-      return resp.json({error: error.message})
-    });
+  req.params.path = 'show_all_job_postings';
+  kafka.make_request('jobPosting',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
 }
 
 module.exports.get_job_posting = async (req,resp) => {
-  let id = req.params.id;
-    let jobPosting = await JobPosting.findById(id).populate('companyProfile');
-  if(jobPosting){
-    resp.json(jobPosting);
-  }else{
-    resp.status(404)
-      .json({error: 'Record not found'});
-  }
+  req.params.path = 'get_job_posting';
+  kafka.make_request('jobPosting',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.status(404).json({error: result.error})
+    }else{
+      resp.json(result);
+    }
+  })
 }
 
 module.exports.create_job_posting = async (req,resp) => {
-  let companyProfileId = req.params.company_profile_id;
-  let jobPostingData = req.body;
-  jobPostingData.companyProfile = companyProfileId;
-  let jobPosting = new JobPosting(jobPostingData);
-  jobPosting.save()
-  .then(async (job_posting) =>{
-    let companyProfile = await CompanyProfile.findById(companyProfileId);
-    companyProfile.jobPostings.push(job_posting._id);
-    await companyProfile.save();
-    return job_posting;
-  })
-  .then(_ => {
-    resp.json({success: true});
-  })
-  .catch(e =>{
-    resp.json({
-      success: false,
-      error: e.message
-    });
+  req.params.path = 'create_job_posting';
+  kafka.make_request('jobPosting',{params: req.params,body: req.body,query: req.query},function(err,result){
+    if(result.error){
+      return resp.json({success: false, error: result.error})
+    }else{
+      resp.json({success: true});
+    }
   })
 }

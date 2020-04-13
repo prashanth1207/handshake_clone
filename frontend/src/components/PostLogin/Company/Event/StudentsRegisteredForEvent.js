@@ -14,7 +14,6 @@ function StudentsRegisteredForEvent(props) {
   if (props.eventRegistrationsResp.status === 'loading') {
     return <div>Loading...</div>;
   }
-
   let eventRegistrations_tag = props.eventRegistrationsResp.data.eventRegistrations.map((eventRegistration) => (
     <Row>
       <Col>

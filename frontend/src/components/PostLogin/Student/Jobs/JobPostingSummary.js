@@ -18,7 +18,7 @@ function JobPostingSummary(props) {
   )) || null;
   let job_title = jobPosting.jobTitle;
   const profile_path = `/company_profile/${jobPosting.companyProfile._id}`;
-  const image_path = `${rooturl}/images/profile_pics/${jobPosting.companyProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${jobPosting.companyProfile.user}.png`;
   if (props.linkJobTitle) {
     job_title = <a href={`/job_postings/${jobPosting._id}`}>{job_title}</a>;
   }
@@ -26,7 +26,8 @@ function JobPostingSummary(props) {
     <Card>
       <Card.Body>
         <Row>
-          <Col xs={3} style={{ 'max-width': '100px', 'max-height': '100px' }}><a href={profile_path}><Image variant="center" src={image_path} roundedCircle thumbnail fluid /></a></Col>
+          <Col xs={3} style={{ 'max-width': '100px', 'max-height': '100px' }}>
+            <a href={profile_path}><Image variant="center" src={image_path} roundedCircle thumbnail /></a></Col>
           <Col>
             <Row>
               <Col>
@@ -50,6 +51,22 @@ function JobPostingSummary(props) {
                       <SalarySvg />
                       {' '}
                       {jobPosting.salary || 'Not provided'}
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <div>
+                      {"Posting Date"}
+                      {' '}
+                      {new Date(jobPosting.postingDate).toLocaleDateString() || 'Not provided'}
+                    </div>
+                  </Col>
+                  <Col>
+                    <div>
+                    {"Deadline Date"}
+                      {' '}
+                      {new Date(jobPosting.applicationDeadline).toLocaleDateString() || 'Not provided'}
                     </div>
                   </Col>
                 </Row>

@@ -40,7 +40,7 @@ function ShowEventsSearchResults(props) {
 
   const eventsSection = props.eventResp.data.events.map((event) => {
     let externalTag = null;
-    if (props.for === 'Student') {
+    if (storedUserInfo().type === 'Student') {
       externalTag = <EventRegister event={event} studentProfileId={storedUserInfo().profile._id} studentMajor={props.eventResp.major} />;
     } else {
       externalTag = <Card.Link href={`/company/events/${event._id}/students`}>Registrations</Card.Link>;

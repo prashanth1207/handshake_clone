@@ -1,8 +1,7 @@
 var JWTStrategy =  require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 var passport = require('passport');
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
+const kafka = require('./../kafka/client');
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
@@ -12,12 +11,12 @@ const options = {
 const configAuth = (passport) => {
   passport.use(new JWTStrategy(options, (jwt_payload, done) => {
     id = jwt_payload.id;
-    User.findOne({_id: id},(err, user) => {
+    kafka.make_request('passport',id,function(err,result){
       if(err){
         done(err, false);
       }
-      if(user){
-        done(null,user);
+      if(result){
+        done(null,result);
       }
       else{
         done(null,false);

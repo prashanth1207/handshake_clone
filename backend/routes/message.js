@@ -5,9 +5,10 @@ let checkAuth = require('./../config/passport').checkAuth;
 
 
 /* GET home page. */
-router.post('/startConversation', MessageController.startConversation);
-router.get('/:id', MessageController.getMessageWindow);
-router.post('/send_message', MessageController.sendMessage);
-router.get('/student/:id',MessageController.getMessageWindowsForStudent);
-router.get('/company/:id',MessageController.getMessageWindowsForCompany);
+router.post('/startConversation', checkAuth, MessageController.startConversation);
+router.get('/:id', checkAuth, MessageController.getMessageWindow);
+router.post('/send_message', checkAuth, MessageController.sendMessage);
+router.get('/student/:id', checkAuth, MessageController.getMessageWindowsForStudent);
+router.get('/company/:id', checkAuth, MessageController.getMessageWindowsForCompany);
+router.post('/converstion_window',checkAuth,MessageController.converstionWindow);
 module.exports = router;

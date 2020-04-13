@@ -9,7 +9,7 @@ import MessageWindowBody from './MessageWindowBody';
 
 function ShowMessages(props) {
   let [messageWindowResp,setMessageWindowResp] = useState({status: 'loading',messageWindows: []});
-  let userType = storedUserInfo().type.toString();
+  let userType = storedUserInfo().type.toLowerCase();
   let profile = storedUserInfo().profile;
   if(messageWindowResp.status === 'loading'){
     Axios.get(`${rooturl}/messages/${userType}/${profile._id}`).then(resp =>{
