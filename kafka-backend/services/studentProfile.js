@@ -21,7 +21,7 @@ async function handle_request(msg, callback) {
       StudentProfile.find(studentProfileQuery)
       .populate('educationDetails')
       .populate('experienceDetails')
-      .skip(page > -1 ? page : 0)
+      .skip(page > -1 ? page*perPage : 0)
       .limit(perPage)
       .then(studentProfiles =>{
         if(Object.keys(educationDetailsQuery).length > 0) {

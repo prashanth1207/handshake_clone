@@ -3,3 +3,5 @@ backend/node_modules
 .DS_Store
 **/__snapshots__
 backend/.env
+frontend/.env
+kafka-backend/.env

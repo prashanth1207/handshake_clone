@@ -20,10 +20,11 @@ async function handle_request(msg, callback) {
     let totalRecords = await JobPosting.find(finalQuery).count();
     JobPosting.find(finalQuery)
       .populate('companyProfile')
-      .skip(page > -1 ? page : 0)
+      .skip(page > -1 ? page*perPage : 0)
       .limit(perPage)
       .sort(sort)
       .then(jobPostings => {
+        jobPostings.forEach(jp => console.log(jp.jobTitle));
         callback(null,{data:jobPostings, totalRecords: totalRecords});
       })
       .catch(error => {

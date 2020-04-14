@@ -1,1 +1,1 @@
-export const rooturl = "http://localhost:3001";
+export const rooturl = process.env.REACT_APP_BACKEND_ENDPOINT;

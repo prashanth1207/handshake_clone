@@ -41,7 +41,7 @@ async function handle_request(msg, callback) {
     query_params = searchableQuery(query_params);
     let totalRecordCount = await Event.find(query_params).count();
     Event.find(query_params)
-    .skip(page > -1 ? page : 0)
+    .skip(page > -1 ? page*perPage : 0)
     .limit(perPage)
     .sort('-time')
     .then(async events =>{
@@ -82,7 +82,7 @@ async function handle_request(msg, callback) {
       ...query_params,
       companyProfile: companyProfileId
     })
-    .skip(page > -1 ? page : 0)
+    .skip(page > -1 ? page*perPage : 0)
     .limit(perPage)
     .sort('-time')
     .then(events =>{

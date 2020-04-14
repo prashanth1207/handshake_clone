@@ -5,19 +5,17 @@ import {
 } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import StudentBody from '../../Student/Profile/StudentBody';
-import JobApplicationStatus from '../../Student/Applications/JobApplicationStatus';
+import JobApplicationStatus from './JobApplicationStatus';
 import { rooturl } from '../../../../config/config';
+import {getAllJobApplications} from '../../../../redux/companyJob/companyJobActions'
+import { connect } from 'react-redux';
 
 function AllJobApplications(props) {
   const { id: jobPostingId } = useParams();
-  const [jobApplicationsResp, setjobApplicationsResp] = useState({ status: 'loading', jobApplications: null });
+  let jobApplicationsResp = props.jobApplicationsResp;
   const [studentProfile, setStudentProfile] = useState(null);
   if (jobApplicationsResp.status === 'loading') {
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
-      .then((resp) => {
-        setjobApplicationsResp({ status: 'loaded', jobApplications: resp.data.data || [] });
-      });
+    props.getAllJobApplications(jobPostingId);
   }
   if (jobApplicationsResp.status === 'loading') {
     return <div>Loading...</div>;
@@ -85,4 +83,7 @@ axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
   );
 }
 
-export default AllJobApplications;
+const mapStateToProps = (state) => ({
+  jobApplicationsResp: state.companyJob.allJobApplictions
+})
+export default connect(mapStateToProps,{getAllJobApplications})(AllJobApplications);

@@ -8,7 +8,8 @@ var agent = require('chai').request.agent(app);
 describe('User Controller', function(){
 
     it('POST login check',function(done){
-        agent.post('/users/login').send({emailId: 'student@sjsu.edu',password: 'student'})
+        agent.post('/users/login')
+            .send({emailId: 'student@sjsu.edu',password: 'student'})
             .then(function(res){
                 expect(res.body.success).to.equal(true);
                 done();

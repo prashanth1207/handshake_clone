@@ -2,7 +2,7 @@ import {
   SUCCESS_LOG_IN_RESPONSE,
   ERROR_LOG_IN_RESPONSE,
   LOG_OUT
-} from '../constants/action-types';
+} from '../action-types';
 import axios from 'axios';
 import { rooturl } from '../../config/config';
 import Cookies from 'js-cookie';

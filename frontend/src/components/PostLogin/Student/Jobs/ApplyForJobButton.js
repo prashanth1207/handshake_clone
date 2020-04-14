@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
+import {Link} from 'react-router-dom';
+import ApplyForJobForm from './ApplyForJobForm';
+import {getJobPostingAppliedStatus} from './../../../../redux/jobPosting/jobPostingActions'
+import { connect } from 'react-redux';
 
 function ApplyForJobButton(props) {
   const usrInfo = storedUserInfo();
-  const [status, setStatus] = useState(null);
+  const status = props.status;
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   if (status === null) {
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/job_application/status`, { studentProfileId: usrInfo.profile._id, jobPostingId: props.jobPostingId })
-      .then((resp) => {
-        setStatus(resp.data.status);
-      });
+    props.getJobPostingAppliedStatus(props.jobPostingId)
   }
-
+  if(usrInfo.type === 'Company'){
+    return null;
+  }
   if (status === null) {
     return null;
   }
   if (status === 'Not Applied') {
-    return <Button variant="primary" href={`/student/${usrInfo.profile._id}/job_postings/${props.jobPostingId}/apply`}>Apply</Button>;
+    return <div>
+      <Button variant="primary" onClick={handleShow}>
+        Apply
+      </Button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Apply</Modal.Title>
+        </Modal.Header>
+        <Modal.Body><ApplyForJobForm studentProfileId={usrInfo.profile._id} jobProfileId={props.jobPostingId}/></Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   }
   return (
     <div>
@@ -29,4 +49,7 @@ axios.post(`${rooturl}/job_application/status`, { studentProfileId: usrInfo.prof
   );
 }
 
-export default ApplyForJobButton;
+const mapStateToProps = (state) => ({
+  status: state.jobPosting.jobStatus
+})
+export default connect(mapStateToProps,{getJobPostingAppliedStatus})(ApplyForJobButton);

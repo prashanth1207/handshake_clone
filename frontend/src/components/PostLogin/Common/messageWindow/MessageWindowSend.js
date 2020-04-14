@@ -3,11 +3,13 @@ import { Row, Col, Button, Form, Alert } from 'react-bootstrap';
 import Axios from 'axios';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
+import {connect} from 'react-redux';
+import { sendMessage } from './../../../../redux/message/messageActions';
 
 function MessageWindowSend(props) {
   let messageWindow = Object.assign({},props.messageWindow);
   let [errorMsg,setErrorMsg] = useState(null);
-  let handleSubmit = (e) =>{
+  let handleSubmit = async (e) =>{
     e.preventDefault();
     const form = e.currentTarget;
     let formData = {
@@ -15,15 +17,8 @@ function MessageWindowSend(props) {
       "creatorId": storedUserInfo().profile._id,
       "message": form.message.value
     }
-    Axios.post(`${rooturl}/messages/send_message`, formData).then(resp =>{
-      if(resp.status === 200 && resp.data.messages){
-        messageWindow.messages = resp.data.messages;
-        form.reset();
-        props.setMessageWindow(messageWindow);
-      }else{
-        setErrorMsg(<Alert variant='danger'>{resp.data.error}</Alert>);
-      }
-    })
+    await props.sendMessage(formData);
+    form.reset();
   };
   return (
     <Form onSubmit={handleSubmit}>
@@ -42,4 +37,15 @@ function MessageWindowSend(props) {
   );
 }
 
-export default MessageWindowSend;
+const mapStateToProps = (state,ownProps) =>{
+  let messageWindow = state.message.allMessages.messageWindows.find(msgWindow =>{
+    if(msgWindow._id === ownProps.messageWindow._id){
+      return true;
+    }
+  });
+  return {
+    messageWindow: messageWindow
+  }
+}
+
+export default connect(mapStateToProps,{sendMessage})(MessageWindowSend);

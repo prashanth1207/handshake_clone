@@ -6,77 +6,37 @@ import {
 import { storedUserInfo } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
 import MyPagination from '../../Common/MyPagination';
+import {getStudentJobApplications} from './../../../../redux/studentJobApplications/studentJobApplicationsActions'
+import { connect } from 'react-redux';
 
-
-function StudentJobApplications() {
+function StudentJobApplications(props) {
   let perPage = 1;
-  const [applicationResp, setapplicationResp] = useState({ 
-    status: 'loading', 
-    applications: null, 
-    queryParams: {
-      page: 1,
-      perPage: perPage,
-      status: ''
-    }, 
-    totalPages: null
-  });
+  const applicationResp = props.applicationResp;
   if (applicationResp.status === 'loading') {
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile._id}`, { params: applicationResp.queryParams }, { validateStatus: false })
-      .then((resp) => {
-        if (resp.status === 200 && resp.data.data) {
-          return setapplicationResp({ 
-            status: 'loaded', 
-            applications: resp.data.data, 
-            queryParams: applicationResp.queryParams,
-            totalPages: Math.ceil(resp.data.totalRecords / perPage)
-          });
-        }
-        return setapplicationResp({ status: 'error', applications: null, queryParams: applicationResp.queryParams });
-      });
+    applicationResp.queryParams.perPage = perPage;
+    props.getStudentJobApplications(applicationResp.queryParams)
   }
 
   const handleOnChange = (e) => {
     const status = e.currentTarget.value;
-    setapplicationResp({ 
-      status: 'loading', 
-      applications: null, 
-      queryParams: {
-        status: status , 
-        page : applicationResp.queryParams.page
-      },
-      currentPage: 1, 
-      totalPages: null
-    });
+    applicationResp.queryParams.status = status;
+    applicationResp.queryParams.page = 1;
+    props.getStudentJobApplications(applicationResp.queryParams)
   };
   const handlePrevPage = () =>{
-    if(applicationResp.currentPage === 1){
+    if(applicationResp.queryParams.page === 1){
       return
     }
-    setapplicationResp({ 
-      status: 'loading', 
-      applications: null, 
-      queryParams: {
-        ...applicationResp.queryParams,
-        page: applicationResp.queryParams.page - 1
-      },
-      totalPages: null
-    });
+    applicationResp.queryParams.page--;
+    props.getStudentJobApplications(applicationResp.queryParams);
   }
 
   const handleNextPage = () =>{
-    if(applicationResp.currentPage === applicationResp.totalPages){
+    if(applicationResp.queryParams.page === applicationResp.totalPages){
       return
     }
-    setapplicationResp({ 
-      status: 'loading', 
-      applications: null, 
-      queryParams: {
-        ...applicationResp.queryParams,
-        page: applicationResp.queryParams.page + 1
-      },
-      totalPages: null
-    });
+    applicationResp.queryParams.page++;
+    props.getStudentJobApplications(applicationResp.queryParams);
   }
 
   if (applicationResp.status === 'loading') {
@@ -133,4 +93,7 @@ axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().pr
   );
 }
 
-export default StudentJobApplications;
+const mapStateToProps = (state) => ({
+  applicationResp: state.studentJobApplications.jobApplictions
+})
+export default connect(mapStateToProps,{getStudentJobApplications})(StudentJobApplications);

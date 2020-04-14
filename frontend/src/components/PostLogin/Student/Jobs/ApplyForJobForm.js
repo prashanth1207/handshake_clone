@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import {
   Container, Row, Col, Form, Button, Alert,
 } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import { rooturl } from '../../../../config/config';
-import axios from 'axios';
+import {applyForJobPosting} from './../../../../redux/jobPosting/jobPostingActions'
+import { connect } from 'react-redux';
 
 function ApplyForJobForm(props) {
-  const { studentProfileId, id: jobProfileId } = useParams();
-  const [submitStatus, setsubmitStatus] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const { studentProfileId, jobProfileId } = props;
+  const submitStatus = props.submitStatus;
+  const errorMsg = props.errorMsg;
   
 
   const handleSubmit = (e) => {
@@ -18,21 +17,9 @@ function ApplyForJobForm(props) {
     formData.append('jobPostingId', jobProfileId);
     formData.append('studentProfileId', studentProfileId);
     formData.append('resume', e.currentTarget.elements.resume.files[0]);
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/job_application/create`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then((resp) => {
-        if (resp.status === 200 && resp.data.success) {
-          setsubmitStatus('success');
-        } else {
-          setErrorMsg(resp.data.error);
-        }
-      });
+    props.applyForJobPosting(formData);
   };
-  if (submitStatus == 'success') {
+  if (submitStatus == 'Pending') {
     return (
       <div>
         <Alert key="success" variant="success">
@@ -68,4 +55,8 @@ axios.post(`${rooturl}/job_application/create`, formData, {
   );
 }
 
-export default ApplyForJobForm;
+const mapStateToProps = (state) => ({
+  submitStatus: state.jobPosting.jobStatus,
+  errorMsg: state.jobPosting.error
+})
+export default connect(mapStateToProps,{applyForJobPosting})(ApplyForJobForm);

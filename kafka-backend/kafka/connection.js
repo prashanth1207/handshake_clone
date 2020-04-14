@@ -1,9 +1,10 @@
 var kafka = require('kafka-node');
+require('dotenv').config()
 
 function ConnectionProvider() {
     this.getConsumer = function (topic_name) {
 
-        this.client = new kafka.Client("localhost:2181");
+        this.client = new kafka.Client(process.env.KAFKA_URL);
         this.kafkaConsumerConnection = new kafka.Consumer(this.client, [{ topic: topic_name, partition: 0 }]);
         this.client.on('ready', function () { console.log('Client ready') })
 

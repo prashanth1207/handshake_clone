@@ -21,8 +21,8 @@ async function handle_request(msg, callback) {
       .then(async jobApplication => {
         if(jobApplication){
           jobApplication.status = msg.body.status;
-          jobApplication.save().then(_ =>{
-           callback(null,true);
+          jobApplication.save().then(jobApplication =>{
+           callback(null,jobApplication);
           })
         }else{
           res.json({
@@ -96,7 +96,7 @@ async function handle_request(msg, callback) {
       studentProfile: studentProfileId
     })
     .populate('jobPosting')
-    .skip(page > -1 ? page : 0)
+    .skip(page > -1 ? page*perPage : 0)
     .limit(perPage)
     .then(jobPostings => {
       callback(null,{data: jobPostings,totalRecords: totalRecords});

@@ -2,7 +2,7 @@ import {
   STUDENT_PROFILES_LOADING,
   STUDENT_PROFILES_DATA,
   STUDENT_PROFILES_ERROR
-} from './../constants/action-types';
+} from '../action-types';
 import {storedUserInfo } from './../../utility'
 import { rooturl } from './../../config/config'
 import axios from 'axios';

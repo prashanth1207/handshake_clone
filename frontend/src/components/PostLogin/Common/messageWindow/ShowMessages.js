@@ -6,19 +6,13 @@ import { storedUserInfo } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
 import MessageWindowLink from './MessageWindowLink';
 import MessageWindowBody from './MessageWindowBody';
+import {connect} from 'react-redux';
+import { showMessages } from './../../../../redux/message/messageActions';
 
 function ShowMessages(props) {
-  let [messageWindowResp,setMessageWindowResp] = useState({status: 'loading',messageWindows: []});
-  let userType = storedUserInfo().type.toLowerCase();
-  let profile = storedUserInfo().profile;
+  let messageWindowResp = props.messageWindowResp;
   if(messageWindowResp.status === 'loading'){
-    Axios.get(`${rooturl}/messages/${userType}/${profile._id}`).then(resp =>{
-      if(resp.status === 200 && resp.data.profile){
-        setMessageWindowResp({status: 'loaded', messageWindows: resp.data.profile.messageWindows})
-      }else{
-        setMessageWindowResp({status: 'error',messageWindows: []});
-      }
-    });
+    props.showMessages();
   }
   let messageWindowsTag = [];
   let messagesTag = [];
@@ -65,4 +59,8 @@ function ShowMessages(props) {
   );
 }
 
-export default ShowMessages;
+const mapStateToProps = (state) =>({
+  messageWindowResp: state.message.allMessages,
+})
+
+export default connect(mapStateToProps,{showMessages})(ShowMessages);

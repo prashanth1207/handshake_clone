@@ -8,21 +8,14 @@ import {
 import JobPostingSummary from './JobPostingSummary';
 import { rooturl } from '../../../../config/config';
 import ApplyForJobButton from './ApplyForJobButton';
+import {getJobPosting} from './../../../../redux/jobPosting/jobPostingActions'
+import { connect } from 'react-redux';
 
 function JobPostingShow(props) {
   const { id: jobPostingId } = useParams();
-  const [jobPostingResp, setData] = useState({ status: 'loading', jobPosting: null });
+  const jobPostingResp = props.jobPostingResp;
   if (jobPostingResp.status === 'loading') {
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_postings/${jobPostingId}`, {
-      validateStatus: false,
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPosting: resp.data });
-      } else {
-        setData({ status: 'recordNotFound' });
-      }
-    });
+    props.getJobPosting(jobPostingId);
   }
   if (jobPostingResp.status === 'loading') {
     return <h3>Loading Profile...</h3>;
@@ -68,4 +61,7 @@ axios.get(`${rooturl}/job_postings/${jobPostingId}`, {
   );
 }
 
-export default JobPostingShow;
+const mapStateToProps = (state) => ({
+  jobPostingResp: state.jobPosting.show
+})
+export default connect(mapStateToProps,{getJobPosting})(JobPostingShow);

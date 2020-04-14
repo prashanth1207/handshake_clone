@@ -4,9 +4,11 @@ import {
 } from 'react-bootstrap';
 import { rooturl } from '../../../../config/config';
 import axios from 'axios';
+import {changeJobApplicationStatus} from '../../../../redux/companyJob/companyJobActions'
+import { connect } from 'react-redux';
 
 function JobApplicationStatus(props) {
-  const [status, setStatus] = useState(props.jobApplication.status);
+  const status = props.status;
   const [showModel, setshowModel] = useState(false);
   const variant = {
     Pending: 'primary',
@@ -24,14 +26,8 @@ function JobApplicationStatus(props) {
   const submitStatus = (e) => {
     e.preventDefault();
     const formData = { status: e.currentTarget.elements.status.value };
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/job_application/${props.jobApplication._id}/set_status`, formData, { validateStatus: false })
-      .then((resp) => {
-        if (resp.status == 200 && resp.data.success) {
-          setStatus(formData.status);
-          setshowModel(false);
-        }
-      });
+    props.changeJobApplicationStatus(props.jobApplication._id,formData);
+    setshowModel(false);
   };
   let change = null;
   if (status === 'Pending') {
@@ -66,4 +62,14 @@ axios.post(`${rooturl}/job_application/${props.jobApplication._id}/set_status`, 
   );
 }
 
-export default JobApplicationStatus;
+const mapStateToProps = function(state, ownProps){
+  let jobApplication = state.companyJob.allJobApplictions.jobApplications.find(jobApplication =>{
+    if(jobApplication._id === ownProps.jobApplication._id){
+      return true;
+    }
+  })
+  return ({
+    status: jobApplication.status,
+  })
+}
+export default connect(mapStateToProps,{changeJobApplicationStatus})(JobApplicationStatus);

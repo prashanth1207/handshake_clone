@@ -5,48 +5,31 @@ import JobPostingSummary from '../../Student/Jobs/JobPostingSummary';
 import { storedUserInfo } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
 import MyPagination from '../../Common/MyPagination';
+import {getCompanyJobPostings} from './../../../../redux/companyJob/companyJobActions'
+import { connect } from 'react-redux';
 
 
 function CompanyJobPostings(props) {
-  let perPage = 10;
+  let perPage = 3;
   const companyProfileId = storedUserInfo().profile._id;
-  const [jobPostingResp, setData] = useState({ 
-    status: 'loading', 
-    jobPostings: null,
-    currentPage: 1,
-    totalPages: null
-  });
+  let jobPostingResp = props.jobPostingResp;
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_postings`, { params: { 
+    let params = {
       companyProfile: companyProfileId,
       page: jobPostingResp.currentPage,
       perPage: perPage
-    }}, {
-      validateStatus: false,
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ 
-          status: 'recordFound', 
-          jobPostings: resp.data,
-          currentPage: jobPostingResp.currentPage,
-          totalPages: Math.ceil(resp.data.totalRecords / perPage),
-        });
-      } else {
-        setData({ status: 'recordNotFound' });
-      }
-    });
+    }
+    props.getCompanyJobPostings(params)
   }
   const handlePrevPage = () =>{
     if(jobPostingResp.currentPage === 1){
       return
     }
-    setData({
-      status: 'loading', 
-      jobPostings: null,
-      currentPage: jobPostingResp.currentPage - 1,
-      totalPages: null
+    props.getCompanyJobPostings({
+      companyProfile: companyProfileId,
+      page: jobPostingResp.currentPage - 1,
+      perPage: perPage
     })
   }
 
@@ -54,11 +37,10 @@ axios.get(`${rooturl}/job_postings`, { params: {
     if(jobPostingResp.currentPage === jobPostingResp.totalPages){
       return
     }
-    setData({
-      status: 'loading', 
-      jobPostings: null,
-      currentPage: jobPostingResp.currentPage + 1,
-      totalPages: null
+    props.getCompanyJobPostings({
+      companyProfile: companyProfileId,
+      page: jobPostingResp.currentPage + 1,
+      perPage: perPage
     })
   }
 
@@ -94,4 +76,7 @@ axios.get(`${rooturl}/job_postings`, { params: {
   );
 }
 
-export default CompanyJobPostings;
+const mapStateToProps = (state) => ({
+  jobPostingResp: state.companyJob.companyJobPostings
+})
+export default connect(mapStateToProps,{getCompanyJobPostings})(CompanyJobPostings);

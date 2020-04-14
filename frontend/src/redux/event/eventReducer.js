@@ -6,7 +6,7 @@ import {
   CREATE_EVENT_SUCCESS,
   CREATE_EVENT_ERROR,
   EVENT_REGISTERED_STUDENTS
-} from './../constants/action-types'
+} from '../action-types'
 
 let intialState = {
   eventDetails : {

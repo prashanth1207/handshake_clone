@@ -5,7 +5,7 @@ import {
   COMPANY_PROFILE_ERROR,
   UPDATE_COMPANY_PROFILE_SUCCESS,
   UPDATE_COMPANY_PROFILE_ERROR,
-} from '../constants/action-types';
+} from '../action-types';
 import axios from 'axios';
 import { rooturl } from '../../config/config';
 

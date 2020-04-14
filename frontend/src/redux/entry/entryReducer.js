@@ -2,9 +2,7 @@ import {
   SUCCESS_LOG_IN_RESPONSE,
   ERROR_LOG_IN_RESPONSE,
   LOG_OUT,
-  STUDENT_SIGN_UP,
-  COMPANY_SIGN_UP
-} from '../constants/action-types';
+} from '../action-types';
 
 let initialState = {
   userInfo : JSON.parse(sessionStorage.getItem('userInfo')),

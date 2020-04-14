@@ -6,40 +6,22 @@ import {
 import JobPostingSummary from './JobPostingSummary';
 import { rooturl } from '../../../../config/config';
 import MyPagination from '../../Common/MyPagination';
-import qs from 'qs';
-
+import {getStudentJobs} from './../../../../redux/studentJobs/studentJobsAction'
+import { connect } from 'react-redux';
 
 
 function JobPostingsAll(props) {
-  let perPage = 10;
+  let perPage = 5;
   const { companyProfileId } = props;
-  const [jobPostingResp, setData] = useState({ 
-    status: 'loading', 
-    jobPostings: null, 
-    currentPage: 1, 
-    totalPages: null
-  });
+  const jobPostingResp = props.jobPostingResp;
   if (jobPostingResp.status === 'loading') {
     console.dir(props);
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/job_postings`, { params: {
+    let params = {
       page: 1,
       perPage: perPage,
       companyProfile: companyProfileId 
-    } }, {
-      validateStatus: false,
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ 
-          status: 'recordFound', 
-          jobPostings: resp.data,
-          currentPage: 1,
-          totalPages: Math.ceil(resp.data.totalRecords / perPage),
-        });
-      } else {
-        setData({ status: 'recordNotFound' });
-      }
-    });
+    }
+    props.getStudentJobs(params)
   }
 
 
@@ -47,52 +29,32 @@ axios.get(`${rooturl}/job_postings`, { params: {
   const handleOnChange = (e,page=1,formElement=null) => {
     const form = formElement || e.currentTarget.form;
     const queryData = {
-      page: page,
+      page: 1,
       perPage: perPage,
       jobTitle: form.jobTitle.value,
       jobCategory: form.jobCategory.value,
       location: form.location.value,
+      companyProfile: companyProfileId,
       sort: eval(`(${form.sort.value})`)
     };
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-    axios.get(`${rooturl}/job_postings`, { 
-      params: queryData,
-      paramsSerializer: qs.stringify
-    }, { 
-      validateStatus: false 
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ 
-          status: 'recordFound', 
-          jobPostings: resp.data, 
-          currentPage: queryData.page,
-          totalPages: Math.ceil(resp.data.totalRecords / perPage),
-        });
-      } else {
-        setData({ 
-          status: 'error', 
-          jobPostings: null,
-          currentPage: queryData.page,
-          totalPages: null
-        });
-      }
-    });
+    props.getStudentJobs(queryData);
+    
   };
 
   const handlePrevPage = () =>{
-    if(jobPostingResp.currentPage === 1){
+    if(jobPostingResp.queryData.page === 1){
       return
     }
-    let form = document.getElementById('jobPostingForm');
-    handleOnChange(null,jobPostingResp.currentPage - 1,form);
+    jobPostingResp.queryData.page--;
+    props.getStudentJobs(jobPostingResp.queryData);
   }
 
   const handleNextPage = () =>{
     if(jobPostingResp.currentPage === jobPostingResp.totalPages){
       return
     }
-    let form = document.getElementById('jobPostingForm');
-    handleOnChange(null,jobPostingResp.currentPage + 1,form);
+    jobPostingResp.queryData.page++;
+    props.getStudentJobs(jobPostingResp.queryData);
   }
 
   const resetForm = (e) => {
@@ -177,11 +139,14 @@ axios.get(`${rooturl}/job_postings`, { params: {
         </Col>
         <Col>
           {jobPostingsDivs}
-          <MyPagination handlePrevPage={handlePrevPage} currentPage={jobPostingResp.currentPage} totalPages={jobPostingResp.totalPages} handleNextPage={handleNextPage}/>
+          <MyPagination handlePrevPage={handlePrevPage} currentPage={jobPostingResp.queryData.page} totalPages={jobPostingResp.totalPages} handleNextPage={handleNextPage}/>
         </Col>
       </Row>
     </div>
   );
 }
 
-export default JobPostingsAll;
+const mapStateToProps = (state) => ({
+  jobPostingResp: state.studentJobs.jobs
+})
+export default connect(mapStateToProps,{getStudentJobs})(JobPostingsAll);

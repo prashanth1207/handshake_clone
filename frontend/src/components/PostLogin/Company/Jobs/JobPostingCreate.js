@@ -5,11 +5,13 @@ import { Redirect } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
+import {createJobPostings} from '../../../../redux/companyJob/companyJobActions'
+import { connect } from 'react-redux';
 
 function JobPostingCreate(props) {
   const companyProfileId = storedUserInfo().profile._id;
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [updateSuccess, setupdateSuccess] = useState(false);
+  const errorMsg = props.errorMsg;
+  const updateSuccess = props.updateSuccess;
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -23,17 +25,7 @@ function JobPostingCreate(props) {
       jobDescription: form.jobDescription.value,
       jobCategory: selectedJobCategoryList.join(','),
     };
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/job_postings/${companyProfileId}/create`, formData, {
-      validateStatus: false,
-    }).then((resp) => {
-      console.dir(resp);
-      if (resp.status === 200 && resp.data.success) {
-        setupdateSuccess(true);
-      } else {
-        setErrorMsg(resp.data.error);
-      }
-    });
+    props.createJobPostings(companyProfileId,formData);
   };
   let errTag = null;
   if (errorMsg) {
@@ -101,4 +93,8 @@ function getSelectValues(select) {
   return result;
 }
 
-export default JobPostingCreate;
+const mapStateToProps = (state) => ({
+  errorMsg: state.companyJob.createJob.error,
+  updateSuccess: state.companyJob.createJob.success,
+})
+export default connect(mapStateToProps,{createJobPostings})(JobPostingCreate);
