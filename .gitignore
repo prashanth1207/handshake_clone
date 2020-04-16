@@ -5,3 +5,7 @@ backend/node_modules
 backend/.env
 frontend/.env
 kafka-backend/.env
+kafka-backend/node_modules
+kafka-backend/kafka_2.11-1.1.0/F:Kafkakafka_2.11-1.1.0kafka-logs
+kafka-backend/kafka_2.11-1.1.0/Kafkakafka_2.11-1.1.0kafka-logs
+kafka-backend/kafka_2.11-1.1.0/logs
