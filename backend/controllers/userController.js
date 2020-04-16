@@ -1,8 +1,3 @@
-const mongoose = require('mongoose');
-let User = mongoose.model('User');
-let StudentProfile = mongoose.model('StudentProfile');
-let CompanyProfile =mongoose.model('CompanyProfile');
-let createJwtToken = require('./../utility/search').createJwtToken;
 let kafka = require('./../kafka/client')
 
 function isDataEmpty(data_arr){

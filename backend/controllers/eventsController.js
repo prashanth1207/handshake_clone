@@ -1,8 +1,3 @@
-let mongoose = require('mongoose');
-let Event = mongoose.model('Event');
-let StudentProfile = mongoose.model('StudentProfile');
-let CompanyProfile = mongoose.model('CompanyProfile');
-let EventRegistration = mongoose.model('EventRegistration');
 let searchableQuery =  require('./../utility/search').searchableQuery;
 let kafka = require('./../kafka/client')
 

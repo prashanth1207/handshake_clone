@@ -1,5 +1,3 @@
-let mongoose = require('mongoose');
-let CompanyProfile = mongoose.model('CompanyProfile');
 const formidable = require('formidable');
 let fs = require('fs');
 let kafka = require('./../kafka/client')

@@ -1,7 +1,3 @@
-let mongoose = require('mongoose');
-let JobPosting = mongoose.model('JobPosting');
-let CompanyProfile = mongoose.model('CompanyProfile');
-let searchableQuery =  require('./../utility/search').searchableQuery;
 let kafka = require('./../kafka/client')
 
 

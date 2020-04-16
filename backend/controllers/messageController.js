@@ -1,7 +1,3 @@
-let mongoose = require('mongoose');
-let MessageWindow = mongoose.model('MessageWindow');
-let CompanyProfile = mongoose.model('CompanyProfile');
-let StudentProfile = mongoose.model('StudentProfile');
 let kafka = require('./../kafka/client')
 
 validParticipants = (params) =>{

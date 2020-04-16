@@ -8,7 +8,6 @@ var cors = require('cors');
 const session = require('express-session');
 var passport = require('passport');
 
-require('./models')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var studentProfileRouter = require('./routes/student_profile');

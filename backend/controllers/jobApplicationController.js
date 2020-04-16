@@ -1,7 +1,3 @@
-let mongoose = require('mongoose')
-let JobApplication = mongoose.model('JobApplication');
-let StudentProfile = mongoose.model('StudentProfile');
-let JobPosting = mongoose.model('JobPosting');
 const formidable = require('formidable')
 let fs = require('fs');
 let searchableQuery = require('./../utility/search').searchableQuery;

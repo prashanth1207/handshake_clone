@@ -1,6 +1,3 @@
-let mongoose = require('mongoose');
-let EventRegistration = mongoose.model('EventRegistration');
-let Event = mongoose.model('Event');
 let kafka = require('./../kafka/client')
 
 

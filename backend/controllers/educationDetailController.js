@@ -1,6 +1,3 @@
-let mongoose = require('mongoose');
-let StudentProfile = mongoose.model('StudentProfile');
-let EducationDetail = mongoose.model('EducationDetail');
 let kafka = require('./../kafka/client')
 
 module.exports.createOrUpdateEducationDetail = (req,resp) =>{
