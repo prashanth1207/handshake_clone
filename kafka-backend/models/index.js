@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const basename = path.basename(__filename);
+require('dotenv').config()
 
 var options = {
     useNewUrlParser: true,
