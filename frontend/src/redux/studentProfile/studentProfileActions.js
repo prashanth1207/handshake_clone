@@ -96,7 +96,7 @@ export const experienceDetailEdit = (formData) => dispatch => {
       if (resp.status === 200 && !resp.data.error) {
         dispatch({
           type: EXPERIENCE_DETAIL_EDIT,
-          payload: resp.data,
+          payload: resp.data.data,
         });
       }
     });
