@@ -2,24 +2,29 @@ import React, { useState } from 'react';
 import EducationDetailsShow from './EducationDetailsShow';
 import EducationDetailsEdit from './EducationDetailsEdit';
 import { Button } from 'react-bootstrap';
+import {connect} from 'react-redux';
 
-export default function EducationDetail(props) {
-  const [stateObj, setstateObj] = useState({ state: props.state || 'show', educationDetail: props.educationDetail });
-  if (stateObj.state === 'show') {
-    return <EducationDetailsShow educationDetail={stateObj.educationDetail} setstateObj={setstateObj} />;
+function EducationDetail(props) {
+  if(props.educationDetail.status === 'edit'){
+    return <EducationDetailsEdit educationDetail={props.educationDetail}/>;
   }
-  if(stateObj.state === 'edit'){
-    return <EducationDetailsEdit educationDetail={stateObj.educationDetail} setstateObj={setstateObj} />;
-  }
-  if(stateObj.state === 'deleted'){
+  if(props.educationDetail.status === 'deleted'){
     return null;
   }
-  if(stateObj.state === 'new'){
-    return <Button variant="light" block onClick={e => setstateObj({
-        state: 'edit',
-        educationDetail: props.educationDetail
-      })}>
-      Add School
-    </Button>
+  else {
+    return <EducationDetailsShow educationDetail={props.educationDetail} />;
   }
 }
+const mapStateToProps = (state,ownProps) =>{
+  let educationDetails = state.studentProfile.studentProfile.studentProfile.educationDetails;
+  let educationDetail = educationDetails.find(educationDetail =>{
+    if(educationDetail._id === ownProps.educationDetail._id){
+      return true;
+    }
+  })
+  return ({
+    educationDetail: educationDetail,
+    status: educationDetail.status
+  })
+}
+export default connect(mapStateToProps)(EducationDetail);

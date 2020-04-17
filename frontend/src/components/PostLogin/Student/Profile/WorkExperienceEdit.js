@@ -2,22 +2,15 @@ import React, { useState } from 'react';
 import {
   Form, Card, Button, Alert,
 } from 'react-bootstrap';
-import { experienceDetailEdit, experienceDetailDelete } from '../../../../utility';
+import { experienceDetailEdit,experienceDetailDelete } from './../../../../redux/studentProfile/studentProfileActions';
+import {connect} from 'react-redux';
 
 function WorkExperienceEdit(props) {
   const [errorMsg, seterrorMsg] = useState(null);
   const experienceDetail = props.experienceDetail;
 
   const handleDelete = async (e) => {
-    const resp = await experienceDetailDelete(props.experienceDetail._id)
-    if (resp.status === 200 && resp.data.success) {
-      props.setstateObj({
-        state: 'deleted',
-        experienceDetail: null,
-      });
-    } else {
-      seterrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-    }
+    props.experienceDetailDelete(props.experienceDetail._id)
   }
 
   const handleSubmit = async (e) => {
@@ -33,15 +26,7 @@ function WorkExperienceEdit(props) {
       endDate: form.endDate.value,
       workDescription: form.workDescription.value,
     };
-    const resp = await experienceDetailEdit(formData);
-    if (resp.status === 200 && resp.data.success) {
-      props.setstateObj({
-        state: 'show',
-        experienceDetail: resp.data.data,
-      });
-    } else {
-      seterrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-    }
+    props.experienceDetailEdit(formData);
   };
 
   let deleteButtonTag = experienceDetail._id && <Button variant="danger" onClick={handleDelete}>Delete</Button>
@@ -86,4 +71,4 @@ function WorkExperienceEdit(props) {
   );
 }
 
-export default WorkExperienceEdit;
+export default connect(null,{ experienceDetailEdit,experienceDetailDelete })(WorkExperienceEdit);

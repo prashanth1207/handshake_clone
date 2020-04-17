@@ -23,7 +23,7 @@ module.exports.update_company_profile = async (req,res) => {
       });
     }
     kafka.make_request('companyProfile',{body: req.body,params: req.params, fields: fields},function(err,result){
-      if(result){
+      if(result.error){
         return res.json({
           success: false,
           error: err

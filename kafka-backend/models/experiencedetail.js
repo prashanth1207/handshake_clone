@@ -64,7 +64,7 @@ ExperienceDetailSchema.statics.createOrUpdate = async function(data){
   let experienceDetail = await this.findOne({_id: data.id});
   delete data.id
   if(experienceDetail){
-    this.findOneAndUpdate(
+    return await this.findOneAndUpdate(
       { _id: experienceDetail._id },
       { $set: data }, 
       {"new": true})
@@ -72,13 +72,14 @@ ExperienceDetailSchema.statics.createOrUpdate = async function(data){
     .then( experienceDetail => experienceDetail);
   }
   let newExperienceDetail = new this(data)
-  return newExperienceDetail.save(data).then(async (experienceDetail) => {
-    let StudentProfile = mongoose.model('StudentProfile');
-    let studentProfile = await StudentProfile.findById(data.studentProfile)
-    studentProfile.experienceDetails.push(experienceDetail._id);
-    await studentProfile.save();
+  let savednewExperienceDetail = newExperienceDetail.save(data).then((experienceDetail) => {
     return experienceDetail;
   });
+  let StudentProfile = mongoose.model('StudentProfile');
+  let studentProfile = await StudentProfile.findById(data.studentProfile)
+  studentProfile.experienceDetails.push(savednewExperienceDetail._id);
+  await studentProfile.save();
+  return savednewExperienceDetail
 }
 
 module.exports = mongoose.model.ExperienceDetail || mongoose.model('ExperienceDetail', ExperienceDetailSchema);

@@ -5,6 +5,7 @@ import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
 import Avatar from 'react-avatar'
 import ProfileMessage from './ProfileMessage';
+import {connect} from 'react-redux';
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
@@ -13,7 +14,7 @@ function IdentityCardShow(props) {
   let editButton = null;
   if (studentProfile._id === storedUserInfo().profile._id) {
     editButton = (
-      <Button variant="link" onClick={(e) => props.setstateObj({ state: 'edit', studentProfile })} style={{ float: 'right', width: '10px' }}>
+      <Button variant="link" onClick={(e) => props.setstateObj({ state: 'edit'})} style={{ float: 'right', width: '10px' }}>
         <EditProfileSvg />
       </Button>
     );
@@ -24,8 +25,7 @@ function IdentityCardShow(props) {
         <div>
           {editButton}
         </div>
-        <Avatar name={`${studentProfile.firstName} ${studentProfile.lastName}`} src={image_path}/>
-        {/* <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid /> */}
+        <Image style={{ 'max-width': '200px', 'max-height': '200px' }} variant="center" src={image_path} roundedCircle thumbnail fluid />
         <Card.Title>
           {studentProfile.firstName}
           {' '}
@@ -50,4 +50,8 @@ function IdentityCardShow(props) {
   );
 }
 
-export default IdentityCardShow;
+const mapStateToProps = (state) =>({
+  studentProfile: state.studentProfile.studentProfile.studentProfile,
+})
+
+export default connect(mapStateToProps)(IdentityCardShow);

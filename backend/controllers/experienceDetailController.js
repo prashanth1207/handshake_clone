@@ -4,9 +4,9 @@ module.exports.createOrUpdateExperienceDetail = (req,resp) =>{
   req.params.path = 'createUpdateExperienceDetails';
   kafka.make_request('experienceDetail',{params: req.params,body: req.body},function(err,result){
     if(result.error){
-      return resp.json({success: false, error: result.error})
+      return resp.json({error: result.error})
     }else{
-      resp.json({success: true,data: result})
+      resp.json(result)
     }
   })
 }

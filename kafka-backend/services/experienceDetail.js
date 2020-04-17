@@ -4,11 +4,10 @@ let ExperienceDetail = mongoose.model('ExperienceDetail');
 
 async function handle_request(msg,callback){
   if(msg.params.path === 'createUpdateExperienceDetails'){
-    ExperienceDetail.createOrUpdate(msg.body).then(experienceDetail =>{
-      callback(null,experienceDetail);
-    }).catch(e =>{
+    let experienceDetail = await ExperienceDetail.createOrUpdate(msg.body).catch(e =>{
       callback(null,{error: e.message})
     })
+    callback(null,experienceDetail)
   }
   
   if(msg.params.path === 'deleteExperienceDetails'){

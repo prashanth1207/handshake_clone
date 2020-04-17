@@ -5,34 +5,31 @@ import {
 import axios from 'axios';
 import CameraSvg from '../../../svg/CameraSvg';
 import { rooturl } from '../../../../config/config';
-import { studentProfileSubmit } from '../../../../utility';
+import { studentProfileSubmit, uploadProfilePic } from './../../../../redux/studentProfile/studentProfileActions';
+import {connect} from 'react-redux';
 
 function IdentityCardEdit(props) {
   const [showModal, setShowModal] = useState(false);
   const [fileUploadErrorMsg, setfileUploadErrorMsg] = useState(null);
   const [profileErrorMsg, setprofileErrorMsg] = useState(null);
   const { studentProfile } = props;
-  const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png?${showModal}`;
+  const image_path = `${rooturl}/images/profile_pics/${studentProfile.user}.png?${showModal}`;
 
   const handleClose = (e) => setShowModal(false);
   const handleOpen = (e) => setShowModal(true);
 
+  if(props.success && showModal){
+    setShowModal(false)
+  }else if(props.error){
+    setfileUploadErrorMsg(<Alert variant="danger">{props.error}</Alert>);
+  }
+  if(props.profileSubmitSuccess){
+    props.setstateObj({ state: 'show'})
+  }
   const handleFileUpload = (e) => {
     const formData = new FormData();
     formData.append('profilePic', e.currentTarget.form.elements.profilePic.files[0]);
-    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then((resp) => {
-        if (resp.status === 200 && resp.data.success) {
-          setShowModal(false);
-        } else {
-          setfileUploadErrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-        }
-      });
+    props.uploadProfilePic(formData, studentProfile._id);
   };
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
@@ -44,15 +41,7 @@ axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`
         currentCollegeName: form.currentCollegeName.value,
       },
     };
-    const resp = await studentProfileSubmit(formData, studentProfile._id);
-    if (resp.status === 200 && resp.data.success) {
-      props.setstateObj({
-        state: 'show',
-        studentProfile: { ...studentProfile, ...formData.studentProfile },
-      });
-    } else {
-      setprofileErrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-    }
+    props.studentProfileSubmit(formData, studentProfile._id);
   };
   return (
     <Card className="text-center" fluid>
@@ -104,4 +93,11 @@ axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`
   );
 }
 
-export default IdentityCardEdit;
+const mapStateToProps = (state) =>({
+  studentProfile: state.studentProfile.studentProfile.studentProfile,
+  success: state.studentProfile.profilePic.success,
+  error: state.studentProfile.profilePic.error,
+  profileSubmitSuccess: state.studentProfile.profileSubmitSuccess
+})
+
+export default connect(mapStateToProps,{studentProfileSubmit,uploadProfilePic})(IdentityCardEdit);

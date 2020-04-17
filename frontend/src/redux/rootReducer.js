@@ -8,6 +8,7 @@ import {studentJobApplicationsReducer} from './studentJobApplications/studentJob
 import {studentJobsReducer} from './studentJobs/studentJobsReducer'
 import {jobPostingReducer} from './jobPosting/jobPostingReducer'
 import {messageReducer} from './message/messageReducer'
+import {studentProfileReducer} from './studentProfile/studentProfileReducer'
 
 const rootReducer = combineReducers({
   user: entryReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   studentJobs: studentJobsReducer,
   jobPosting: jobPostingReducer,
   message: messageReducer,
+  studentProfile: studentProfileReducer,
 });
 
 export default rootReducer;

@@ -3,7 +3,8 @@ import {
   Form, Card, Button, Alert,
 } from 'react-bootstrap';
 import { DEGREES, MAJORS, studentProfileSubmit } from '../../../../utility';
-import { educationDetailEdit, educationDetailDelete } from '../../../../utility';
+import { educationDetailEdit,educationDetailDelete } from './../../../../redux/studentProfile/studentProfileActions';
+import {connect} from 'react-redux';
 
 function EducationDetailsEdit(props) {
   const [errorMsg, seterrorMsg] = useState(null);
@@ -12,15 +13,7 @@ function EducationDetailsEdit(props) {
   const majorSelectionTag = MAJORS.map((major) => <option key={major} defaultValue={major}>{major}</option>);
 
   const handleDelete = async (e) => {
-    const resp = await educationDetailDelete(props.educationDetail._id)
-    if (resp.status === 200 && resp.data.success) {
-      props.setstateObj({
-        state: 'deleted',
-        educationDetail: null,
-      });
-    } else {
-      seterrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-    }
+    props.educationDetailDelete(props.educationDetail._id)
   }
 
   const handleSubmit = async (e) => {
@@ -37,15 +30,7 @@ function EducationDetailsEdit(props) {
       currentCgpa: form.currentCgpa.value,
       highestDegree: true//form.highestDegree.value,
     };
-    const resp = await educationDetailEdit(formData);
-    if (resp.status === 200 && resp.data.success) {
-      props.setstateObj({
-        state: 'show',
-        educationDetail: resp.data.data,
-      });
-    } else {
-      seterrorMsg(<Alert variant="danger">{resp.data.error}</Alert>);
-    }
+    props.educationDetailEdit(formData);
   };
   let deleteButtonTag = educationDetail._id && <Button variant="danger" onClick={handleDelete}>Delete</Button>
 
@@ -92,4 +77,4 @@ function EducationDetailsEdit(props) {
   );
 }
 
-export default EducationDetailsEdit;
+export default connect(null,{educationDetailEdit,educationDetailDelete})(EducationDetailsEdit);

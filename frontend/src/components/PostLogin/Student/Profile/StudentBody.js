@@ -7,22 +7,14 @@ import {
 import LeftDetails from './LeftDetails';
 import { rooturl } from '../../../../config/config';
 import RightDetails from './RightDetails';
+import {connect} from 'react-redux';
+import { getStudentProfile } from './../../../../redux/studentProfile/studentProfileActions';
 
-export default function StudentBody(props) {
-  const [studentProfileResp, setData] = useState({ status: 'loading', studentProfile: null });
+function StudentBody(props) {
+  const studentProfileResp = props.studentProfileResp;
   useEffect(() => {
     if (studentProfileResp.status === 'loading') {
-      axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
-        validateStatus: false,
-      }).then((resp) => {
-        console.log(resp.status);
-        if (resp.status === 200) {
-          setData({ status: 'recordFound', studentProfile: resp.data });
-        } else {
-          setData({ status: 'recordNotFound' });
-        }
-      });
+      props.getStudentProfile(props.studentProfileId);
     }
   });
 
@@ -31,7 +23,6 @@ axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
   } if (studentProfileResp.status === 'recordNotFound') {
     return <h3>Profile Not Found</h3>;
   }
-
   return (
     <Row>
       <Col xs={4}>
@@ -43,3 +34,9 @@ axios.get(`${rooturl}/student_profile/${props.studentProfileId}`, {
     </Row>
   );
 }
+
+const mapStateToProps = (state) =>({
+  studentProfileResp: state.studentProfile.studentProfile,
+})
+
+export default connect(mapStateToProps,{getStudentProfile})(StudentBody);

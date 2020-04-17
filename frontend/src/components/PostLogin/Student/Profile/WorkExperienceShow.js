@@ -2,13 +2,15 @@ import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import EditProfileSvg from '../../../svg/EditProfileSvg';
 import { storedUserInfo } from '../../../../utility';
+import { experienceDetailClickEdit } from './../../../../redux/studentProfile/studentProfileActions';
+import {connect} from 'react-redux';
 
 function WorkExperienceShow(props) {
   const experienceDetail = props.experienceDetail;
   let editButton = null;
   if (experienceDetail.studentProfile === storedUserInfo().profile._id) {
     editButton = (
-      <Button variant="link" onClick={(_e) => props.setstateObj({ state: 'edit', experienceDetail: props.experienceDetail })} style={{ float: 'right', width: '10px' }}>
+      <Button variant="link" onClick={(_e) => props.experienceDetailClickEdit(props.experienceDetail._id)} style={{ float: 'right', width: '10px' }}>
         <EditProfileSvg />
       </Button>
     );
@@ -30,5 +32,4 @@ function WorkExperienceShow(props) {
     </Card.Text>
   );
 }
-
-export default WorkExperienceShow;
+export default connect(null,{experienceDetailClickEdit})(WorkExperienceShow);

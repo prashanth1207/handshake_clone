@@ -48,14 +48,15 @@ EducationDetailSchema.statics.createOrUpdate = async function(data,condition){
     .exec()
     .then(educationDetail => educationDetail)
   }
-  let newEducationDetail = new this(data)
-  return newEducationDetail.save(data).then(async (educationDetail) => {
-    let StudentProfile = mongoose.model('StudentProfile');
-    let studentProfile = await StudentProfile.findById(data.studentProfile)
-    studentProfile.educationDetails.push(educationDetail._id);
-    await studentProfile.save();
+  let newEducationDetail = new this(data);
+  let savednewEducationDetail = newEducationDetail.save(data).then((educationDetail) => {
     return educationDetail;
   });
+  let studentProfile = await StudentProfile.findById(data.studentProfile)
+  studentProfile.educationDetails.push(savednewEducationDetail._id);
+  await studentProfile.save();
+  console.log(savednewEducationDetail);
+  return savednewEducationDetail
 }
 module.exports = mongoose.model.EducationDetail || mongoose.model('EducationDetail', EducationDetailSchema);
 

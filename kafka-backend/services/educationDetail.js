@@ -4,11 +4,11 @@ let EducationDetail = mongoose.model('EducationDetail');
 
 async function handle_request(msg, callback) {
   if(msg.params.path === 'createUpdateEducationDetails'){
-    EducationDetail.createOrUpdate(msg.body).then(educationDetail =>{
-      callback(null,educationDetail);
-    }).catch(e =>{
+    educationDetail = await EducationDetail.createOrUpdate(msg.body).catch(e =>{
       callback(e,null);
     })
+    console.log(educationDetail);
+    callback(null,educationDetail)
   }
   
   if(msg.params.path === 'deleteEducationDetails'){

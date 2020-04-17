@@ -60,7 +60,9 @@ async function handle_request(msg, callback) {
 
   if(msg.params.path === 'update_student_profile'){
     let id = msg.params.id;
-    let studentProfile = await StudentProfile.findById(id);
+    let studentProfile = await StudentProfile.findById(id)
+      .populate('educationDetails')
+      .populate('experienceDetails');
     if(studentProfile){
       try{
         let educationDetailsData = msg.body.educationDetails;
@@ -72,7 +74,7 @@ async function handle_request(msg, callback) {
         if(studentProfileData){
           await studentProfile.update(studentProfileData);
         }
-        return callback(null, {success: true});
+        return callback(null, studentProfile);
       }catch(error){
         callback(null, {
           success: false,
@@ -85,7 +87,10 @@ async function handle_request(msg, callback) {
   };
   
   if(msg.params.path === 'upload_profile_pic'){
-    StudentProfile.findById(msg.params.id).then(studentProfile =>{
+    StudentProfile.findById(msg.params.id)
+      .populate('educationDetails')
+      .populate('experienceDetails')
+      .then(studentProfile =>{
       if(!studentProfile){
         return callback(null, {
           success: false,
