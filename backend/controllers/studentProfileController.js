@@ -37,36 +37,38 @@ module.exports.update_student_profile = async(req,resp) => {
 
 module.exports.upload_profile_pic = (req, resp) =>{
   req.params.path = 'upload_profile_pic';
-  new formidable.IncomingForm().parse(req,async (err,_fields,files) =>{
-    if(err){
-      res.json({
-        success: false,
-        error: err
-      })
-    }
-    kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
-      if(result.error){
-        return resp.json({error: result.error})
-      }else{
-        resp.json(result);
+  try {
+    new formidable.IncomingForm().parse(req,(err,_fields,files) =>{
+      if(err){
+        res.json({
+          success: false,
+          error: err
+        })
       }
-    })
-    let profilePic = files.profilePic;
-    if(profilePic){
-      fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.user._id}.png`)
-      return res.json({
-        success: true
+      kafka.make_request('studentProfile',{params: req.params,body: req.body,query: req.query},function(err,result){
+        if(result.error){
+          return resp.json({error: result.error})
+        }else{
+          resp.json(result);
+          let profilePic = files.profilePic;
+          if(profilePic){
+            fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.user._id}.png`)
+            return res.json({
+              success: true
+            })
+          }else{
+            res.json({
+              success: false,
+              error: "No picture uploaded"
+            })
+          }
+        }
       })
-    }else{
-      res.json({
-        success: false,
-        error: "No picture uploaded"
-      })
-    }
-  }).catch(e =>{
+    });
+  }catch(error){
     res.json({
       success: false,
-      error: error
+      error: error.message
     })
-  });
+  }
 }
