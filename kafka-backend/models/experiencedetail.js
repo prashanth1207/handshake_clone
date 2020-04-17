@@ -64,7 +64,7 @@ ExperienceDetailSchema.statics.createOrUpdate = async function(data){
   let experienceDetail = await this.findOne({_id: data.id});
   delete data.id
   if(experienceDetail){
-    return await this.findOneAndUpdate(
+    return this.findOneAndUpdate(
       { _id: experienceDetail._id },
       { $set: data }, 
       {"new": true})
