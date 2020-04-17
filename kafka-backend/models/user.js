@@ -1,8 +1,8 @@
 'use strict';
 const crypto = require('crypto')
 var mongoose = require('mongoose');
-let StudentProfile = require('./../models/studentprofile');
-let CompanyProfile = require('./../models/companyProfile');
+let StudentProfile = mongoose.model('StudentProfile');
+let CompanyProfile = mongoose.model('CompanyProfile');
 
 const UserSchema = new mongoose.Schema({
   emailId: {
