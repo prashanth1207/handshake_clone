@@ -91,6 +91,8 @@ async function handle_request(msg, callback) {
           success: false,
           error: 'no record found'
         })
+      }else{
+        return callback(null, studentProfile)
       }
     })
   

@@ -52,7 +52,7 @@ module.exports.sendMessage = (req,resp) => {
 
 const getMessageWindows = (profile,req, resp) => {
   req.params.path = 'getMessageWindows';
-  kafka.make_request('message',{params: req.params,body: req.body,profile: profile.modelName},function(err,result){
+  kafka.make_request('message',{params: req.params,body: req.body,profile: profile},function(err,result){
     if(result.error){
       return resp.json({error: result.error})
     }else{
@@ -62,11 +62,11 @@ const getMessageWindows = (profile,req, resp) => {
 }
 
 module.exports.getMessageWindowsForStudent = (req, resp) => {
-  getMessageWindows(StudentProfile,req,resp)
+  getMessageWindows('StudentProfile',req,resp)
 }
 
 module.exports.getMessageWindowsForCompany = (req, resp) => {
-  getMessageWindows(CompanyProfile,req,resp)
+  getMessageWindows('CompanyProfile',req,resp)
 }
 
 module.exports.converstionWindow = (req,resp) => {

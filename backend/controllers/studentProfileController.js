@@ -49,15 +49,14 @@ module.exports.upload_profile_pic = (req, resp) =>{
         if(result.error){
           return resp.json({error: result.error})
         }else{
-          resp.json(result);
           let profilePic = files.profilePic;
           if(profilePic){
-            fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${studentProfile.user._id}.png`)
-            return res.json({
+            fs.renameSync(profilePic.path,__basedir+`/public/images/profile_pics/${result.user}.png`)
+            return resp.json({
               success: true
             })
           }else{
-            res.json({
+            resp.json({
               success: false,
               error: "No picture uploaded"
             })
@@ -66,7 +65,7 @@ module.exports.upload_profile_pic = (req, resp) =>{
       })
     });
   }catch(error){
-    res.json({
+    resp.json({
       success: false,
       error: error.message
     })
