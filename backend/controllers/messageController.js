@@ -1,18 +1,10 @@
 let kafka = require('./../kafka/client')
 
-validParticipants = (params) =>{
-  if(params.senderType && params.receiverType){
-    validModels = [CompanyProfile.modelName,StudentProfile.modelName];
-    if(validModels.includes(params.senderType) && validModels.includes(params.receiverType)){
-      return true
-    }
-  }
-  return false;
-}
+
 
 module.exports.startConversation = (req,resp) => {
   req.params.path = 'startConversation';
-  if(validParticipants(req.body)){
+  if(true){
     kafka.make_request('message',{params: req.params,body: req.body,query: req.query},function(err,result){
       if(result.error){
         return resp.json({success: false, error: result.error})
