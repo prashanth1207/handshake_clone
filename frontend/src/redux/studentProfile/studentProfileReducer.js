@@ -106,6 +106,7 @@ export function studentProfileReducer(state=initalState,action){
     case EXPERIENCE_DETAIL_EDIT:
       let expstudentProfileEdit = Object.assign({},state.studentProfile.studentProfile);
       let expindex = expstudentProfileEdit.experienceDetails.findIndex(experienceDetail =>{
+        debugger
         if(experienceDetail._id == action.payload._id){
           return true
         }

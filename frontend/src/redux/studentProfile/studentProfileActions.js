@@ -92,10 +92,11 @@ export const experienceDetailEdit = (formData) => dispatch => {
   axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
   return axios.post(`${rooturl}/experience_details/create_update`, formData)
     .then((resp) => {
+      debugger
       if (resp.status === 200 && !resp.data.error) {
         dispatch({
           type: EXPERIENCE_DETAIL_EDIT,
-          payload: resp.data.data,
+          payload: resp.data,
         });
       }
     });
