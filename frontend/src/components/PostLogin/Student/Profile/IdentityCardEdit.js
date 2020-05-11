@@ -20,7 +20,7 @@ function IdentityCardEdit(props) {
   const handleFileUpload = (e) => {
     const formData = new FormData();
     formData.append('profilePic', e.currentTarget.form.elements.profilePic.files[0]);
-    axios.post(`${rooturl}/student_profile/${studentProfile._id}/upload_profile_pic`, formData, {
+    axios.post(`${rooturl}/student_profile/${studentProfile.id}/upload_profile_pic`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -43,7 +43,7 @@ function IdentityCardEdit(props) {
         currentCollegeName: form.currentCollegeName.value,
       },
     };
-    const resp = await studentProfileSubmit(formData, studentProfile._id);
+    const resp = await studentProfileSubmit(formData, studentProfile.id);
     if (resp.status === 200 && resp.data.success) {
       props.setstateObj({
         state: 'show',

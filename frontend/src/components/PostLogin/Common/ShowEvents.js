@@ -11,7 +11,7 @@ import { rooturl } from '../../../config/config';
 function ShowEvents(props) {
   const [eventResp, setEventResp] = useState({ status: 'loading', events: null });
   if (eventResp.status === 'loading') {
-    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile._id}`, { validationStatus: false }).then((resp) => resp.data).then((resp) => {
+    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { validationStatus: false }).then((resp) => resp.data).then((resp) => {
       if (resp.error) {
         return setEventResp({ status: 'error', events: [] });
       }
@@ -25,7 +25,7 @@ function ShowEvents(props) {
       eventName: form.eventName.value,
     };
     console.dir(queryData);
-    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile._id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
+    axios.get(`${rooturl}/events/${props.for.toLowerCase()}/${storedUserInfo().profile.id}`, { params: queryData }, { validateStatus: false }).then((resp) => resp.data).then((resp) => {
       if (resp.error) {
         return setEventResp({ status: 'error', events: [] });
       }
@@ -48,7 +48,7 @@ function ShowEvents(props) {
   const eventsSection = eventResp.events.map((event) => {
     let externalTag = null;
     if (props.for === 'Student') {
-      externalTag = <EventRegister event={event} studentProfileId={storedUserInfo().profile._id} studentMajor={eventResp.major} />;
+      externalTag = <EventRegister event={event} studentProfileId={storedUserInfo().profile.id} studentMajor={eventResp.major} />;
     } else {
       externalTag = <Card.Link href={`/company/events/${event._id}/students`}>Registrations</Card.Link>;
     }
@@ -74,7 +74,7 @@ function ShowEvents(props) {
   if (props.for === 'Company') {
     create_event_tag = (
       <div>
-        <Button style={{ float: 'right' }} variant="primary" href={`/company/${storedUserInfo().profile._id}/create_event`}>Create New Event</Button>
+        <Button style={{ float: 'right' }} variant="primary" href={`/company/${storedUserInfo().profile.id}/create_event`}>Create New Event</Button>
         <br />
         <br />
       </div>

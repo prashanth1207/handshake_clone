@@ -17,10 +17,10 @@ function JobPostingSummary(props) {
     </span>
   )) || null;
   let job_title = jobPosting.jobTitle;
-  const profile_path = `/company_profile/${jobPosting.companyProfile._id}`;
-  const image_path = `${rooturl}/images/profile_pics/${jobPosting.companyProfile.userId}.png`;
+  const profile_path = `/company_profile/${jobPosting.companyProfile.id}`;
+  const image_path = `${rooturl}/images/profile_pics/${jobPosting.companyProfile.user.id}.png`;
   if (props.linkJobTitle) {
-    job_title = <a href={`/job_postings/${jobPosting._id}`}>{job_title}</a>;
+    job_title = <a href={`/job_postings/${jobPosting.id}`}>{job_title}</a>;
   }
   return (
     <Card>

@@ -10,7 +10,7 @@ import { rooturl } from '../../../../config/config';
 function StudentJobApplications() {
   const [applicationResp, setapplicationResp] = useState({ status: 'loading', applications: null, queryParams: {} });
   if (applicationResp.status === 'loading') {
-    Axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile._id}`, { params: applicationResp.queryParams }, { validateStatus: false })
+    Axios.get(`${rooturl}/job_application/student_applications/${storedUserInfo().profile.id}`, { params: applicationResp.queryParams }, { validateStatus: false })
       .then((resp) => {
         if (resp.status === 200 && resp.data.data) {
           return setapplicationResp({ status: 'loaded', applications: resp.data.data, queryParams: applicationResp.queryParams });

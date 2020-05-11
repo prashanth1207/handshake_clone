@@ -7,36 +7,29 @@ import RedirectToJobsPage from '../RedirectToJobsPage';
 import { rooturl } from '../../config/config';
 import { connect } from 'react-redux';
 import { LoginIn } from '../../redux/actions/index';
+import { CompanySignup } from '../../graphql/mutations/signup';
+import { useMutation } from 'react-apollo';
 
 function CompanySignUp(props) {
   const [errorMsg, setErrorMsg] = useState(null);
+  const [signup, {loading, error, data}] = useMutation(CompanySignup);
+  if(data && data.register){
+    sessionStorage.setItem('userInfo', JSON.stringify(data.register));
+    props.loggedIn();
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
-    const form_data = {
-      userData: {
+    signup({
+      variables: {
         emailId: form.emailId.value,
         password: form.password.value,
         role: 'Company',
-      },
-      profileData: {
         name: form.name.value,
         location: form.location.value,
-      },
-    };
-    axios.defaults.withCredentials = true;
-    axios.post(`${rooturl}/users/register`, form_data)
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data.success === true) {
-            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
-            props.loggedIn();
-          } else {
-            setErrorMsg(response.data.error);
-          }
-        }
-      });
+      }
+    })
   }
   let errorTag = null;
   if (errorMsg) {

@@ -15,7 +15,7 @@ function CareerObjectiveEdit(props) {
         careerObjective: form.careerObjective.value,
       },
     };
-    const resp = await studentProfileSubmit(formData, props.studentProfile._id);
+    const resp = await studentProfileSubmit(formData, props.studentProfile.id);
     if (resp.status === 200 && resp.data.success) {
       props.setstateObj({
         state: 'show',

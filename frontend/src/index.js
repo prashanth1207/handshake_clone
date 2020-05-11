@@ -7,12 +7,19 @@ import Favicon from 'react-favicon';
 import App from './App';
 //import * as serviceWorker from './serviceWorker';
 import store from './redux/store/index';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+const client = new ApolloClient({
+  uri: 'http://localhost:3001/graphql'
+});
 
 ReactDOM.render(
   <Provider store={store}>
     <div>
       <Favicon url="https://handshake-production-cdn.joinhandshake.com/assets/favicon-d6b3be8966fbadf95833dc4a6a405e696cf638275db7ff77964af2e3d9f7919e.ico?v=2" />
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </div>
   </Provider>,
   document.getElementById('root'),

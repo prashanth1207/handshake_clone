@@ -56,7 +56,7 @@ function StudentBodyEdit(props) {
       },
     };
     axios.defaults.withCredentials = false;
-    axios.post(`${rooturl}/student_profile/${studentProfile._id}`, formData)
+    axios.post(`${rooturl}/student_profile/${studentProfile.id}`, formData)
       .then((resp) => {
         if (resp.status === 200 && resp.data.success) {
           setUpdateSuccess(true);
@@ -75,7 +75,7 @@ function StudentBodyEdit(props) {
     errTag = <Alert variant="danger">{errorMsg}</Alert>;
   }
   if (updateSuccess) {
-    return <Redirect to={`/student_profile/${studentProfile._id}`} />;
+    return <Redirect to={`/student_profile/${studentProfile.id}`} />;
   }
   return (
     <main className="clearfix new-topbar-nux" id="skip-to-content">

@@ -6,10 +6,11 @@ import { storedUserInfo } from '../../../../utility';
 
 function IdentityCardShow(props) {
   const { studentProfile } = props;
-  const educationDetails = studentProfile.educationDetails || {};
-  const image_path = `${rooturl}/images/profile_pics/${studentProfile.userId}.png`;
+  const educationDetails = (studentProfile.educationDetails[0] || {});
+  const image_path = `${rooturl}/images/profile_pics/${studentProfile.user.id}.png`;
   let editButton = null;
-  if (studentProfile._id === storedUserInfo().profile._id) {
+  let profid = storedUserInfo().profile.id;
+  if (studentProfile.id === storedUserInfo().profile.id) {
     editButton = (
       <Button variant="link" onClick={(e) => props.setstateObj({ state: 'edit', studentProfile })} style={{ float: 'right', width: '10px' }}>
         <EditProfileSvg />

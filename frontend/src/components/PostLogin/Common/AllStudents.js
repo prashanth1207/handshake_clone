@@ -1,29 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container, Row, Col, Image, Card, Form, Button,
 } from 'react-bootstrap';
 import axios from 'axios';
 import { MAJORS, storedUserInfo } from '../../../utility';
 import { rooturl } from '../../../config/config';
+import { StudentProfiles } from '../../../graphql/queries/student';
+import { useLazyQuery } from 'react-apollo';
 
 
 function AllStudents(props) {
   const [studentsResp, setstudentsResp] = useState({ status: 'loading', students: null });
-
-  const getStudentProfiles = async (queryData) =>{
-    axios.get(`${rooturl}/student_profile`, { params: queryData }, { validateStatus: false }).then((resp) => {
-      if (resp.status == 200 && resp.data.data) {
-        const students = resp.data.data.filter((student) => student._id != storedUserInfo().profile._id);
-        setstudentsResp({ status: 'loaded', students });
-      } else {
-        setstudentsResp({ status: 'error', students: null });
-      }
-    });
-  }
-
-  if (studentsResp.status === 'loading') {
-    getStudentProfiles({});
-  }
+  const [studentProfiles, {loading, error, data}] = useLazyQuery(StudentProfiles);
 
   const handleOnChange = (e) => {
     const { form } = e.currentTarget;
@@ -36,7 +24,7 @@ function AllStudents(props) {
         major: form.major.value,
       },
     };
-    getStudentProfiles(queryData);
+    studentProfiles({variables : queryData})
   };
 
   const resetForm = (e) => {
@@ -44,16 +32,13 @@ function AllStudents(props) {
     handleOnChange(e);
   };
 
-  if (studentsResp.status === 'loading') {
-    return <div> Loading Profiles..</div>;
-  }
-  if (studentsResp.status === 'error') {
+  if (error) {
     return <div>Something went wrong</div>;
   }
-  const students_tag = studentsResp.students.map((student) => {
+  const students_tag = ((data && data.studentProfiles) || []).map((student) => {
     const educationDetails = student.educationDetails[0] || {};
     const image_path = `${rooturl}/images/profile_pics/${student.userId}.png`;
-    const profile_path = `/student_profile/${student._id}`;
+    const profile_path = `/student_profile/${student.id}`;
     return (
       <Row className="my-3">
         <Col>

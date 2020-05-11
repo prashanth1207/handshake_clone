@@ -7,20 +7,21 @@ import { useParams } from 'react-router-dom';
 import StudentBody from '../../Student/Profile/StudentBody';
 import JobApplicationStatus from '../../Student/Applications/JobApplicationStatus';
 import { rooturl } from '../../../../config/config';
+import {JobApplications} from '../../../../graphql/queries/jobApplication'
+import { useQuery } from 'react-apollo';
 
 function AllJobApplications(props) {
   const { id: jobPostingId } = useParams();
-  const [jobApplicationsResp, setjobApplicationsResp] = useState({ status: 'loading', jobApplications: null });
   const [studentProfile, setStudentProfile] = useState(null);
-  if (jobApplicationsResp.status === 'loading') {
-    axios.get(`${rooturl}/job_application?jobPostingId=${jobPostingId}`)
-      .then((resp) => {
-        setjobApplicationsResp({ status: 'loaded', jobApplications: resp.data.data || [] });
-      });
-  }
-  if (jobApplicationsResp.status === 'loading') {
+  const {loading, error, data} = useQuery(JobApplications, {
+    variables: {
+      jobPosting: jobPostingId
+    }
+  })
+  if (loading) {
     return <div>Loading...</div>;
   }
+  const jobApplicationsResp = data && data.jobApplications;
 
   const handleViewProfile = (e) => {
     e.preventDefault();
@@ -47,7 +48,7 @@ function AllJobApplications(props) {
     setStudentProfile(null);
   };
 
-  let jobApplication_tag = jobApplicationsResp.jobApplications.map((jobApplication) => (
+  let jobApplication_tag = jobApplicationsResp.map((jobApplication) => (
     <Row>
       <Col>
         <Card>
@@ -59,7 +60,7 @@ function AllJobApplications(props) {
             </Card.Title>
             <Card.Text>
               Applied on
-              {new Date(jobApplication.createdAt).toLocaleString('en-US', { dateStyle: 'full' })}
+              {jobApplication.createdAt}
             </Card.Text>
             <Card.Text>
               <Card.Link target="_blank" href={`${rooturl}/resume/${jobApplication.resumePath}`} id={jobApplication.studentProfileId}>Resume</Card.Link>

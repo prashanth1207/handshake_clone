@@ -18,7 +18,7 @@ export default function CompanyBodyEdit(props) {
     formData.append('contactInformation', form.contactInformation.value);
     formData.append('companyLogo', form.elements.companyLogo.files[0]);
     axios.defaults.withCredentials = false;
-    axios.post(`${rooturl}/company_profile/${companyProfile._id}`, formData,
+    axios.post(`${rooturl}/company_profile/${companyProfile.id}`, formData,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -37,7 +37,7 @@ export default function CompanyBodyEdit(props) {
     errTag = <p color="red">{errorMsg}</p>;
   }
   if (updateSuccess) {
-    return <Redirect to={`/company_profile/${companyProfile._id}`} />;
+    return <Redirect to={`/company_profile/${companyProfile.id}`} />;
   }
   return (
     <div>

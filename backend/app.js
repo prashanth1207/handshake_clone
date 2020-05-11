@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 const session = require('express-session');
-
+const graphqlHTTP = require('express-graphql');
 require('./models')
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var studentProfileRouter = require('./routes/student_profile');
@@ -47,6 +48,11 @@ app.use('/job_application', jobApplicationRouter);
 app.use('/events', eventRouter);
 app.use('/event_registrations', eventRegistrationRouter);
 
+const schema = require('./graphql/schema/schema');
+app.use("/graphql",graphqlHTTP({
+  schema,
+  graphiql: true
+}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -24,7 +24,7 @@ export const PrivateOwnStudentRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
-      const authentic_user = isLoggedIn() && isStudent() && storedUserInfo().profile._id === props.match.params.studentProfileId;
+      const authentic_user = isLoggedIn() && isStudent() && storedUserInfo().profile.id === props.match.params.studentProfileId;
       if (authentic_user) {
         return <Component {...props} />;
       }
@@ -54,7 +54,7 @@ export const PrivateOwnCompanyRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
-      const authentic_user = isLoggedIn() && isCompany() && storedUserInfo().profile._id === props.match.params.companyProfileId;
+      const authentic_user = isLoggedIn() && isCompany() && storedUserInfo().profile.id === props.match.params.companyProfileId;
       if (authentic_user) {
         return <Component {...props} />;
       }

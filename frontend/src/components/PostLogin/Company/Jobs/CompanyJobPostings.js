@@ -4,33 +4,25 @@ import { Button } from 'react-bootstrap';
 import JobPostingSummary from '../../Student/Jobs/JobPostingSummary';
 import { storedUserInfo } from '../../../../utility';
 import { rooturl } from '../../../../config/config';
-
+import { useQuery } from 'react-apollo';
+import {JobPostings} from '../../../../graphql/queries/jobPosting';
 
 function CompanyJobPostings(props) {
-  const companyProfileId = storedUserInfo().profile._id;
+  const companyProfileId = storedUserInfo().profile.id;
+  const {loading,error,data} = useQuery(JobPostings,{
+    variables: {
+      companyProfileId: companyProfileId
+    }
+  });
   const [jobPostingResp, setData] = useState({ status: 'loading', jobPostings: null });
-  if (jobPostingResp.status === 'loading') {
-    console.dir(props);
-    axios.get(`${rooturl}/job_postings`, { params: { companyProfile: companyProfileId } }, {
-      validateStatus: false,
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPostings: resp.data });
-      } else {
-        setData({ status: 'recordNotFound' });
-      }
-    });
-  }
-  if (jobPostingResp.status === 'loading') {
+  if (loading) {
     return <h3>Loading Job Postings...</h3>;
-  } if (jobPostingResp.status === 'recordNotFound') {
+  } if (!loading && error) {
     return <h3>Something went wrong..</h3>;
   }
-  const { jobPostings } = jobPostingResp;
-  console.dir(jobPostings);
-  let jobPostingsDivs = jobPostings.map((jobPosting) => {
+  let jobPostingsDivs = data.jobPostings.map((jobPosting) => {
     let jobApplicationTag = (
-      <Button style={{ float: 'right' }} variant="link" href={`/${companyProfileId}/job_postings/${jobPosting._id}/job_applications`}>
+      <Button style={{ float: 'right' }} variant="link" href={`/${companyProfileId}/job_postings/${jobPosting.id}/job_applications`}>
         Job applications
       </Button>
     );

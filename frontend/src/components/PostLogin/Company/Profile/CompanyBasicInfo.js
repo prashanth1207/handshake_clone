@@ -10,11 +10,11 @@ import { rooturl } from '../../../../config/config';
 
 export default function CompanyBasicInfo(props) {
   const { companyProfile } = props;
-  const image_path = `${rooturl}/images/profile_pics/${companyProfile.userId}.png`;
+  const image_path = `${rooturl}/images/profile_pics/${companyProfile.user.id}.png`;
   let editButton = null;
-  if (companyProfile._id === storedUserInfo().profile._id) {
+  if (companyProfile.id === storedUserInfo().profile.id) {
     editButton = (
-      <Button variant="link" href={`/company_profile/${companyProfile._id}/edit`} style={{ float: 'right', width: '10px' }}>
+      <Button variant="link" href={`/company_profile/${companyProfile.id}/edit`} style={{ float: 'right', width: '10px' }}>
         <EditProfileSvg />
       </Button>
     );

@@ -3,31 +3,20 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { rooturl } from '../../../../config/config';
 import CompanyBody from './CompanyBody';
+import {CompanyProfileQuery} from '../../../../graphql/queries/company'
+import {useQuery} from 'react-apollo'
 
 export default function CompanyProfile() {
   const { id } = useParams();
-  const [companyProfileResp, setData] = useState({ status: 'loading', companyProfile: {} });
-  useEffect(() => {
-    if (companyProfileResp.status === 'loading') {
-      axios.get(`${rooturl}/company_profile/${id}`, {
-        validateStatus: false,
-      }).then((resp) => {
-        if (resp.status === 200) {
-          setData({ status: 'recordFound', companyProfile: resp.data });
-        } else {
-          setData({ status: 'recordNotFound' });
-        }
-      });
-    }
-  });
-  if (companyProfileResp.status === 'loading') {
+  const {loading, error, data} = useQuery(CompanyProfileQuery,{variables: {id: id}});
+  if (loading) {
     return <h3>Loading Profile...</h3>;
-  } if (companyProfileResp.status === 'recordNotFound') {
+  } if (!loading && !data) {
     return <h3>Profile Not Found</h3>;
   }
   return (
     <div>
-      <CompanyBody companyProfileResp={companyProfileResp} />
+      <CompanyBody companyProfile={data.companyProfile} />
     </div>
   );
 }

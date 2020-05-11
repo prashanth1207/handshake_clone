@@ -22,7 +22,7 @@ function WorkExperienceEdit(props) {
         workDescription: form.workDescription.value,
       },
     };
-    const resp = await studentProfileSubmit(formData, props.studentProfile._id);
+    const resp = await studentProfileSubmit(formData, props.studentProfile.id);
     if (resp.status === 200 && resp.data.success) {
       props.studentProfile.experienceDetails = [{ ...experienceDetails, ...formData.experienceDetails }];
       props.setstateObj({

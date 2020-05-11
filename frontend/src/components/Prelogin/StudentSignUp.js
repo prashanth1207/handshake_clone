@@ -7,41 +7,34 @@ import { rooturl } from '../../config/config';
 import RedirectToJobsPage from '../RedirectToJobsPage';
 import { connect } from 'react-redux';
 import { LoginIn } from '../../redux/actions/index';
+import { StudentSignup } from '../../graphql/mutations/signup';
+import { useMutation } from 'react-apollo';
+
 
 function StudentSignUp(props) {
   const [errorMsg, setErrorMsg] = useState(null);
-
+  const [signup, {loading, error, data}] = useMutation(StudentSignup);
+  if(data && data.register){
+    sessionStorage.setItem('userInfo', JSON.stringify(data.register));
+    props.loggedIn();
+  }
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
-    const form_data = {
-      userData: {
+    signup({
+      variables: {
         emailId: form.emailId.value,
         password: form.password.value,
         role: 'Student',
-      },
-      profileData: {
         firstName: form.firstName.value,
         lastName: form.lastName.value,
         currentCollegeName: form.currentCollegeName.value,
-      },
-    };
-    axios.defaults.withCredentials = true;
-    axios.post(`${rooturl}/users/register`, form_data)
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data.success === true) {
-            sessionStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
-            props.loggedIn();
-          } else {
-            setErrorMsg(response.data.error);
-          }
-        }
-      });
+      }
+    })
   }
   let errorTag = null;
-  if (errorMsg) {
-    errorTag = <Alert variant="danger">{errorMsg}</Alert>;
+  if (error) {
+    errorTag = <Alert variant="danger">{error}</Alert>;
   }
   return (
     <Container>

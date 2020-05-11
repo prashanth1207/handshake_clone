@@ -5,39 +5,27 @@ import {
 } from 'react-bootstrap';
 import JobPostingSummary from './JobPostingSummary';
 import { rooturl } from '../../../../config/config';
-
+import {JobPostings} from '../../../../graphql/queries/jobPosting'
+import { useLazyQuery } from 'react-apollo';
 
 
 function JobPostingsAll(props) {
   const { companyProfileId } = props;
-  const [jobPostingResp, setData] = useState({ status: 'loading', jobPostings: null });
-  if (jobPostingResp.status === 'loading') {
-    console.dir(props);
-    axios.get(`${rooturl}/job_postings`, { params: { companyProfile: companyProfileId } }, {
-      validateStatus: false,
-    }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPostings: resp.data });
-      } else {
-        setData({ status: 'recordNotFound' });
-      }
-    });
+  const [jobPostingsQuery, {loading, error, data}] = useLazyQuery(JobPostings);
+
+  if (!loading && data === undefined) {
+    jobPostingsQuery({variables: {}});
   }
 
   const handleOnChange = (e) => {
     const { form } = e.currentTarget;
     const queryData = {
+    };
+    jobPostingsQuery({variables: {
       jobTitle: form.jobTitle.value,
       jobCategory: form.jobCategory.value,
-      location: form.location.value,
-    };
-    axios.get(`${rooturl}/job_postings`, { params: queryData }, { validateStatus: false }).then((resp) => {
-      if (resp.status === 200) {
-        setData({ status: 'recordFound', jobPostings: resp.data });
-      } else {
-        setData({ status: 'error', jobPostings: null });
-      }
-    });
+      companyName: form.companyName.value,
+    }})
   };
 
   const resetForm = (e) => {
@@ -45,14 +33,8 @@ function JobPostingsAll(props) {
     handleOnChange(e);
   };
 
-  if (jobPostingResp.status === 'loading' || jobPostingResp.status === 'reloading') {
-    return <h3>Loading Job Postings...</h3>;
-  } if (jobPostingResp.status === 'recordNotFound') {
-    return <h3>Something went wrong..</h3>;
-  }
 
-
-  const { jobPostings } = jobPostingResp;
+  const jobPostings  = (data && data.jobPostings) || [];
   console.dir(jobPostings);
   const jobPostingsDivs = jobPostings.map((jobPosting) => (
     <Row className="my-3">
@@ -95,9 +77,9 @@ function JobPostingsAll(props) {
                     </Card.Text>
                   </Card.Body>
                   <Card.Body class="list-group-item">
-                    <Card.Text>Location</Card.Text>
+                    <Card.Text>Comapny Name</Card.Text>
                     <Card.Text>
-                      <Form.Control type="text" name="location" onChange={handleOnChange} placeholder="Job Location" className="mr-sm-2" />
+                      <Form.Control type="text" name="companyName" onChange={handleOnChange} placeholder="Company Name" className="mr-sm-2" />
                     </Card.Text>
                   </Card.Body>
                 </Form>

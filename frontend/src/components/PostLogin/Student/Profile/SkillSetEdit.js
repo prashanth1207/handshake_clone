@@ -15,7 +15,7 @@ function SkillSetEdit(props) {
         skillSet: skills.join(','),
       },
     };
-    const resp = await studentProfileSubmit(formData, props.studentProfile._id);
+    const resp = await studentProfileSubmit(formData, props.studentProfile.id);
     if (resp.status === 200 && resp.data.success) {
       setSkillSet(skills);
     } else {

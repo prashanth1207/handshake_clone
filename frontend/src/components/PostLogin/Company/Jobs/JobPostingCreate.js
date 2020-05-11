@@ -5,40 +5,37 @@ import { Redirect } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { rooturl } from '../../../../config/config';
 import { storedUserInfo } from '../../../../utility';
+import { CreateJobPosting } from '../../../../graphql/mutations/jobPostingCreate'
+import { useMutation } from 'react-apollo';
 
 function JobPostingCreate(props) {
-  const companyProfileId = storedUserInfo().profile._id;
+  const companyProfileId = storedUserInfo().profile.id;
   const [errorMsg, setErrorMsg] = useState(null);
-  const [updateSuccess, setupdateSuccess] = useState(false);
+  const [jobPostingCreate, {loading, error, data}] = useMutation(CreateJobPosting);
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const selectedJobCategoryList = getSelectValues(form.jobCategory);
     const formData = {
-      jobTitle: form.jobTitle.value,
-      postingDate: form.postingDate.value,
-      applicationDeadline: form.applicationDeadline.value,
-      location: form.location.value,
-      salary: form.salary.value,
-      jobDescription: form.jobDescription.value,
-      jobCategory: selectedJobCategoryList.join(','),
     };
-    axios.post(`${rooturl}/job_postings/${companyProfileId}/create`, formData, {
-      validateStatus: false,
-    }).then((resp) => {
-      console.dir(resp);
-      if (resp.status === 200 && resp.data.success) {
-        setupdateSuccess(true);
-      } else {
-        setErrorMsg(resp.data.error);
+    jobPostingCreate({
+      variables: {
+        jobTitle: form.jobTitle.value,
+        postingDate: form.postingDate.value,
+        applicationDeadline: form.applicationDeadline.value,
+        location: form.location.value,
+        salary: form.salary.value,
+        jobDescription: form.jobDescription.value,
+        jobCategory: selectedJobCategoryList.join(','),
+        companyProfile: companyProfileId
       }
-    });
+    })
   };
   let errTag = null;
-  if (errorMsg) {
-    errTag = <Alert variant="danger">{errorMsg}</Alert>;
+  if (error) {
+    errTag = <Alert variant="danger">{error}</Alert>;
   }
-  if (updateSuccess) {
+  if (data && data.createJobPosting) {
     return <Redirect to="/company/job_postings" />;
   }
   return (

@@ -26,7 +26,7 @@ function EducationDetailsEdit(props) {
         highestDegree: true,
       },
     };
-    const resp = await studentProfileSubmit(formData, props.studentProfile._id);
+    const resp = await studentProfileSubmit(formData, props.studentProfile.id);
     if (resp.status === 200 && resp.data.success) {
       props.studentProfile.educationDetails = [{ ...educationDetails, ...formData.educationDetails }];
       props.setstateObj({

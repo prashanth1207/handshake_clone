@@ -6,27 +6,19 @@ import CompanyDescription from './CompanyDescription';
 import CompanyContactInformation from './CompanyContactInformation';
 
 export default function CompanyBody(props) {
-  const { companyProfileResp } = props;
-
-  if (companyProfileResp.status === 'loading') {
-    return <h3>Loading Profile...</h3>;
-  } if (companyProfileResp.status === 'recordNotFound') {
-    return <h3>Profile Not Found</h3>;
-  }
-
   return (
     <div>
       <Row className="my-3">
         <Col>
-          <CompanyBasicInfo companyProfile={companyProfileResp.companyProfile} />
+          <CompanyBasicInfo companyProfile={props.companyProfile} />
         </Col>
       </Row>
       <Row className="my-3">
         <Col xs={9}>
-          <CompanyDescription companyProfile={companyProfileResp.companyProfile} />
+          <CompanyDescription companyProfile={props.companyProfile} />
         </Col>
         <Col>
-          <CompanyContactInformation companyProfile={companyProfileResp.companyProfile} />
+          <CompanyContactInformation companyProfile={props.companyProfile} />
         </Col>
       </Row>
     </div>

@@ -10,7 +10,7 @@ const NavigationBar = (props) => {
     sessionStorage.removeItem('userInfo');
     props.logout();
   };
-  const profileId = storedUserInfo().profile._id;
+  const profileId = storedUserInfo().profile.id;
   const role = storedUserInfo().type;
   const jobsLink = role === 'Student' ? '/student/job_postings' : '/company/job_postings';
   const eventsLink = `/${role}/show_all_events`;
